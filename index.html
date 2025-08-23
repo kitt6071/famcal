@@ -587,7 +587,6 @@
 <body>
 
     <div id="app" class="min-h-screen p-6 relative">
-        <!-- Header -->
         <header class="flex items-center justify-between mb-8 bg-white rounded-lg p-6 shadow-md border border-gray-100">
             <h1 class="display-font text-4xl">Calendar</h1>
             <div class="flex items-center gap-3">
@@ -609,16 +608,13 @@
             </div>
         </header>
 
-        <!-- Calendar Tabs -->
         <div id="tabs-container" class="flex items-end -mb-px relative mb-4">
-            <!-- Tabs will be dynamically inserted here -->
             <button id="add-calendar-btn" class="clean-btn ml-3 flex items-center gap-2">
                 <i class="fas fa-plus text-sm"></i>
                 <span>Add Calendar</span>
             </button>
         </div>
 
-        <!-- View Toggle -->
         <div class="flex justify-center mb-6">
             <div class="bg-white rounded-lg p-1 shadow-sm border">
                 <button id="view-toggle-btn" class="px-6 py-2 rounded-md font-medium transition-all duration-300" data-view="calendar">
@@ -630,11 +626,8 @@
             </div>
         </div>
 
-        <!-- Main Content -->
         <main id="main-content" class="p-6 mb-6">
-            <!-- Calendar View -->
             <div id="calendar-view">
-                <!-- Calendar Header -->
                 <div class="flex justify-between items-center mb-6">
                     <button id="prev-month" class="clean-btn secondary p-3">
                         <i class="fas fa-chevron-left"></i>
@@ -644,7 +637,6 @@
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
-                <!-- Calendar Grid -->
                 <div class="grid grid-cols-7 gap-0 text-center text-sm font-medium mb-4 text-gray-600">
                     <div class="py-3">Sun</div>
                     <div class="py-3">Mon</div>
@@ -655,11 +647,9 @@
                     <div class="py-3">Sat</div>
                 </div>
                 <div id="calendar-grid" class="calendar-grid mb-8">
-                    <!-- Calendar days will be dynamically inserted here -->
-                </div>
+                    </div>
             </div>
 
-            <!-- Voting View -->
             <div id="voting-view" class="hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-3xl font-medium display-font">🗳️ Voting & Polls</h2>
@@ -668,13 +658,11 @@
                     </button>
                 </div>
                 <div id="polls-container" class="space-y-4">
-                    <!-- Polls will be dynamically inserted here -->
-                </div>
+                    </div>
             </div>
         </main>
     </div>
 
-    <!-- Daily Schedule Sidebar -->
     <div id="daily-schedule" class="daily-schedule fixed top-0 right-0 h-full w-full md:w-96 p-6 z-50 overflow-y-auto">
         <div class="flex justify-between items-center mb-6 bg-white rounded-lg p-4 shadow-sm border">
             <h3 class="text-xl font-medium content-font" id="schedule-date">Schedule</h3>
@@ -683,8 +671,7 @@
             </button>
         </div>
         <div id="schedule-content" class="space-y-2 mb-6">
-            <!-- Hourly slots will be dynamically inserted here -->
-        </div>
+            </div>
         <div class="bg-white rounded-lg p-6 shadow-sm border">
             <h4 class="font-medium mb-4 content-font">Add New Event</h4>
             <input type="text" id="schedule-event-input" class="clean-input mb-3" placeholder="Event name...">
@@ -695,11 +682,9 @@
         </div>
     </div>
 
-    <!-- Modals -->
     <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
 
-                <!-- User Setup Modal -->
-            <div id="user-setup-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
+                <div id="user-setup-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
                 <h3 class="text-2xl font-medium mb-4 content-font">🔗 Sync Across Devices</h3>
                 <p class="text-gray-600 mb-4">To sync your calendars across all your devices, create a unique sync code:</p>
                 <input type="text" id="user-sync-code" placeholder="Enter a unique name (e.g., your name)" class="clean-input mb-4">
@@ -710,7 +695,6 @@
                 </div>
             </div>
 
-            <!-- Sync Management Modal -->
             <div id="sync-management-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
                 <h3 class="text-2xl font-medium mb-4 content-font">🔄 Sync Management</h3>
                 
@@ -744,7 +728,6 @@
                 </div>
             </div>
 
-            <!-- Create Poll Modal -->
             <div id="create-poll-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
                 <h3 class="text-2xl font-medium mb-4 content-font">🗳️ Create New Poll</h3>
                 <input type="text" id="poll-title" placeholder="Poll title (e.g., Movie Night)" class="clean-input mb-4">
@@ -762,7 +745,6 @@
                 </div>
             </div>
 
-            <!-- Notification Permission Modal -->
             <div id="notification-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
                 <h3 class="text-2xl font-medium mb-4 content-font">📱 Enable Notifications?</h3>
                 <p class="text-gray-600 mb-6">Get cute reminders for your upcoming events! We'll notify you 15 and 5 minutes before each event.</p>
@@ -772,7 +754,6 @@
                 </div>
             </div>
 
-            <!-- Add Calendar Modal -->
             <div id="add-calendar-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
         <h3 class="text-2xl font-medium mb-6 content-font">Create New Calendar</h3>
         <input type="text" id="new-calendar-name" placeholder="Calendar Name (e.g., John's Calendar)" class="clean-input mb-6">
@@ -819,7 +800,6 @@
         </div>
     </div>
 
-    <!-- Add Event Modal -->
     <div id="add-event-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
         <h3 class="text-2xl font-medium mb-6 content-font">Add Event for <span id="event-modal-date" class="font-normal text-gray-600"></span></h3>
         <input type="text" id="event-name-input" placeholder="Event Name" class="clean-input mb-6">
@@ -867,6 +847,8 @@
                 // --- CONSTANTS & CONFIG ---
                 config: {
                     WEATHER_API_KEY: '973209301a5a4be53a5337c204db93c2',
+                    // IMPORTANT: REPLACE WITH YOUR FIREBASE PROJECT URL
+                    FIREBASE_URL: 'https://calendar-app-default-rtdb.firebaseio.com/',
                     months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
                                          colorSchemes: {
                          'theme-warm-neutrals': { 
@@ -942,205 +924,128 @@
                     }
                 },
 
-                // --- DATA PERSISTENCE ---
-                                 saveState() {
-                     try {
-                         const stateToSave = {
-                             ...this.state,
-                             visibleCalendars: Array.from(this.state.visibleCalendars), // Convert Set to Array for JSON
-                             scheduledNotifications: {}, // Don't save timeout IDs, they'll be recreated
-                             lastModified: Date.now(),
-                             version: '2.0'
-                         };
-                         
-                         localStorage.setItem('calendarAppState', JSON.stringify(stateToSave));
-                         sessionStorage.setItem('calendarAppBackup', JSON.stringify(stateToSave));
-                         this.autoSyncToCloud(stateToSave);
-                     } catch (error) {
-                         console.error('Failed to save state:', error);
-                     }
-                 },
+                // --- DATA PERSISTENCE & SYNC ---
+                syncManager: {
+                    isSyncing: false,
+                    lastSyncTimestamp: 0,
+                    
+                    async syncToCloud(data) {
+                        if (this.isSyncing) return;
+                        this.isSyncing = true;
+                        app.state.syncStatus = 'syncing';
+                        app.updateSyncIcon();
+                        
+                        try {
+                            const userKey = app.getUserKey();
+                            if (!userKey) {
+                                throw new Error("User key not set.");
+                            }
+                            
+                            const response = await fetch(`${app.config.FIREBASE_URL}calendars/${userKey}.json`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(data)
+                            });
+                            
+                            if (response.ok) {
+                                app.state.syncStatus = 'synced';
+                                this.lastSyncTimestamp = Date.now();
+                                console.log('✅ Synced to cloud');
+                            } else {
+                                throw new Error(`Firebase PUT failed with status: ${response.status}`);
+                            }
+                        } catch (error) {
+                            app.state.syncStatus = 'error';
+                            console.error('Sync to cloud failed:', error);
+                        } finally {
+                            this.isSyncing = false;
+                            app.updateSyncIcon();
+                        }
+                    },
+                    
+                    async loadFromCloud() {
+                        try {
+                            const userKey = app.getUserKey();
+                            if (!userKey) return null;
+                            
+                            const response = await fetch(`${app.config.FIREBASE_URL}calendars/${userKey}.json`);
+                            if (response.ok) {
+                                const data = await response.json();
+                                return data;
+                            }
+                            return null;
+                        } catch (error) {
+                            console.error('Load from cloud failed:', error);
+                            return null;
+                        }
+                    },
+                    
+                    mergeData(localData, cloudData) {
+                        if (!cloudData) return localData;
+                        if (!localData) return cloudData;
 
-                async autoSyncToCloud(data) {
-                    try {
-                        await this.syncToFirebase(data);
-                        // Also update sync status to show it's working
-                        this.state.syncStatus = 'synced';
-                        this.updateSyncIcon();
-                    } catch (error) {
-                        console.log('Cloud sync unavailable, using local storage');
-                        this.state.syncStatus = 'error';
-                        this.updateSyncIcon();
+                        // Simple last-write-wins based on timestamp
+                        return cloudData.lastModified > localData.lastModified ? cloudData : localData;
                     }
                 },
 
-                                 async syncToFirebase(data) {
-                     try {
-                         const userKey = this.getUserKey();
-                         if (!userKey) return; // Can't sync without user key
-                         
-                         this.state.syncStatus = 'syncing';
-                         this.updateSyncIcon();
-                         
-                         const firebaseUrl = 'https://calendar-app-default-rtdb.firebaseio.com/';
-                         const response = await fetch(`${firebaseUrl}calendars/${userKey}.json`, {
-                             method: 'PUT',
-                             headers: { 'Content-Type': 'application/json' },
-                             body: JSON.stringify(data)
-                         });
-                         
-                         if (response.ok) {
-                             this.state.syncStatus = 'synced';
-                             console.log('✅ Synced to cloud');
-                         } else {
-                             this.state.syncStatus = 'error';
-                         }
-                         this.updateSyncIcon();
-                     } catch (error) {
-                         this.state.syncStatus = 'error';
-                         this.updateSyncIcon();
-                     }
-                 },
-
-                                 getUserKey() {
-                     let userKey = localStorage.getItem('calendarUserKey');
-                     if (!userKey) {
-                         // Show modal to get user identifier for cross-device sync
-                         this.showUserSetupModal();
-                         return null;
-                     }
-                     return userKey;
-                 },
-
-                 setUserKey(userKey) {
-                     localStorage.setItem('calendarUserKey', userKey);
-                     this.state.userKey = userKey;
-                     // Force immediate sync after setting user key
-                     this.loadState();
-                 },
-                
-                                 async loadFromCloud() {
-                     try {
-                         const userKey = this.getUserKey();
-                         if (!userKey) return null; // Can't load without user key
-                         
-                         const firebaseUrl = 'https://calendar-app-default-rtdb.firebaseio.com/';
-                         const response = await fetch(`${firebaseUrl}calendars/${userKey}.json`);
-                         if (response.ok) {
-                             const data = await response.json();
-                             // Firebase returns null for non-existent data, which is normal for new users
-                             return data;
-                         }
-                         return null;
-                     } catch (error) {
-                         return null;
-                     }
-                 },
+                saveState() {
+                    try {
+                        const stateToSave = {
+                            ...this.state,
+                            visibleCalendars: Array.from(this.state.visibleCalendars),
+                            scheduledNotifications: {},
+                            lastModified: Date.now(),
+                            version: '2.0'
+                        };
+                        
+                        localStorage.setItem('calendarAppState', JSON.stringify(stateToSave));
+                        this.syncManager.syncToCloud(stateToSave);
+                    } catch (error) {
+                        console.error('Failed to save state:', error);
+                    }
+                },
 
                 async loadState() {
-                    let bestData = null;
-                    let bestTimestamp = 0;
+                    const localDataRaw = localStorage.getItem('calendarAppState');
+                    const localData = localDataRaw ? JSON.parse(localDataRaw) : null;
                     
-                    // Always try to load from cloud first for cross-device sync
-                    try {
-                        const cloudData = await this.loadFromCloud();
-                        if (cloudData && cloudData.lastModified) {
-                            bestData = cloudData;
-                            bestTimestamp = cloudData.lastModified;
-                            console.log('📥 Using cloud data (timestamp:', new Date(bestTimestamp).toLocaleString(), ')');
-                        }
-                    } catch (e) {
-                        console.log('Cloud data unavailable, will use local storage');
-                    }
+                    const cloudData = await this.syncManager.loadFromCloud();
                     
-                    // Fall back to local storage if no cloud data
-                    if (!bestData) {
-                        const localData = localStorage.getItem('calendarAppState');
-                        if (localData) {
-                            try {
-                                const parsed = JSON.parse(localData);
-                                if (parsed.lastModified > bestTimestamp) {
-                                    bestData = parsed;
-                                    bestTimestamp = parsed.lastModified;
-                                    console.log('📱 Using local data (timestamp:', new Date(bestTimestamp).toLocaleString(), ')');
-                                }
-                            } catch (e) {
-                                console.log('Local data corrupted, ignoring');
-                            }
-                        }
-                    }
-                    
+                    const bestData = this.syncManager.mergeData(localData, cloudData);
+
                     if (bestData) {
-                        // Ensure we have the latest data structure
-                        bestData.currentDate = new Date(bestData.currentDate);
-                        
-                        // Process calendars and events
-                        if(bestData.calendars && bestData.calendars.length > 0) {
-                            bestData.calendars.forEach(cal => {
-                                if(cal.events) {
-                                    Object.values(cal.events).forEach(dayEvents => {
-                                        dayEvents.forEach(event => event.date = new Date(event.date));
-                                    });
-                                }
-                            });
-                            
-                            // Ensure activeCalendarId is set to the first calendar if none exists
-                            if (!bestData.activeCalendarId && bestData.calendars.length > 0) {
-                                bestData.activeCalendarId = bestData.calendars[0].id;
-                                console.log('🔄 Setting active calendar to:', bestData.calendars[0].name);
+                        this.state = {
+                            ...this.state, // keep defaults for any missing properties
+                            ...bestData,
+                            currentDate: new Date(bestData.currentDate),
+                            visibleCalendars: new Set(bestData.visibleCalendars),
+                            userKey: localStorage.getItem('calendarUserKey'),
+                        };
+
+                        if(this.state.calendars && this.state.calendars.length > 0) {
+                            if (!this.state.activeCalendarId) {
+                                this.state.activeCalendarId = this.state.calendars[0].id;
                             }
                         }
                         
-                        // Initialize visibleCalendars as Set
-                        if (!bestData.visibleCalendars || Array.isArray(bestData.visibleCalendars)) {
-                            bestData.visibleCalendars = new Set(bestData.visibleCalendars || []);
-                        } else {
-                            bestData.visibleCalendars = new Set(bestData.visibleCalendars);
-                        }
-                        
-                        // Initialize other state properties
-                        if (bestData.notificationsEnabled === undefined) {
-                            bestData.notificationsEnabled = false;
-                        }
-                        if (!bestData.notificationTimes) {
-                            bestData.notificationTimes = [15, 5];
-                        }
-                        if (!bestData.scheduledNotifications) {
-                            bestData.scheduledNotifications = new Map();
-                        }
-                        if (!bestData.polls) {
-                            bestData.polls = [];
-                        }
-                        if (!bestData.currentView) {
-                            bestData.currentView = 'calendar';
-                        }
-                        
-                        // Always use the userKey from localStorage for consistency
-                        const storedUserKey = localStorage.getItem('calendarUserKey');
-                        if (storedUserKey) {
-                            bestData.userKey = storedUserKey;
-                        }
-                        
-                        if (!bestData.syncStatus) {
-                            bestData.syncStatus = bestData.userKey ? 'synced' : 'disconnected';
-                        }
-                        
-                        // Update state
-                        this.state = bestData;
-                        
-                        // Save back to localStorage to ensure consistency
-                        localStorage.setItem('calendarAppState', JSON.stringify({
-                            ...bestData,
-                            visibleCalendars: Array.from(bestData.visibleCalendars)
-                        }));
-                        
-                        console.log('✅ State loaded successfully. Active calendar:', 
-                            bestData.calendars?.find(c => c.id === bestData.activeCalendarId)?.name || 'None');
-                        return;
+                        console.log('✅ State loaded successfully.');
+                    } else {
+                        console.log('🆕 No existing data found, starting fresh');
                     }
-                    
-                    // No existing data found - user will create their first calendar
-                    console.log('🆕 No existing data found, starting fresh');
+                },
+                
+                getUserKey() {
+                    return this.state.userKey || localStorage.getItem('calendarUserKey');
+                },
+                
+                setUserKey(userKey) {
+                    localStorage.setItem('calendarUserKey', userKey);
+                    this.state.userKey = userKey;
+                    this.loadState().then(() => {
+                        this.renderTabs();
+                        this.renderCalendar();
+                    });
                 },
 
                 // --- WEATHER API ---
@@ -1641,42 +1546,13 @@
                  },
 
                  async forceRefreshFromCloud() {
-                     console.log('🔄 Force refreshing from cloud...');
-                     this.state.syncStatus = 'syncing';
-                     this.updateSyncIcon();
-                     
-                     try {
-                         // Clear local state and reload from cloud
-                         this.state = {
-                             currentDate: new Date(),
-                             calendars: [],
-                             activeCalendarId: null,
-                             weatherData: {},
-                             visibleCalendars: new Set(),
-                             notificationsEnabled: false,
-                             notificationTimes: [15, 5],
-                             scheduledNotifications: new Map(),
-                             userKey: this.state.userKey,
-                             syncStatus: 'syncing',
-                             polls: [],
-                             currentView: 'calendar'
-                         };
-                         
-                         // Force reload from cloud
-                         await this.loadState();
-                         
-                         // Re-render everything
-                         this.renderTabs();
-                         this.renderCalendar();
-                         
-                         this.state.syncStatus = 'synced';
-                         this.updateSyncIcon();
-                         console.log('✅ Force refresh completed');
-                     } catch (error) {
-                         console.error('Force refresh failed:', error);
-                         this.state.syncStatus = 'error';
-                         this.updateSyncIcon();
-                     }
+                    this.state.syncStatus = 'syncing';
+                    this.updateSyncIcon();
+                    await this.loadState();
+                    this.renderTabs();
+                    this.renderCalendar();
+                    this.state.syncStatus = 'synced';
+                    this.updateSyncIcon();
                  },
 
                  openSyncManagementModal() {
@@ -1938,7 +1814,7 @@
                                  <button class="vote-btn yes ${userVote === 'yes' ? 'voted' : ''}" onclick="app.voteOnPoll('${poll.id}', 'yes')">
                                      👍 Yes (${poll.votes.yes.length})
                                  </button>
-                                 <button class="vote-btn no ${userVote === 'no' ? 'voted' : ''}" onclick="app.voteOnPoll('${poll.id}', 'no')">
+                                 <button class="vote-btn no ${userVote === 'no' ? 'voted' : ''}" onclick="app.voteOnPoll('${poll.id}','no')">
                                      👎 No (${poll.votes.no.length})
                                  </button>
                              </div>
@@ -2002,7 +1878,7 @@
                      this.saveState();
                  },
 
-                 // --- EVENT HANDLERS & LOGIC ---
+                // --- EVENT HANDLERS & LOGIC ---
                  changeMonth(offset) {
                     this.state.currentDate.setMonth(this.state.currentDate.getMonth() + offset);
                     this.renderCalendar();
@@ -2206,17 +2082,9 @@
                      // Auto-sync from cloud every 2 minutes to keep calendars in sync
                      setInterval(async () => {
                          if (this.state.userKey && this.state.syncStatus !== 'syncing') {
-                             try {
-                                 const cloudData = await this.loadFromCloud();
-                                 if (cloudData && cloudData.lastModified > this.state.lastModified) {
-                                     console.log('🔄 Auto-sync: Found newer cloud data, updating...');
-                                     await this.loadState();
-                                     this.renderTabs();
-                                     this.renderCalendar();
-                                 }
-                             } catch (error) {
-                                 // Silent fail for auto-sync
-                             }
+                            await this.loadState();
+                            this.renderTabs();
+                            this.renderCalendar();
                          }
                      }, 120000); // 2 minutes
                 },
