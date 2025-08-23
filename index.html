@@ -590,11 +590,19 @@
         <!-- Header -->
         <header class="flex items-center justify-between mb-8 bg-white rounded-lg p-6 shadow-md border border-gray-100">
             <h1 class="display-font text-4xl">Calendar</h1>
-            <div id="weather-widget" class="text-right content-font">
-                <div class="text-sm">
-                    <p class="font-medium text-gray-700">Finding Location...</p>
-                    <p class="text-gray-500">Loading weather...</p>
+            <div class="flex items-center gap-3">
+                <div id="weather-widget" class="text-right content-font">
+                    <div class="text-sm">
+                        <p class="font-medium text-gray-700">Finding Location...</p>
+                        <p class="text-gray-500">Loading weather...</p>
+                    </div>
                 </div>
+                <button id="notification-settings-btn" class="clean-btn p-2" title="Notification Settings">
+                    <span id="notification-icon">🔕</span>
+                </button>
+                <button id="sync-settings-btn" class="clean-btn p-2" title="Sync Settings">
+                    <span id="sync-icon">🔄</span>
+                </button>
             </div>
         </header>
 
