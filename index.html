@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kittson's Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@300;400;600;700;800&family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --shadow-magical: 0 20px 40px rgba(0,0,0,0.1), 0 15px 12px rgba(0,0,0,0.05);
+            --shadow-soft: 0 10px 25px rgba(0,0,0,0.08), 0 5px 10px rgba(0,0,0,0.04);
+            --shadow-gentle: 0 4px 15px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        body {
+            font-family: 'Comfortaa', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g"><stop offset="0%" stop-color="rgba(255,255,255,0.03)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><circle cx="20" cy="20" r="20" fill="url(%23g)"/><circle cx="80" cy="40" r="15" fill="url(%23g)"/><circle cx="40" cy="80" r="25" fill="url(%23g)"/></svg>') repeat;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .display-font { 
+            font-family: 'Fredoka One', cursive;
+            background: linear-gradient(135deg, #ff6b9d, #c44569, #f8b500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .content-font { font-family: 'Comfortaa', sans-serif; }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .tab {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-bottom: none;
+            margin-bottom: -2px;
+            box-shadow: var(--shadow-gentle);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .tab:hover::before {
+            left: 100%;
+        }
+
+        .tab:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .tab-active {
+            background: var(--bg-primary, rgba(255, 255, 255, 0.95));
+            border-color: var(--accent-soft, rgba(255, 255, 255, 0.5));
+            border-bottom-color: var(--bg-primary, rgba(255, 255, 255, 0.95)) !important;
+            z-index: 10;
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: var(--shadow-magical);
+        }
+        
+        #main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-magical);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 12px;
+        }
+
+        .day-cell {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-cell::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .day-cell:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-soft);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .day-cell:hover::before {
+            opacity: 1;
+        }
+
+        .event-bubble {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 25px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--event-color, #60a5fa), var(--event-color-dark, #3b82f6));
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-bubble::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.4s;
+        }
+
+        .event-bubble:hover::before {
+            left: 100%;
+        }
+
+        .event-bubble:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .event-bubble-completed {
+            text-decoration: line-through;
+            opacity: 0.7;
+            filter: grayscale(30%);
+        }
+
+        .daily-schedule {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(100%);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+        }
+
+        .daily-schedule.open {
+            transform: translateX(0);
+        }
+
+        .floating-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: var(--shadow-magical);
+        }
+
+        .cute-input {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .cute-input:focus {
+            outline: none;
+            border-color: var(--accent, #667eea);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: scale(1.02);
+        }
+
+        .cute-button {
+            background: linear-gradient(135deg, var(--btn-color, #667eea) 0%, var(--btn-color-dark, #764ba2) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cute-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.4s;
+        }
+
+        .cute-button:hover::before {
+            left: 100%;
+        }
+
+        .cute-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .cute-button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* Enhanced Color Scheme Classes with gradients */
+        .theme-cotton-candy { 
+            --bg-primary: linear-gradient(135deg, #FEF6FB 0%, #FCE7F3 100%); 
+            --bg-secondary: #FCE7F3; 
+            --text-primary: #9D446F; 
+            --accent: #F472B6; 
+            --accent-soft: #FBCFE8; 
+            --shadow-color: rgba(219, 39, 119, 0.15);
+            --gradient-theme: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .theme-sunny-day { 
+            --bg-primary: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); 
+            --bg-secondary: #FEF3C7; 
+            --text-primary: #92400E; 
+            --accent: #FBBF24; 
+            --accent-soft: #FDE68A; 
+            --shadow-color: rgba(217, 119, 6, 0.15);
+            --gradient-theme: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+        }
+        .theme-minty-fresh { 
+            --bg-primary: linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 100%); 
+            --bg-secondary: #CCFBF1; 
+            --text-primary: #115E59; 
+            --accent: #2DD4BF; 
+            --accent-soft: #99F6E4; 
+            --shadow-color: rgba(13, 148, 136, 0.15);
+            --gradient-theme: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        }
+        .theme-blueberry-muffin { 
+            --bg-primary: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); 
+            --bg-secondary: #DBEAFE; 
+            --text-primary: #1E40AF; 
+            --accent: #60A5FA; 
+            --accent-soft: #BFDBFE; 
+            --shadow-color: rgba(59, 130, 246, 0.15);
+            --gradient-theme: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        }
+        .theme-lavender-dreams { 
+            --bg-primary: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%); 
+            --bg-secondary: #E9D5FF; 
+            --text-primary: #581C87; 
+            --accent: #A855F7; 
+            --accent-soft: #DDD6FE; 
+            --shadow-color: rgba(168, 85, 247, 0.15);
+            --gradient-theme: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+        }
+        .theme-sunset-orange { 
+            --bg-primary: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%); 
+            --bg-secondary: #FFEDD5; 
+            --text-primary: #9A3412; 
+            --accent: #FB923C; 
+            --accent-soft: #FED7AA; 
+            --shadow-color: rgba(251, 146, 60, 0.15);
+            --gradient-theme: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+        }
+        
+        .bg-primary { background: var(--bg-primary); }
+        .bg-secondary { background-color: var(--bg-secondary); }
+        .text-primary { color: var(--text-primary); }
+        .accent { background-color: var(--accent); }
+        .border-accent { border-color: var(--accent); }
+
+        /* Magical animations */
+        @keyframes bounce-in {
+            0% { transform: scale(0) rotate(-360deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(-180deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .animate-bounce-in {
+            animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .weather-icon {
+            transition: all 0.3s ease;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .weather-icon:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+    </style>
+</head>
+<body class="overflow-hidden">
+
+    <div id="app" class="flex flex-col h-screen p-4 lg:p-6 relative z-10">
+        <!-- Header -->
+        <header class="flex items-center justify-between mb-6 glass-effect rounded-3xl p-6 shadow-lg">
+            <h1 class="display-font text-6xl tracking-wider animate-bounce-in">✨ Kittson's Calendar ✨</h1>
+            <div id="weather-widget" class="text-right content-font">
+                <div class="glass-effect rounded-2xl p-4 shadow-md">
+                    <p class="font-bold text-lg text-gray-700">📍 Finding Location...</p>
+                    <p class="text-sm text-gray-600">🌤️ Loading weather...</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Calendar Tabs -->
+        <div id="tabs-container" class="flex items-end -mb-px z-20 relative">
+            <!-- Tabs will be dynamically inserted here -->
+            <button id="add-calendar-btn" class="floating-btn flex items-center justify-center w-14 h-14 rounded-full text-white focus:outline-none ml-3 shadow-lg">
+                <i class="fas fa-plus text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 rounded-b-3xl rounded-tr-3xl p-8 transition-all duration-500">
+            <!-- Calendar Header -->
+            <div class="flex justify-between items-center mb-6">
+                <button id="prev-month" class="cute-button p-4 text-white font-bold hover:shadow-lg">
+                    <i class="fas fa-chevron-left text-lg"></i>
+                </button>
+                <h2 id="month-year" class="text-4xl font-bold content-font text-primary bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"></h2>
+                <button id="next-month" class="cute-button p-4 text-white font-bold hover:shadow-lg">
+                    <i class="fas fa-chevron-right text-lg"></i>
+                </button>
+            </div>
+            <!-- Calendar Grid -->
+            <div class="grid grid-cols-7 gap-3 text-center text-lg font-bold mb-4">
+                <div class="glass-effect rounded-2xl py-3 text-purple-600">🌞 Sun</div>
+                <div class="glass-effect rounded-2xl py-3 text-purple-600">🌙 Mon</div>
+                <div class="glass-effect rounded-2xl py-3 text-purple-600">🔥 Tue</div>
+                <div class="glass-effect rounded-2xl py-3 text-purple-600">💧 Wed</div>
+                <div class="glass-effect rounded-2xl py-3 text-purple-600">🌿 Thu</div>
+                <div class="glass-effect rounded-2xl py-3 text-purple-600">💎 Fri</div>
+                <div class="glass-effect rounded-2xl py-3 text-purple-600">⭐ Sat</div>
+            </div>
+            <div id="calendar-grid" class="calendar-grid h-[calc(100%-140px)]">
+                <!-- Calendar days will be dynamically inserted here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Daily Schedule Sidebar -->
+    <div id="daily-schedule" class="daily-schedule fixed top-0 right-0 h-full w-full md:w-96 shadow-2xl p-6 z-50 overflow-y-auto rounded-l-3xl">
+        <div class="flex justify-between items-center mb-6 glass-effect rounded-2xl p-4">
+            <h3 class="text-2xl font-bold content-font text-purple-600" id="schedule-date">📅 Schedule</h3>
+            <button id="close-schedule" class="floating-btn p-3 rounded-full text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="schedule-content" class="space-y-3">
+            <!-- Hourly slots will be dynamically inserted here -->
+        </div>
+        <div class="mt-6 glass-effect rounded-2xl p-6">
+            <h4 class="font-bold mb-4 text-purple-600 content-font text-lg">✨ Add New Event</h4>
+            <input type="text" id="schedule-event-input" class="cute-input w-full p-4 mb-3 content-font" placeholder="🎉 Event name...">
+            <input type="time" id="schedule-event-time" class="cute-input w-full p-4 mb-3 content-font">
+            <button id="schedule-add-event-btn" class="cute-button w-full text-white p-4 font-bold content-font">
+                ➕ Add Event
+            </button>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+    <!-- Add Calendar Modal -->
+    <div id="add-calendar-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 glass-effect rounded-3xl shadow-2xl p-8 z-50 hidden w-96 animate-bounce-in">
+        <h3 class="text-3xl font-bold mb-6 text-center content-font text-purple-600">🎨 Create New Calendar</h3>
+        <input type="text" id="new-calendar-name" placeholder="📝 Calendar Name (e.g., John's Calendar)" class="cute-input w-full p-4 mb-6 content-font">
+        <p class="font-semibold mb-4 text-purple-600 content-font text-lg">🌈 Choose a color scheme:</p>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="color-scheme-option cursor-pointer transition-all duration-300 hover:scale-105" data-theme="theme-cotton-candy">
+                <div class="w-full h-16 rounded-xl flex items-center justify-center font-bold theme-cotton-candy border-2 shadow-md">🍭 Cotton Candy</div>
+            </div>
+            <div class="color-scheme-option cursor-pointer transition-all duration-300 hover:scale-105" data-theme="theme-sunny-day">
+                <div class="w-full h-16 rounded-xl flex items-center justify-center font-bold theme-sunny-day border-2 shadow-md">☀️ Sunny Day</div>
+            </div>
+            <div class="color-scheme-option cursor-pointer transition-all duration-300 hover:scale-105" data-theme="theme-minty-fresh">
+                <div class="w-full h-16 rounded-xl flex items-center justify-center font-bold theme-minty-fresh border-2 shadow-md">🌿 Minty Fresh</div>
+            </div>
+            <div class="color-scheme-option cursor-pointer transition-all duration-300 hover:scale-105" data-theme="theme-blueberry-muffin">
+                <div class="w-full h-16 rounded-xl flex items-center justify-center font-bold theme-blueberry-muffin border-2 shadow-md">🫐 Blueberry Muffin</div>
+            </div>
+            <div class="color-scheme-option cursor-pointer transition-all duration-300 hover:scale-105" data-theme="theme-lavender-dreams">
+                <div class="w-full h-16 rounded-xl flex items-center justify-center font-bold theme-lavender-dreams border-2 shadow-md">💜 Lavender Dreams</div>
+            </div>
+            <div class="color-scheme-option cursor-pointer transition-all duration-300 hover:scale-105" data-theme="theme-sunset-orange">
+                <div class="w-full h-16 rounded-xl flex items-center justify-center font-bold theme-sunset-orange border-2 shadow-md">🧡 Sunset Orange</div>
+            </div>
+        </div>
+        <div class="flex justify-end gap-4">
+            <button id="cancel-add-calendar" class="cute-button px-6 py-3 text-gray-600 font-bold content-font bg-gray-200">❌ Cancel</button>
+            <button id="confirm-add-calendar" class="cute-button px-6 py-3 text-white font-bold content-font">✨ Create</button>
+        </div>
+    </div>
+
+    <!-- Add Event Modal -->
+    <div id="add-event-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 glass-effect rounded-3xl shadow-2xl p-8 z-50 hidden w-96 animate-bounce-in">
+        <h3 class="text-3xl font-bold mb-6 content-font text-purple-600">🎉 Add Event for <span id="event-modal-date" class="text-pink-500"></span></h3>
+        <input type="text" id="event-name-input" placeholder="🎯 Event Name" class="cute-input w-full p-4 mb-6 content-font">
+        <p class="font-semibold mb-4 text-purple-600 content-font text-lg">🎨 Event Color:</p>
+        <div id="event-colors" class="flex gap-3 mb-6 justify-center">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-red-400 to-red-600 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110" data-color="bg-gradient-to-br from-red-400 to-red-600"></div>
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110" data-color="bg-gradient-to-br from-blue-400 to-blue-600"></div>
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110" data-color="bg-gradient-to-br from-green-400 to-green-600"></div>
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110" data-color="bg-gradient-to-br from-yellow-400 to-yellow-600"></div>
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110" data-color="bg-gradient-to-br from-purple-400 to-purple-600"></div>
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110" data-color="bg-gradient-to-br from-pink-400 to-pink-600"></div>
+        </div>
+        <p class="font-semibold mb-4 text-purple-600 content-font text-lg">🔗 Link with another calendar (optional):</p>
+        <select id="link-calendar-select" class="cute-input w-full p-4 mb-6 content-font">
+            <option value="">None</option>
+        </select>
+        <div class="flex justify-end gap-4">
+            <button id="cancel-add-event" class="cute-button px-6 py-3 text-gray-600 font-bold content-font bg-gray-200">❌ Cancel</button>
+            <button id="save-event" class="cute-button px-6 py-3 text-white font-bold content-font">💾 Save Event</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- STATE MANAGEMENT ---
+            let state = {
+                currentDate: new Date(),
+                calendars: [],
+                activeCalendarId: null,
+                weatherData: {}
+            };
+
+            // --- DOM ELEMENTS ---
+            const calendarGrid = document.getElementById('calendar-grid');
+            const monthYearHeader = document.getElementById('month-year');
+            const prevMonthBtn = document.getElementById('prev-month');
+            const nextMonthBtn = document.getElementById('next-month');
+            const tabsContainer = document.getElementById('tabs-container');
+            const mainContent = document.getElementById('main-content');
+            const appContainer = document.getElementById('app');
+            
+            // Modals
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const addCalendarModal = document.getElementById('add-calendar-modal');
+            const addEventModal = document.getElementById('add-event-modal');
+
+            // Daily Schedule
+            const dailySchedulePanel = document.getElementById('daily-schedule');
+            const scheduleDateHeader = document.getElementById('schedule-date');
+            const scheduleContent = document.getElementById('schedule-content');
+            
+            // --- CONSTANTS & CONFIG ---
+            // IMPORTANT: The weather feature requires a free API key from OpenWeatherMap.
+            // 1. Go to https://openweathermap.org/appid
+            // 2. Sign up and get your API key.
+            // 3. Paste it here. This API provides weather data for locations worldwide.
+            const WEATHER_API_KEY = ''; 
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const colorSchemes = {
+                'theme-cotton-candy': { 
+                    bg: 'linear-gradient(135deg, #FEF6FB 0%, #FCE7F3 100%)', 
+                    secondary: '#FCE7F3', 
+                    text: '#9D446F', 
+                    accent: '#F472B6', 
+                    'accent-soft': '#FBCFE8', 
+                    'shadow-color': 'rgba(219, 39, 119, 0.15)',
+                    'gradient-theme': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+                },
+                'theme-sunny-day': { 
+                    bg: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)', 
+                    secondary: '#FEF3C7', 
+                    text: '#92400E', 
+                    accent: '#FBBF24', 
+                    'accent-soft': '#FDE68A', 
+                    'shadow-color': 'rgba(217, 119, 6, 0.15)',
+                    'gradient-theme': 'linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%)'
+                },
+                'theme-minty-fresh': { 
+                    bg: 'linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 100%)', 
+                    secondary: '#CCFBF1', 
+                    text: '#115E59', 
+                    accent: '#2DD4BF', 
+                    'accent-soft': '#99F6E4', 
+                    'shadow-color': 'rgba(13, 148, 136, 0.15)',
+                    'gradient-theme': 'linear-gradient(135deg, #00b894 0%, #00cec9 100%)'
+                },
+                'theme-blueberry-muffin': { 
+                    bg: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', 
+                    secondary: '#DBEAFE', 
+                    text: '#1E40AF', 
+                    accent: '#60A5FA', 
+                    'accent-soft': '#BFDBFE', 
+                    'shadow-color': 'rgba(59, 130, 246, 0.15)',
+                    'gradient-theme': 'linear-gradient(135deg, #74b9ff 0%, #0984e3 100%)'
+                },
+                'theme-lavender-dreams': { 
+                    bg: 'linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%)', 
+                    secondary: '#E9D5FF', 
+                    text: '#581C87', 
+                    accent: '#A855F7', 
+                    'accent-soft': '#DDD6FE', 
+                    'shadow-color': 'rgba(168, 85, 247, 0.15)',
+                    'gradient-theme': 'linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%)'
+                },
+                'theme-sunset-orange': { 
+                    bg: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)', 
+                    secondary: '#FFEDD5', 
+                    text: '#9A3412', 
+                    accent: '#FB923C', 
+                    'accent-soft': '#FED7AA', 
+                    'shadow-color': 'rgba(251, 146, 60, 0.15)',
+                    'gradient-theme': 'linear-gradient(135deg, #fdcb6e 0%, #e17055 100%)'
+                }
+            };
+
+
+            // --- DATA PERSISTENCE ---
+            function saveState() {
+                localStorage.setItem('calendarAppState', JSON.stringify(state));
+            }
+
+            function loadState() {
+                const savedState = localStorage.getItem('calendarAppState');
+                if (savedState) {
+                    const parsedState = JSON.parse(savedState);
+                    // Convert date strings back to Date objects
+                    parsedState.currentDate = new Date(parsedState.currentDate);
+                    if(parsedState.calendars) {
+                        parsedState.calendars.forEach(cal => {
+                            if(cal.events) {
+                                Object.values(cal.events).forEach(dayEvents => {
+                                    dayEvents.forEach(event => event.date = new Date(event.date));
+                                });
+                            }
+                        });
+                    }
+                    state = parsedState;
+                } else {
+                    // Initialize with a default calendar if none exists
+                    const defaultId = `cal-${Date.now()}`;
+                    state.calendars.push({
+                        id: defaultId,
+                        name: "Kittson's Calendar",
+                        theme: 'theme-cotton-candy',
+                        events: {}
+                    });
+                    state.activeCalendarId = defaultId;
+                    
+                    // Add some sample events to showcase the beautiful interface
+                    const today = new Date();
+                    const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+                    const tomorrowKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() + 1}`;
+                    
+                    state.calendars[0].events[todayKey] = [
+                        { id: 'sample1', name: '🌟 Morning Coffee', color: 'bg-gradient-to-br from-yellow-400 to-yellow-600', completed: false, date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 8, 0).toISOString() },
+                        { id: 'sample2', name: '💻 Work Meeting', color: 'bg-gradient-to-br from-blue-400 to-blue-600', completed: true, date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 10, 30).toISOString() }
+                    ];
+                    
+                    state.calendars[0].events[tomorrowKey] = [
+                        { id: 'sample3', name: '🎨 Creative Project', color: 'bg-gradient-to-br from-purple-400 to-purple-600', completed: false, date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 14, 0).toISOString() }
+                    ];
+                }
+            }
+
+            // --- WEATHER API ---
+            async function getWeatherData(lat, lon, cityName) {
+                document.querySelector('#weather-widget p:first-child').textContent = cityName;
+                if (!WEATHER_API_KEY) {
+                    console.warn("Weather API key is missing.");
+                    document.querySelector('#weather-widget p:last-child').textContent = 'API Key needed';
+                    return;
+                }
+                const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`;
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    
+                    if (!response.ok || !data.list || data.list.length === 0) {
+                        console.error("Weather API error or empty response:", data);
+                        let errorMessage = 'Weather data unavailable';
+                        if (data && data.message) {
+                             errorMessage = `Weather Error: ${data.message}`;
+                        }
+                        document.querySelector('#weather-widget p:last-child').textContent = errorMessage;
+                        return;
+                    }
+
+                    document.querySelector('#weather-widget p:last-child').textContent = 
+                        `${Math.round(data.list[0].main.temp)}°C, ${data.list[0].weather[0].main}`;
+
+                    state.weatherData = {};
+                    const dailyData = {};
+                    data.list.forEach(item => {
+                        const date = new Date(item.dt * 1000);
+                        const dateKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+                        if (!dailyData[dateKey] || date.getHours() === 12) {
+                             dailyData[dateKey] = {
+                                temp: Math.round(item.main.temp),
+                                icon: item.weather[0].icon
+                            };
+                        }
+                    });
+                    state.weatherData = dailyData;
+
+                    renderCalendar();
+                } catch (error) {
+                    console.error("Error fetching weather data:", error);
+                    document.querySelector('#weather-widget p:last-child').textContent = 'Weather unavailable';
+                }
+            }
+            
+            function getLocationAndFetchWeather() {
+                 if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(async position => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        let cityName = "Your Location";
+                        if(WEATHER_API_KEY) {
+                            try {
+                                const geoUrl = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${WEATHER_API_KEY}`;
+                                const geoResponse = await fetch(geoUrl);
+                                const geoData = await geoResponse.json();
+                                if(geoData[0]) cityName = geoData[0].name;
+                            } catch (e) { console.error("Could not reverse geocode."); }
+                        }
+                        getWeatherData(lat, lon, cityName);
+                    }, () => {
+                        getWeatherData(51.5072, -0.1276, "London, UK");
+                    });
+                } else {
+                    getWeatherData(51.5072, -0.1276, "London, UK");
+                }
+            }
+
+
+            // --- CORE RENDER FUNCTIONS ---
+            function renderCalendar() {
+                const date = state.currentDate;
+                const year = date.getFullYear();
+                const month = date.getMonth();
+
+                monthYearHeader.textContent = `${months[month]} ${year}`;
+                calendarGrid.innerHTML = '';
+
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                const activeCalendar = state.calendars.find(c => c.id === state.activeCalendarId);
+                
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'p-2 border rounded-2xl bg-gray-50 opacity-50';
+                    calendarGrid.appendChild(cell);
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const cell = document.createElement('div');
+                    const fullDate = new Date(year, month, day);
+                    const dateKey = `${year}-${month}-${day}`;
+                    
+                    cell.className = 'day-cell p-4 flex flex-col cursor-pointer min-h-[140px] group';
+                    cell.dataset.date = fullDate.toISOString();
+                    
+                    const today = new Date();
+                    if (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && day === today.getDate()) {
+                        cell.style.border = '3px solid var(--accent)';
+                        cell.style.boxShadow = '0 0 20px rgba(var(--accent), 0.3)';
+                        cell.classList.add('animate-bounce-in');
+                    }
+                    
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'flex justify-between items-start mb-2';
+
+                    const dayNumber = document.createElement('span');
+                    dayNumber.className = 'font-bold text-xl content-font text-gray-700';
+                    dayNumber.textContent = day;
+                    dayHeader.appendChild(dayNumber);
+                    
+                    if(state.weatherData[dateKey]) {
+                        const weatherContainer = document.createElement('div');
+                        weatherContainer.className = 'flex flex-col items-center text-xs text-gray-600';
+                        const weatherIcon = document.createElement('img');
+                        weatherIcon.src = `https://openweathermap.org/img/wn/${state.weatherData[dateKey].icon}.png`;
+                        weatherIcon.className = 'w-8 h-8 weather-icon';
+                        weatherContainer.appendChild(weatherIcon);
+                        const tempSpan = document.createElement('span');
+                        tempSpan.textContent = `${state.weatherData[dateKey].temp}°C`;
+                        tempSpan.className = 'font-semibold';
+                        weatherContainer.appendChild(tempSpan);
+                        dayHeader.appendChild(weatherContainer);
+                    }
+                    cell.appendChild(dayHeader);
+
+                    const eventsContainer = document.createElement('div');
+                    eventsContainer.className = 'flex-1 space-y-2 overflow-y-auto text-xs';
+                    
+                    if (activeCalendar && activeCalendar.events && activeCalendar.events[dateKey]) {
+                        cell.style.background = `linear-gradient(135deg, ${colorSchemes[activeCalendar.theme].secondary}, rgba(255,255,255,0.9))`;
+                        activeCalendar.events[dateKey].forEach(event => {
+                            const eventEl = document.createElement('div');
+                            eventEl.className = `event-bubble p-2 text-center text-white flex items-center justify-between text-xs font-semibold`;
+                            eventEl.style.background = event.color || 'linear-gradient(135deg, #60a5fa, #3b82f6)';
+                            if(event.completed) eventEl.classList.add('event-bubble-completed');
+                            
+                            const eventText = document.createElement('span');
+                            eventText.textContent = event.name;
+                            eventEl.appendChild(eventText);
+
+                            const checkbox = document.createElement('input');
+                            checkbox.type = 'checkbox';
+                            checkbox.checked = event.completed;
+                            checkbox.className = 'ml-2 w-4 h-4 rounded-full';
+                            checkbox.onchange = (e) => {
+                                e.stopPropagation();
+                                toggleEventCompletion(event.id);
+                            };
+                            eventEl.appendChild(checkbox);
+                            eventsContainer.appendChild(eventEl);
+                        });
+                    }
+                    cell.appendChild(eventsContainer);
+
+                    const addBtn = document.createElement('button');
+                    addBtn.innerHTML = '<i class="fas fa-plus-circle text-2xl"></i>';
+                    addBtn.className = 'self-center mt-auto opacity-0 group-hover:opacity-100 transition-all duration-300 text-purple-400 hover:text-purple-600 hover:scale-110';
+                    addBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        openAddEventModal(fullDate);
+                    };
+                    cell.appendChild(addBtn);
+                    
+                    cell.onclick = () => openDailySchedule(fullDate);
+
+                    calendarGrid.appendChild(cell);
+                }
+            }
+
+            function renderTabs() {
+                const addBtn = document.getElementById('add-calendar-btn');
+                tabsContainer.innerHTML = '';
+                
+                state.calendars.forEach(calendar => {
+                    const tab = document.createElement('button');
+                    tab.className = `tab px-8 py-4 rounded-t-2xl font-bold text-lg transition-all duration-500 relative content-font`;
+                    
+                    // Add emoji and styling based on theme
+                    const themeEmojis = {
+                        'theme-cotton-candy': '🍭',
+                        'theme-sunny-day': '☀️',
+                        'theme-minty-fresh': '🌿',
+                        'theme-blueberry-muffin': '🫐',
+                        'theme-lavender-dreams': '💜',
+                        'theme-sunset-orange': '🧡'
+                    };
+                    
+                    tab.innerHTML = `${themeEmojis[calendar.theme] || '📅'} ${calendar.name}`;
+                    tab.dataset.calendarId = calendar.id;
+                    
+                    const theme = colorSchemes[calendar.theme];
+                    if (calendar.id === state.activeCalendarId) {
+                        tab.classList.add('tab-active');
+                        tab.style.background = theme.bg;
+                        tab.style.color = theme.text;
+                        tab.style.borderColor = theme['accent-soft'];
+                        
+                        // Set CSS variables on the root for global access
+                        const root = document.documentElement;
+                        root.style.setProperty('--bg-primary', theme.bg);
+                        root.style.setProperty('--bg-secondary', theme.secondary);
+                        root.style.setProperty('--text-primary', theme.text);
+                        root.style.setProperty('--accent', theme.accent);
+                        root.style.setProperty('--accent-soft', theme['accent-soft']);
+                        root.style.setProperty('--shadow-color', theme['shadow-color']);
+
+                    } else {
+                        tab.style.background = 'rgba(255, 255, 255, 0.8)';
+                        tab.style.color = '#6b7280';
+                    }
+
+                    tab.onclick = () => switchCalendar(calendar.id);
+                    tabsContainer.appendChild(tab);
+                });
+                
+                tabsContainer.appendChild(addBtn);
+                addBtn.addEventListener('click', openAddCalendarModal);
+            }
+
+            function renderDailySchedule(date) {
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const day = date.getDate();
+                const dateKey = `${year}-${month}-${day}`;
+                
+                scheduleDateHeader.textContent = `📅 ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
+                scheduleContent.innerHTML = '';
+
+                const activeCalendar = state.calendars.find(c => c.id === state.activeCalendarId);
+                const events = (activeCalendar && activeCalendar.events[dateKey]) ? [...activeCalendar.events[dateKey]] : [];
+                events.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+                for (let hour = 0; hour < 24; hour++) {
+                    const hourEl = document.createElement('div');
+                    hourEl.className = 'flex mb-3';
+                    
+                    const timeEl = document.createElement('div');
+                    timeEl.className = 'w-20 text-sm text-purple-600 pr-3 text-right font-bold content-font glass-effect rounded-l-2xl p-2 flex items-center justify-center';
+                    const timeIcon = hour < 6 ? '🌙' : hour < 12 ? '🌅' : hour < 18 ? '☀️' : '🌆';
+                    timeEl.innerHTML = `${timeIcon}<br>${hour % 12 === 0 ? 12 : hour % 12} ${hour < 12 ? 'AM' : 'PM'}`;
+                    
+                    const slotEl = document.createElement('div');
+                    slotEl.className = 'flex-1 glass-effect rounded-r-2xl p-3 min-h-[60px] flex flex-col justify-center';
+                    
+                    const eventsThisHour = events.filter(e => new Date(e.date).getHours() === hour);
+
+                    if (eventsThisHour.length === 0) {
+                        const emptySlot = document.createElement('div');
+                        emptySlot.className = 'text-gray-400 text-sm content-font text-center';
+                        emptySlot.textContent = '✨ Free time';
+                        slotEl.appendChild(emptySlot);
+                    } else {
+                        eventsThisHour.forEach(event => {
+                            const eventDiv = document.createElement('div');
+                            eventDiv.innerHTML = `<strong>${new Date(event.date).getMinutes().toString().padStart(2, '0')}:</strong> ${event.name}`;
+                            eventDiv.className = `text-sm p-3 rounded-2xl text-white font-semibold mb-2 last:mb-0 shadow-md`;
+                            eventDiv.style.background = event.color || 'linear-gradient(135deg, #60a5fa, #3b82f6)';
+                            if (event.completed) {
+                                eventDiv.style.textDecoration = 'line-through';
+                                eventDiv.style.opacity = '0.7';
+                            }
+                            slotEl.appendChild(eventDiv);
+                        });
+                    }
+
+                    hourEl.appendChild(timeEl);
+                    hourEl.appendChild(slotEl);
+                    scheduleContent.appendChild(hourEl);
+                }
+            }
+
+
+            // --- EVENT HANDLERS & LOGIC ---
+            function changeMonth(offset) {
+                state.currentDate.setMonth(state.currentDate.getMonth() + offset);
+                renderCalendar();
+                saveState();
+            }
+
+            function switchCalendar(calendarId) {
+                state.activeCalendarId = calendarId;
+                renderTabs();
+                renderCalendar();
+                saveState();
+            }
+            
+            function addCalendar(name, theme) {
+                const newCalendar = {
+                    id: `cal-${Date.now()}`,
+                    name: name,
+                    theme: theme,
+                    events: {}
+                };
+                state.calendars.push(newCalendar);
+                switchCalendar(newCalendar.id); // Use switchCalendar to set active and render
+            }
+
+            function addEvent(calendarId, date, name, color, linkedCalendarId) {
+                const calendar = state.calendars.find(c => c.id === calendarId);
+                if (!calendar) return;
+
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const day = date.getDate();
+                const dateKey = `${year}-${month}-${day}`;
+
+                if (!calendar.events[dateKey]) {
+                    calendar.events[dateKey] = [];
+                }
+
+                const newEvent = {
+                    id: `evt-${Date.now()}`,
+                    name: name,
+                    color: color,
+                    completed: false,
+                    date: date.toISOString()
+                };
+                calendar.events[dateKey].push(newEvent);
+                
+                if (linkedCalendarId) {
+                    const linkedCalendar = state.calendars.find(c => c.id === linkedCalendarId);
+                    if (linkedCalendar) {
+                        if (!linkedCalendar.events[dateKey]) {
+                            linkedCalendar.events[dateKey] = [];
+                        }
+                        linkedCalendar.events[dateKey].push({...newEvent, id: `evt-${Date.now()}-linked`});
+                    }
+                }
+
+                renderCalendar();
+                if (dailySchedulePanel.classList.contains('open')) {
+                    renderDailySchedule(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
+                }
+                saveState();
+            }
+            
+            function toggleEventCompletion(eventId) {
+                const activeCalendar = state.calendars.find(c => c.id === state.activeCalendarId);
+                if (activeCalendar && activeCalendar.events) {
+                    for (const dateKey in activeCalendar.events) {
+                        const event = activeCalendar.events[dateKey].find(e => e.id === eventId);
+                        if (event) {
+                            event.completed = !event.completed;
+                            break;
+                        }
+                    }
+                }
+                renderCalendar();
+                saveState();
+            }
+
+
+            // --- MODAL & SIDEBAR CONTROLS ---
+            let selectedDateForEvent = null;
+            let selectedColorScheme = 'theme-cotton-candy';
+            let selectedEventColor = 'bg-red-400';
+
+            function openModal(modal) {
+                modalBackdrop.classList.remove('hidden');
+                modal.classList.remove('hidden');
+            }
+
+            function closeModal(modal) {
+                modalBackdrop.classList.add('hidden');
+                modal.classList.add('hidden');
+            }
+
+            function openAddCalendarModal() {
+                openModal(addCalendarModal);
+            }
+
+            function openAddEventModal(date) {
+                selectedDateForEvent = date;
+                document.getElementById('event-modal-date').textContent = date.toLocaleDateString();
+                
+                const select = document.getElementById('link-calendar-select');
+                select.innerHTML = '<option value="">None</option>';
+                state.calendars
+                    .filter(c => c.id !== state.activeCalendarId)
+                    .forEach(c => {
+                        const option = document.createElement('option');
+                        option.value = c.id;
+                        option.textContent = c.name;
+                        select.appendChild(option);
+                    });
+
+                openModal(addEventModal);
+            }
+
+            function openDailySchedule(date) {
+                renderDailySchedule(date);
+                dailySchedulePanel.classList.add('open');
+                modalBackdrop.classList.remove('hidden');
+                dailySchedulePanel.dataset.date = date.toISOString();
+            }
+
+            function closeDailySchedule() {
+                dailySchedulePanel.classList.remove('open');
+                modalBackdrop.classList.add('hidden');
+            }
+
+            // Event Listeners for Modals & Sidebar
+            document.getElementById('add-calendar-btn').addEventListener('click', openAddCalendarModal);
+            document.getElementById('cancel-add-calendar').addEventListener('click', () => closeModal(addCalendarModal));
+            document.getElementById('cancel-add-event').addEventListener('click', () => closeModal(addEventModal));
+            modalBackdrop.addEventListener('click', () => {
+                closeModal(addCalendarModal);
+                closeModal(addEventModal);
+                closeDailySchedule();
+            });
+            document.getElementById('close-schedule').addEventListener('click', closeDailySchedule);
+
+            document.querySelectorAll('.color-scheme-option').forEach(el => {
+                el.addEventListener('click', () => {
+                    document.querySelectorAll('.color-scheme-option div').forEach(div => div.classList.remove('ring-4', 'ring-offset-2', 'ring-blue-500'));
+                    el.querySelector('div').classList.add('ring-4', 'ring-offset-2', 'ring-blue-500');
+                    selectedColorScheme = el.dataset.theme;
+                });
+            });
+
+            document.getElementById('confirm-add-calendar').addEventListener('click', () => {
+                const name = document.getElementById('new-calendar-name').value;
+                if (name && selectedColorScheme) {
+                    addCalendar(name, selectedColorScheme);
+                    closeModal(addCalendarModal);
+                    document.getElementById('new-calendar-name').value = '';
+                }
+            });
+
+            document.getElementById('event-colors').addEventListener('click', (e) => {
+                if (e.target.dataset.color) {
+                    selectedEventColor = e.target.dataset.color;
+                    document.querySelectorAll('#event-colors div').forEach(div => div.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500'));
+                    e.target.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500');
+                }
+            });
+
+            document.getElementById('save-event').addEventListener('click', () => {
+                const name = document.getElementById('event-name-input').value;
+                const linkedCalendarId = document.getElementById('link-calendar-select').value;
+                if (name && selectedDateForEvent) {
+                    const eventDate = new Date(selectedDateForEvent);
+                    eventDate.setHours(12, 0, 0, 0);
+                    addEvent(state.activeCalendarId, eventDate, name, selectedEventColor, linkedCalendarId);
+                    closeModal(addEventModal);
+                    document.getElementById('event-name-input').value = '';
+                }
+            });
+            
+            document.getElementById('schedule-add-event-btn').addEventListener('click', () => {
+                const name = document.getElementById('schedule-event-input').value;
+                const time = document.getElementById('schedule-event-time').value;
+                const baseDate = new Date(dailySchedulePanel.dataset.date);
+                
+                if (name && time) {
+                    const [hours, minutes] = time.split(':');
+                    baseDate.setHours(parseInt(hours), parseInt(minutes));
+                    addEvent(state.activeCalendarId, baseDate, name, 'bg-blue-400', null);
+                    renderDailySchedule(new Date(dailySchedulePanel.dataset.date));
+                    document.getElementById('schedule-event-input').value = '';
+                    document.getElementById('schedule-event-time').value = '';
+                }
+            });
+
+
+            // --- INITIALIZATION ---
+            function init() {
+                prevMonthBtn.addEventListener('click', () => changeMonth(-1));
+                nextMonthBtn.addEventListener('click', () => changeMonth(1));
+
+                loadState();
+                getLocationAndFetchWeather();
+                renderTabs();
+                renderCalendar();
+            }
+
+            init();
+        });
+    </script>
+</body>
+</html>
