@@ -603,6 +603,9 @@
                 <button id="sync-settings-btn" class="clean-btn p-2" title="Sync Settings">
                     <span id="sync-icon">🔄</span>
                 </button>
+                <button id="switch-sync-btn" class="clean-btn p-2" title="Switch Sync Session">
+                    <span>🔄</span>
+                </button>
             </div>
         </header>
 
@@ -704,6 +707,40 @@
                 <div class="flex justify-end gap-3">
                     <button id="skip-sync" class="clean-btn secondary">Skip for Now</button>
                     <button id="setup-sync" class="clean-btn">Setup Sync 🔄</button>
+                </div>
+            </div>
+
+            <!-- Sync Management Modal -->
+            <div id="sync-management-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
+                <h3 class="text-2xl font-medium mb-4 content-font">🔄 Sync Management</h3>
+                
+                <div class="mb-6">
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">Current Session:</span>
+                            <span class="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full" id="current-sync-session">Loading...</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <div>Status: <span id="current-sync-status">Loading...</span></div>
+                            <div>Last Sync: <span id="last-sync-time">Loading...</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-3 mb-6">
+                    <button id="refresh-sync-btn" class="clean-btn w-full">
+                        <span>🔄</span> Refresh from Cloud
+                    </button>
+                    <button id="switch-session-btn" class="clean-btn secondary w-full">
+                        <span>🔄</span> Switch to Different Session
+                    </button>
+                    <button id="clear-sync-btn" class="clean-btn secondary w-full text-red-600">
+                        <span>🗑️</span> Clear & Start Fresh
+                    </button>
+                </div>
+
+                <div class="flex justify-end">
+                    <button id="close-sync-modal" class="clean-btn secondary">Close</button>
                 </div>
             </div>
 
@@ -1642,6 +1679,90 @@
                      }
                  },
 
+                 openSyncManagementModal() {
+                     const modal = document.getElementById('sync-management-modal');
+                     if (!modal) return;
+                     
+                     // Update modal content with current sync info
+                     const sessionSpan = document.getElementById('current-sync-session');
+                     const statusSpan = document.getElementById('current-sync-status');
+                     const timeSpan = document.getElementById('last-sync-time');
+                     
+                     if (sessionSpan) {
+                         const userKey = this.state.userKey || 'Not set';
+                         sessionSpan.textContent = userKey.replace('user_', '').replace('temp_', '');
+                     }
+                     
+                     if (statusSpan) {
+                         statusSpan.textContent = this.state.syncStatus;
+                     }
+                     
+                     if (timeSpan) {
+                         const lastSync = this.state.lastModified ? new Date(this.state.lastModified).toLocaleString() : 'Never';
+                         timeSpan.textContent = lastSync;
+                     }
+                     
+                     this.openModal(modal);
+                 },
+
+                 async switchToNewSession() {
+                     // Clear current session
+                     localStorage.removeItem('calendarAppState');
+                     localStorage.removeItem('calendarUserKey');
+                     
+                     // Reset state
+                     this.state = {
+                         currentDate: new Date(),
+                         calendars: [],
+                         activeCalendarId: null,
+                         weatherData: {},
+                         visibleCalendars: new Set(),
+                         notificationsEnabled: false,
+                         notificationTimes: [15, 5],
+                         scheduledNotifications: new Map(),
+                         userKey: null,
+                         syncStatus: 'disconnected',
+                         polls: [],
+                         currentView: 'calendar'
+                     };
+                     
+                     // Close modal and show setup
+                     this.closeModal(document.getElementById('sync-management-modal'));
+                     this.showUserSetupModal();
+                 },
+
+                 clearAndStartFresh() {
+                     if (confirm('⚠️ This will clear ALL your calendars and events. Are you sure?')) {
+                         // Clear everything
+                         localStorage.removeItem('calendarAppState');
+                         localStorage.removeItem('calendarUserKey');
+                         
+                         // Reset state
+                         this.state = {
+                             currentDate: new Date(),
+                             calendars: [],
+                             activeCalendarId: null,
+                             weatherData: {},
+                             visibleCalendars: new Set(),
+                             notificationsEnabled: false,
+                             notificationTimes: [15, 5],
+                             scheduledNotifications: new Map(),
+                             userKey: null,
+                             syncStatus: 'disconnected',
+                             polls: [],
+                             currentView: 'calendar'
+                         };
+                         
+                         // Close modal and show welcome
+                         this.closeModal(document.getElementById('sync-management-modal'));
+                         this.showWelcomeModal();
+                         
+                         // Re-render
+                         this.renderTabs();
+                         this.renderCalendar();
+                     }
+                 },
+
                  showUserSetupModal() {
                      this.openModal(document.getElementById('user-setup-modal'));
                  },
@@ -2160,6 +2281,45 @@
                                  // Otherwise show setup modal
                                  this.showUserSetupModal();
                              }
+                         });
+                     }
+
+                     // Switch sync button
+                     const switchSyncBtn = document.getElementById('switch-sync-btn');
+                     if (switchSyncBtn) {
+                         switchSyncBtn.addEventListener('click', () => {
+                             this.openSyncManagementModal();
+                         });
+                     }
+
+                     // Sync management modal handlers
+                     const refreshSyncBtn = document.getElementById('refresh-sync-btn');
+                     const switchSessionBtn = document.getElementById('switch-session-btn');
+                     const clearSyncBtn = document.getElementById('clear-sync-btn');
+                     const closeSyncModal = document.getElementById('close-sync-modal');
+
+                     if (refreshSyncBtn) {
+                         refreshSyncBtn.addEventListener('click', () => {
+                             this.forceRefreshFromCloud();
+                             this.closeModal(document.getElementById('sync-management-modal'));
+                         });
+                     }
+
+                     if (switchSessionBtn) {
+                         switchSessionBtn.addEventListener('click', () => {
+                             this.switchToNewSession();
+                         });
+                     }
+
+                     if (clearSyncBtn) {
+                         clearSyncBtn.addEventListener('click', () => {
+                             this.clearAndStartFresh();
+                         });
+                     }
+
+                     if (closeSyncModal) {
+                         closeSyncModal.addEventListener('click', () => {
+                             this.closeModal(document.getElementById('sync-management-modal'));
                          });
                      }
 
