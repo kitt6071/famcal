@@ -919,8 +919,13 @@
                 async autoSyncToCloud(data) {
                     try {
                         await this.syncToFirebase(data);
+                        // Also update sync status to show it's working
+                        this.state.syncStatus = 'synced';
+                        this.updateSyncIcon();
                     } catch (error) {
                         console.log('Cloud sync unavailable, using local storage');
+                        this.state.syncStatus = 'error';
+                        this.updateSyncIcon();
                     }
                 },
 
@@ -991,76 +996,106 @@
                     let bestData = null;
                     let bestTimestamp = 0;
                     
-                    const localData = localStorage.getItem('calendarAppState');
-                    if (localData) {
-                        try {
-                            const parsed = JSON.parse(localData);
-                            if (parsed.lastModified > bestTimestamp) {
-                                bestData = parsed;
-                                bestTimestamp = parsed.lastModified;
+                    // Always try to load from cloud first for cross-device sync
+                    try {
+                        const cloudData = await this.loadFromCloud();
+                        if (cloudData && cloudData.lastModified) {
+                            bestData = cloudData;
+                            bestTimestamp = cloudData.lastModified;
+                            console.log('📥 Using cloud data (timestamp:', new Date(bestTimestamp).toLocaleString(), ')');
+                        }
+                    } catch (e) {
+                        console.log('Cloud data unavailable, will use local storage');
+                    }
+                    
+                    // Fall back to local storage if no cloud data
+                    if (!bestData) {
+                        const localData = localStorage.getItem('calendarAppState');
+                        if (localData) {
+                            try {
+                                const parsed = JSON.parse(localData);
+                                if (parsed.lastModified > bestTimestamp) {
+                                    bestData = parsed;
+                                    bestTimestamp = parsed.lastModified;
+                                    console.log('📱 Using local data (timestamp:', new Date(bestTimestamp).toLocaleString(), ')');
+                                }
+                            } catch (e) {
+                                console.log('Local data corrupted, ignoring');
                             }
-                        } catch (e) {
-                            console.log('Local data corrupted, ignoring');
                         }
                     }
                     
-                                         try {
-                         const cloudData = await this.loadFromCloud();
-                         if (cloudData && cloudData.lastModified > bestTimestamp) {
-                             bestData = cloudData;
-                             bestTimestamp = cloudData.lastModified;
-                             console.log('📥 Using newer cloud data');
-                         }
-                     } catch (e) {
-                         // Cloud data unavailable, continue with local only
-                     }
+                    if (bestData) {
+                        // Ensure we have the latest data structure
+                        bestData.currentDate = new Date(bestData.currentDate);
+                        
+                        // Process calendars and events
+                        if(bestData.calendars && bestData.calendars.length > 0) {
+                            bestData.calendars.forEach(cal => {
+                                if(cal.events) {
+                                    Object.values(cal.events).forEach(dayEvents => {
+                                        dayEvents.forEach(event => event.date = new Date(event.date));
+                                    });
+                                }
+                            });
+                            
+                            // Ensure activeCalendarId is set to the first calendar if none exists
+                            if (!bestData.activeCalendarId && bestData.calendars.length > 0) {
+                                bestData.activeCalendarId = bestData.calendars[0].id;
+                                console.log('🔄 Setting active calendar to:', bestData.calendars[0].name);
+                            }
+                        }
+                        
+                        // Initialize visibleCalendars as Set
+                        if (!bestData.visibleCalendars || Array.isArray(bestData.visibleCalendars)) {
+                            bestData.visibleCalendars = new Set(bestData.visibleCalendars || []);
+                        } else {
+                            bestData.visibleCalendars = new Set(bestData.visibleCalendars);
+                        }
+                        
+                        // Initialize other state properties
+                        if (bestData.notificationsEnabled === undefined) {
+                            bestData.notificationsEnabled = false;
+                        }
+                        if (!bestData.notificationTimes) {
+                            bestData.notificationTimes = [15, 5];
+                        }
+                        if (!bestData.scheduledNotifications) {
+                            bestData.scheduledNotifications = new Map();
+                        }
+                        if (!bestData.polls) {
+                            bestData.polls = [];
+                        }
+                        if (!bestData.currentView) {
+                            bestData.currentView = 'calendar';
+                        }
+                        
+                        // Always use the userKey from localStorage for consistency
+                        const storedUserKey = localStorage.getItem('calendarUserKey');
+                        if (storedUserKey) {
+                            bestData.userKey = storedUserKey;
+                        }
+                        
+                        if (!bestData.syncStatus) {
+                            bestData.syncStatus = bestData.userKey ? 'synced' : 'disconnected';
+                        }
+                        
+                        // Update state
+                        this.state = bestData;
+                        
+                        // Save back to localStorage to ensure consistency
+                        localStorage.setItem('calendarAppState', JSON.stringify({
+                            ...bestData,
+                            visibleCalendars: Array.from(bestData.visibleCalendars)
+                        }));
+                        
+                        console.log('✅ State loaded successfully. Active calendar:', 
+                            bestData.calendars?.find(c => c.id === bestData.activeCalendarId)?.name || 'None');
+                        return;
+                    }
                     
-                                         if (bestData) {
-                         bestData.currentDate = new Date(bestData.currentDate);
-                         if(bestData.calendars) {
-                             bestData.calendars.forEach(cal => {
-                                 if(cal.events) {
-                                     Object.values(cal.events).forEach(dayEvents => {
-                                         dayEvents.forEach(event => event.date = new Date(event.date));
-                                     });
-                                 }
-                             });
-                         }
-                         
-                         // Initialize visibleCalendars as Set if it doesn't exist or is array
-                         if (!bestData.visibleCalendars || Array.isArray(bestData.visibleCalendars)) {
-                             bestData.visibleCalendars = new Set(bestData.visibleCalendars || []);
-                         } else {
-                             bestData.visibleCalendars = new Set(bestData.visibleCalendars);
-                         }
-                         
-                         // Initialize notification settings
-                         if (bestData.notificationsEnabled === undefined) {
-                             bestData.notificationsEnabled = false;
-                         }
-                         if (!bestData.notificationTimes) {
-                             bestData.notificationTimes = [15, 5];
-                         }
-                         if (!bestData.scheduledNotifications) {
-                             bestData.scheduledNotifications = new Map();
-                         }
-                         if (!bestData.userKey) {
-                             bestData.userKey = localStorage.getItem('calendarUserKey');
-                         }
-                         if (!bestData.syncStatus) {
-                             bestData.syncStatus = bestData.userKey ? 'disconnected' : 'disconnected';
-                         }
-                         
-                         this.state = bestData;
-                         
-                         localStorage.setItem('calendarAppState', JSON.stringify({
-                             ...bestData,
-                             visibleCalendars: Array.from(bestData.visibleCalendars)
-                         }));
-                         return;
-                     }
-                    
-                                         // No existing data found - user will create their first calendar
+                    // No existing data found - user will create their first calendar
+                    console.log('🆕 No existing data found, starting fresh');
                 },
 
                 // --- WEATHER API ---
@@ -1543,7 +1578,7 @@
                          switch (this.state.syncStatus) {
                              case 'synced':
                                  icon.textContent = '✅';
-                                 icon.title = 'Synced across devices';
+                                 icon.title = 'Synced across devices - click to refresh';
                                  break;
                              case 'syncing':
                                  icon.textContent = '🔄';
@@ -1551,12 +1586,51 @@
                                  break;
                              case 'error':
                                  icon.textContent = '⚠️';
-                                 icon.title = 'Sync error';
+                                 icon.title = 'Sync error - click to retry';
                                  break;
                              default:
                                  icon.textContent = '🔄';
                                  icon.title = 'Click to setup sync';
                          }
+                     }
+                 },
+
+                 async forceRefreshFromCloud() {
+                     console.log('🔄 Force refreshing from cloud...');
+                     this.state.syncStatus = 'syncing';
+                     this.updateSyncIcon();
+                     
+                     try {
+                         // Clear local state and reload from cloud
+                         this.state = {
+                             currentDate: new Date(),
+                             calendars: [],
+                             activeCalendarId: null,
+                             weatherData: {},
+                             visibleCalendars: new Set(),
+                             notificationsEnabled: false,
+                             notificationTimes: [15, 5],
+                             scheduledNotifications: new Map(),
+                             userKey: this.state.userKey,
+                             syncStatus: 'syncing',
+                             polls: [],
+                             currentView: 'calendar'
+                         };
+                         
+                         // Force reload from cloud
+                         await this.loadState();
+                         
+                         // Re-render everything
+                         this.renderTabs();
+                         this.renderCalendar();
+                         
+                         this.state.syncStatus = 'synced';
+                         this.updateSyncIcon();
+                         console.log('✅ Force refresh completed');
+                     } catch (error) {
+                         console.error('Force refresh failed:', error);
+                         this.state.syncStatus = 'error';
+                         this.updateSyncIcon();
                      }
                  },
 
@@ -1997,7 +2071,25 @@
                      // Set initial view
                      this.switchView('calendar');
                      
+                     // Auto-save every 30 seconds
                      setInterval(() => this.saveState(), 30000);
+                     
+                     // Auto-sync from cloud every 2 minutes to keep calendars in sync
+                     setInterval(async () => {
+                         if (this.state.userKey && this.state.syncStatus !== 'syncing') {
+                             try {
+                                 const cloudData = await this.loadFromCloud();
+                                 if (cloudData && cloudData.lastModified > this.state.lastModified) {
+                                     console.log('🔄 Auto-sync: Found newer cloud data, updating...');
+                                     await this.loadState();
+                                     this.renderTabs();
+                                     this.renderCalendar();
+                                 }
+                             } catch (error) {
+                                 // Silent fail for auto-sync
+                             }
+                         }
+                     }, 120000); // 2 minutes
                 },
                 
                 addEventListeners() {
@@ -2053,7 +2145,13 @@
                      const syncBtn = document.getElementById('sync-settings-btn');
                      if (syncBtn) {
                          syncBtn.addEventListener('click', () => {
-                             this.showUserSetupModal();
+                             // If already synced, force refresh from cloud
+                             if (this.state.syncStatus === 'synced') {
+                                 this.forceRefreshFromCloud();
+                             } else {
+                                 // Otherwise show setup modal
+                                 this.showUserSetupModal();
+                             }
                          });
                      }
 
