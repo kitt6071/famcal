@@ -469,6 +469,119 @@
         .day-cell:hover::after {
             left: 100%;
         }
+
+        /* Voting System Styles */
+        #view-toggle-btn.active, #voting-view-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .poll-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 2px solid rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+
+        .poll-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .poll-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .poll-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .poll-description {
+            color: #6B7280;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .poll-date {
+            font-size: 0.875rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .poll-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .vote-btn {
+            flex: 1;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .vote-btn.yes {
+            background: #10B981;
+            color: white;
+        }
+
+        .vote-btn.yes:hover {
+            background: #059669;
+            transform: scale(1.02);
+        }
+
+        .vote-btn.no {
+            background: #EF4444;
+            color: white;
+        }
+
+        .vote-btn.no:hover {
+            background: #DC2626;
+            transform: scale(1.02);
+        }
+
+        .vote-btn.voted {
+            border-color: white;
+            box-shadow: 0 0 0 2px currentColor;
+        }
+
+        .vote-counts {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            font-size: 0.875rem;
+        }
+
+        .vote-count {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .vote-count.yes {
+            color: #10B981;
+        }
+
+        .vote-count.no {
+            color: #EF4444;
+        }
+
+        .poll-creator {
+            font-size: 0.75rem;
+            color: #9CA3AF;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
@@ -494,30 +607,58 @@
             </button>
         </div>
 
+        <!-- View Toggle -->
+        <div class="flex justify-center mb-6">
+            <div class="bg-white rounded-lg p-1 shadow-sm border">
+                <button id="view-toggle-btn" class="px-6 py-2 rounded-md font-medium transition-all duration-300" data-view="calendar">
+                    <span id="view-icon">📅</span> Calendar
+                </button>
+                <button id="voting-view-btn" class="px-6 py-2 rounded-md font-medium transition-all duration-300" data-view="voting">
+                    <span id="voting-icon">🗳️</span> Voting
+                </button>
+            </div>
+        </div>
+
         <!-- Main Content -->
         <main id="main-content" class="p-6 mb-6">
-            <!-- Calendar Header -->
-            <div class="flex justify-between items-center mb-6">
-                <button id="prev-month" class="clean-btn secondary p-3">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <h2 id="month-year" class="text-3xl font-medium display-font"></h2>
-                <button id="next-month" class="clean-btn secondary p-3">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+            <!-- Calendar View -->
+            <div id="calendar-view">
+                <!-- Calendar Header -->
+                <div class="flex justify-between items-center mb-6">
+                    <button id="prev-month" class="clean-btn secondary p-3">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h2 id="month-year" class="text-3xl font-medium display-font"></h2>
+                    <button id="next-month" class="clean-btn secondary p-3">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <!-- Calendar Grid -->
+                <div class="grid grid-cols-7 gap-0 text-center text-sm font-medium mb-4 text-gray-600">
+                    <div class="py-3">Sun</div>
+                    <div class="py-3">Mon</div>
+                    <div class="py-3">Tue</div>
+                    <div class="py-3">Wed</div>
+                    <div class="py-3">Thu</div>
+                    <div class="py-3">Fri</div>
+                    <div class="py-3">Sat</div>
+                </div>
+                <div id="calendar-grid" class="calendar-grid mb-8">
+                    <!-- Calendar days will be dynamically inserted here -->
+                </div>
             </div>
-            <!-- Calendar Grid -->
-            <div class="grid grid-cols-7 gap-0 text-center text-sm font-medium mb-4 text-gray-600">
-                <div class="py-3">Sun</div>
-                <div class="py-3">Mon</div>
-                <div class="py-3">Tue</div>
-                <div class="py-3">Wed</div>
-                <div class="py-3">Thu</div>
-                <div class="py-3">Fri</div>
-                <div class="py-3">Sat</div>
-            </div>
-            <div id="calendar-grid" class="calendar-grid mb-8">
-                <!-- Calendar days will be dynamically inserted here -->
+
+            <!-- Voting View -->
+            <div id="voting-view" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-medium display-font">🗳️ Voting & Polls</h2>
+                    <button id="create-poll-btn" class="clean-btn">
+                        <i class="fas fa-plus mr-2"></i>Create Poll
+                    </button>
+                </div>
+                <div id="polls-container" class="space-y-4">
+                    <!-- Polls will be dynamically inserted here -->
+                </div>
             </div>
         </main>
     </div>
@@ -555,6 +696,24 @@
                 <div class="flex justify-end gap-3">
                     <button id="skip-sync" class="clean-btn secondary">Skip for Now</button>
                     <button id="setup-sync" class="clean-btn">Setup Sync 🔄</button>
+                </div>
+            </div>
+
+            <!-- Create Poll Modal -->
+            <div id="create-poll-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
+                <h3 class="text-2xl font-medium mb-4 content-font">🗳️ Create New Poll</h3>
+                <input type="text" id="poll-title" placeholder="Poll title (e.g., Movie Night)" class="clean-input mb-4">
+                <textarea id="poll-description" placeholder="Description (optional)" class="clean-input mb-4 h-20 resize-none"></textarea>
+                <input type="datetime-local" id="poll-date" class="clean-input mb-4">
+                <div class="flex gap-2 mb-6">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="poll-is-event" class="mr-2">
+                        <span class="text-sm">Create as calendar event</span>
+                    </label>
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button id="cancel-create-poll" class="clean-btn secondary">Cancel</button>
+                    <button id="confirm-create-poll" class="clean-btn">Create Poll ✨</button>
                 </div>
             </div>
 
@@ -652,7 +811,9 @@
                      notificationTimes: [15, 5], // Notify 15 and 5 minutes before events
                      scheduledNotifications: new Map(), // Track scheduled notifications
                      userKey: null,
-                     syncStatus: 'disconnected' // 'disconnected', 'syncing', 'synced', 'error'
+                     syncStatus: 'disconnected', // 'disconnected', 'syncing', 'synced', 'error'
+                     polls: [], // Store all polls/voting events
+                     currentView: 'calendar' // 'calendar' or 'voting'
                  },
 
                 // --- DOM ELEMENTS ---
@@ -1472,6 +1633,161 @@
                      });
                  },
 
+                 // --- VOTING SYSTEM ---
+                 createPoll(title, description, date, isEvent) {
+                     const poll = {
+                         id: `poll-${Date.now()}`,
+                         title: title,
+                         description: description,
+                         date: date,
+                         isEvent: isEvent,
+                         creator: this.state.userKey || 'anonymous',
+                         createdAt: Date.now(),
+                         votes: {
+                             yes: [],
+                             no: []
+                         }
+                     };
+
+                     this.state.polls.push(poll);
+                     
+                     // If it's an event, also add to calendar
+                     if (isEvent && this.state.activeCalendarId) {
+                         const eventDate = new Date(date);
+                         this.addEvent(this.state.activeCalendarId, eventDate, title, 'event-color-1', null);
+                     }
+                     
+                     this.renderPolls();
+                     this.saveState();
+                 },
+
+                 voteOnPoll(pollId, vote) {
+                     const poll = this.state.polls.find(p => p.id === pollId);
+                     if (!poll) return;
+
+                     const userId = this.state.userKey || 'anonymous';
+                     
+                     // Remove previous vote if exists
+                     poll.votes.yes = poll.votes.yes.filter(id => id !== userId);
+                     poll.votes.no = poll.votes.no.filter(id => id !== userId);
+                     
+                     // Add new vote
+                     if (vote === 'yes') {
+                         poll.votes.yes.push(userId);
+                     } else if (vote === 'no') {
+                         poll.votes.no.push(userId);
+                     }
+                     
+                     this.renderPolls();
+                     this.saveState();
+                 },
+
+                 renderPolls() {
+                     const container = document.getElementById('polls-container');
+                     if (!container) return;
+
+                     if (this.state.polls.length === 0) {
+                         container.innerHTML = `
+                             <div class="text-center py-12">
+                                 <div class="text-6xl mb-4">🗳️</div>
+                                 <h3 class="text-xl font-medium mb-2">No polls yet!</h3>
+                                 <p class="text-gray-600 mb-4">Create the first poll to get started</p>
+                                 <button onclick="app.openCreatePollModal()" class="clean-btn">
+                                     <i class="fas fa-plus mr-2"></i>Create First Poll
+                                 </button>
+                             </div>
+                         `;
+                         return;
+                     }
+
+                     container.innerHTML = '';
+                     
+                     // Sort polls by date (newest first)
+                     const sortedPolls = [...this.state.polls].sort((a, b) => new Date(b.date) - new Date(a.date));
+                     
+                     sortedPolls.forEach(poll => {
+                         const pollEl = document.createElement('div');
+                         pollEl.className = 'poll-card';
+                         
+                         const userId = this.state.userKey || 'anonymous';
+                         const userVote = poll.votes.yes.includes(userId) ? 'yes' : 
+                                        poll.votes.no.includes(userId) ? 'no' : null;
+                         
+                         const dateStr = new Date(poll.date).toLocaleDateString('en-US', {
+                             weekday: 'long',
+                             month: 'long',
+                             day: 'numeric',
+                             hour: '2-digit',
+                             minute: '2-digit'
+                         });
+
+                         pollEl.innerHTML = `
+                             <div class="poll-header">
+                                 <div>
+                                     <div class="poll-title">${poll.title}</div>
+                                     ${poll.description ? `<div class="poll-description">${poll.description}</div>` : ''}
+                                     <div class="poll-date">📅 ${dateStr}</div>
+                                 </div>
+                                 ${poll.isEvent ? '<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">📅 Event</span>' : ''}
+                             </div>
+                             
+                             <div class="poll-actions">
+                                 <button class="vote-btn yes ${userVote === 'yes' ? 'voted' : ''}" onclick="app.voteOnPoll('${poll.id}', 'yes')">
+                                     👍 Yes (${poll.votes.yes.length})
+                                 </button>
+                                 <button class="vote-btn no ${userVote === 'no' ? 'voted' : ''}" onclick="app.voteOnPoll('${poll.id}', 'no')">
+                                     👎 No (${poll.votes.no.length})
+                                 </button>
+                             </div>
+                             
+                             <div class="vote-counts">
+                                 <div class="vote-count yes">
+                                     <span>👍</span>
+                                     <span>${poll.votes.yes.length} votes</span>
+                                 </div>
+                                 <div class="vote-count no">
+                                     <span>👎</span>
+                                     <span>${poll.votes.no.length} votes</span>
+                                 </div>
+                             </div>
+                             
+                             <div class="poll-creator">Created by: ${poll.creator === userId ? 'You' : poll.creator}</div>
+                         `;
+                         
+                         container.appendChild(pollEl);
+                     });
+                 },
+
+                 switchView(view) {
+                     this.state.currentView = view;
+                     
+                     // Update view toggle buttons
+                     document.getElementById('view-toggle-btn').classList.toggle('active', view === 'calendar');
+                     document.getElementById('voting-view-btn').classList.toggle('active', view === 'voting');
+                     
+                     // Show/hide views
+                     document.getElementById('calendar-view').classList.toggle('hidden', view !== 'calendar');
+                     document.getElementById('voting-view').classList.toggle('hidden', view !== 'voting');
+                     
+                     // Update view icon
+                     document.getElementById('view-icon').textContent = view === 'calendar' ? '📅' : '🗳️';
+                     
+                     if (view === 'voting') {
+                         this.renderPolls();
+                     } else {
+                         this.renderCalendar();
+                     }
+                 },
+
+                 openCreatePollModal() {
+                     this.openModal(document.getElementById('create-poll-modal'));
+                     // Set default date to tomorrow
+                     const tomorrow = new Date();
+                     tomorrow.setDate(tomorrow.getDate() + 1);
+                     tomorrow.setHours(18, 0, 0, 0);
+                     document.getElementById('poll-date').value = tomorrow.toISOString().slice(0, 16);
+                 },
+
                  // --- CALENDAR VISIBILITY CONTROLS ---
                  toggleCalendarVisibility(calendarId) {
                      if (this.state.visibleCalendars.has(calendarId)) {
@@ -1678,6 +1994,9 @@
                      
                      this.addEventListeners();
                      
+                     // Set initial view
+                     this.switchView('calendar');
+                     
                      setInterval(() => this.saveState(), 30000);
                 },
                 
@@ -1685,6 +2004,32 @@
                                          this.elements.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
                      this.elements.nextMonthBtn.addEventListener('click', () => this.changeMonth(1));
                      this.elements.addCalendarBtn.addEventListener('click', () => this.openAddCalendarModal());
+                     
+                     // View toggle
+                     document.getElementById('view-toggle-btn').addEventListener('click', () => this.switchView('calendar'));
+                     document.getElementById('voting-view-btn').addEventListener('click', () => this.switchView('voting'));
+                     
+                     // Create poll button
+                     document.getElementById('create-poll-btn').addEventListener('click', () => this.openCreatePollModal());
+                     
+                     // Poll modal handlers
+                     document.getElementById('cancel-create-poll').addEventListener('click', () => this.closeModal(document.getElementById('create-poll-modal')));
+                     document.getElementById('confirm-create-poll').addEventListener('click', () => {
+                         const title = document.getElementById('poll-title').value.trim();
+                         const description = document.getElementById('poll-description').value.trim();
+                         const date = document.getElementById('poll-date').value;
+                         const isEvent = document.getElementById('poll-is-event').checked;
+                         
+                         if (title && date) {
+                             this.createPoll(title, description, date, isEvent);
+                             this.closeModal(document.getElementById('create-poll-modal'));
+                             
+                             // Clear form
+                             document.getElementById('poll-title').value = '';
+                             document.getElementById('poll-description').value = '';
+                             document.getElementById('poll-is-event').checked = false;
+                         }
+                     });
                      
                      // Notification settings (only if button exists)
                      const notificationBtn = document.getElementById('notification-settings-btn');
