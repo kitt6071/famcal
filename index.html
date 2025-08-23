@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=Raleway:wght@300;400;500;600;700&family=Crimson+Text:wght@400;600&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -64,6 +64,86 @@
         body.theme-sage-tones::before {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cdefs%3E%3Cstyle%3E.vine%7Bfill:none;stroke:%23B8C5B1;stroke-width:2;opacity:0.6%7D.leaf%7Bfill:%23B8C5B1;opacity:0.4%7D%3C/style%3E%3C/defs%3E%3Cpath class='vine' d='M50 50Q150 100 250 50M50 150Q150 200 250 150M50 250Q150 300 250 250'/%3E%3Cellipse class='leaf' cx='100' cy='75' rx='8' ry='15' transform='rotate(30 100 75)'/%3E%3Cellipse class='leaf' cx='200' cy='125' rx='8' ry='15' transform='rotate(-45 200 125)'/%3E%3Cellipse class='leaf' cx='150' cy='225' rx='8' ry='15' transform='rotate(60 150 225)'/%3E%3C/svg%3E");
             opacity: 0.15;
+        }
+
+        /* Theme-specific typography and styling */
+        .theme-warm-neutrals {
+            font-family: 'Poppins', sans-serif !important;
+        }
+        .theme-warm-neutrals .display-font {
+            font-family: 'Dancing Script', cursive !important;
+            font-weight: 600 !important;
+        }
+        .theme-warm-neutrals .content-font {
+            font-family: 'Poppins', sans-serif !important;
+        }
+        
+        .theme-sage-tones {
+            font-family: 'Lora', serif !important;
+        }
+        .theme-sage-tones .display-font {
+            font-family: 'Playfair Display', serif !important;
+            font-weight: 600 !important;
+        }
+        .theme-sage-tones .content-font {
+            font-family: 'Lora', serif !important;
+        }
+        
+        .theme-matcha-dreams {
+            font-family: 'Montserrat', sans-serif !important;
+        }
+        .theme-matcha-dreams .display-font {
+            font-family: 'Raleway', sans-serif !important;
+            font-weight: 500 !important;
+            letter-spacing: 2px !important;
+        }
+        .theme-matcha-dreams .content-font {
+            font-family: 'Montserrat', sans-serif !important;
+        }
+        
+        .theme-lavender-mist {
+            font-family: 'Inter', sans-serif !important;
+        }
+        .theme-lavender-mist .display-font {
+            font-family: 'Crimson Text', serif !important;
+            font-weight: 600 !important;
+        }
+        .theme-lavender-mist .content-font {
+            font-family: 'Inter', sans-serif !important;
+        }
+        
+        .theme-soft-beige {
+            font-family: 'Raleway', sans-serif !important;
+        }
+        .theme-soft-beige .display-font {
+            font-family: 'Playfair Display', serif !important;
+            font-weight: 700 !important;
+        }
+        .theme-soft-beige .content-font {
+            font-family: 'Raleway', sans-serif !important;
+        }
+        
+        .theme-minimal-gray {
+            font-family: 'Inter', sans-serif !important;
+        }
+        .theme-minimal-gray .display-font {
+            font-family: 'Montserrat', sans-serif !important;
+            font-weight: 300 !important;
+            letter-spacing: 3px !important;
+        }
+        .theme-minimal-gray .content-font {
+            font-family: 'Inter', sans-serif !important;
+        }
+        
+        .theme-cream-rose {
+            font-family: 'Lora', serif !important;
+        }
+        .theme-cream-rose .display-font {
+            font-family: 'Dancing Script', cursive !important;
+            font-weight: 700 !important;
+        }
+        .theme-cream-rose .content-font {
+            font-family: 'Lora', serif !important;
         }
 
         body.theme-matcha-dreams::before {
@@ -466,33 +546,56 @@
     <!-- Modals -->
     <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
 
-    <!-- Add Calendar Modal -->
-    <div id="add-calendar-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
+                <!-- Notification Permission Modal -->
+            <div id="notification-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
+                <h3 class="text-2xl font-medium mb-4 content-font">📱 Enable Notifications?</h3>
+                <p class="text-gray-600 mb-6">Get cute reminders for your upcoming events! We'll notify you 15 and 5 minutes before each event.</p>
+                <div class="flex justify-end gap-3">
+                    <button id="deny-notifications" class="clean-btn secondary">No Thanks</button>
+                    <button id="enable-notifications" class="clean-btn">Yes, Notify Me! 🔔</button>
+                </div>
+            </div>
+
+            <!-- Add Calendar Modal -->
+            <div id="add-calendar-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
         <h3 class="text-2xl font-medium mb-6 content-font">Create New Calendar</h3>
         <input type="text" id="new-calendar-name" placeholder="Calendar Name (e.g., John's Calendar)" class="clean-input mb-6">
         <p class="font-medium mb-4 content-font">Choose a color scheme:</p>
         <div class="grid grid-cols-2 gap-3 mb-6">
-            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-warm-neutrals">
-                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-warm-neutrals border">Warm Neutrals</div>
-            </div>
-            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-sage-tones">
-                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-sage-tones border">Sage Tones</div>
-            </div>
-            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-matcha-dreams">
-                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-matcha-dreams border">Matcha Dreams</div>
-            </div>
-            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-lavender-mist">
-                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-lavender-mist border">Lavender Mist</div>
-            </div>
-            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-soft-beige">
-                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-soft-beige border">Soft Beige</div>
-            </div>
-            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-minimal-gray">
-                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-minimal-gray border">Minimal Gray</div>
-            </div>
-            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-cream-rose">
-                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-cream-rose border">Cream Rose</div>
-            </div>
+                                        <div class="color-scheme-option cursor-pointer" data-theme="theme-warm-neutrals">
+                                <div class="w-16 h-16 rounded-2xl shadow-lg flex items-center justify-center text-2xl" style="background: linear-gradient(135deg, #FDF2E9, #FAE5D3);">🌸</div>
+                                <p class="mt-2 text-sm font-bold content-font" style="color: #D2691E;">Peachy Dreams</p>
+                            </div>
+                            
+                            <div class="color-scheme-option cursor-pointer" data-theme="theme-sage-tones">
+                                <div class="w-16 h-16 rounded-2xl shadow-lg flex items-center justify-center text-2xl" style="background: linear-gradient(135deg, #E8F5E8, #D4E4D4);">🌿</div>
+                                <p class="mt-2 text-sm font-bold content-font" style="color: #4A7C59;">Forest Whisper</p>
+                            </div>
+                            
+                            <div class="color-scheme-option cursor-pointer" data-theme="theme-matcha-dreams">
+                                <div class="w-16 h-16 rounded-2xl shadow-lg flex items-center justify-center text-2xl" style="background: linear-gradient(135deg, #F0F8E8, #E8F5D8);">🧋</div>
+                                <p class="mt-2 text-sm font-bold content-font" style="color: #7CB342;">Matcha Latte</p>
+                            </div>
+                            
+                            <div class="color-scheme-option cursor-pointer" data-theme="theme-lavender-mist">
+                                <div class="w-16 h-16 rounded-2xl shadow-lg flex items-center justify-center text-2xl" style="background: linear-gradient(135deg, #F3E5F5, #E1BEE7);">💜</div>
+                                <p class="mt-2 text-sm font-bold content-font" style="color: #8E24AA;">Lavender Fields</p>
+                            </div>
+                            
+                            <div class="color-scheme-option cursor-pointer" data-theme="theme-soft-beige">
+                                <div class="w-16 h-16 rounded-2xl shadow-lg flex items-center justify-center text-2xl" style="background: linear-gradient(135deg, #FFF8E1, #F5E6A8);">☕</div>
+                                <p class="mt-2 text-sm font-bold content-font" style="color: #A1887F;">Vanilla Latte</p>
+                            </div>
+                            
+                            <div class="color-scheme-option cursor-pointer" data-theme="theme-minimal-gray">
+                                <div class="w-16 h-16 rounded-2xl shadow-lg flex items-center justify-center text-2xl" style="background: linear-gradient(135deg, #ECEFF1, #CFD8DC);">⚪</div>
+                                <p class="mt-2 text-sm font-bold content-font" style="color: #455A64;">Stone Minimal</p>
+                            </div>
+                            
+                            <div class="color-scheme-option cursor-pointer" data-theme="theme-cream-rose">
+                                <div class="w-16 h-16 rounded-2xl shadow-lg flex items-center justify-center text-2xl" style="background: linear-gradient(135deg, #FCE4EC, #F8BBD9);">🌹</div>
+                                <p class="mt-2 text-sm font-bold content-font" style="color: #AD1457;">Rose Garden</p>
+                            </div>
         </div>
         <div class="flex justify-end gap-3">
             <button id="cancel-add-calendar" class="clean-btn secondary">Cancel</button>
@@ -527,12 +630,16 @@
         document.addEventListener('DOMContentLoaded', () => {
             const app = {
                 // --- STATE MANAGEMENT ---
-                state: {
-                    currentDate: new Date(),
-                    calendars: [],
-                    activeCalendarId: null,
-                    weatherData: {}
-                },
+                                 state: {
+                     currentDate: new Date(),
+                     calendars: [],
+                     activeCalendarId: null,
+                     weatherData: {},
+                     visibleCalendars: new Set(), // Track which calendars are visible for overlay
+                     notificationsEnabled: false,
+                     notificationTimes: [15, 5], // Notify 15 and 5 minutes before events
+                     scheduledNotifications: new Map() // Track scheduled notifications
+                 },
 
                 // --- DOM ELEMENTS ---
                 elements: {},
@@ -541,82 +648,98 @@
                 config: {
                     WEATHER_API_KEY: '973209301a5a4be53a5337c204db93c2',
                     months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-                    colorSchemes: {
-                        'theme-warm-neutrals': { 
-                            bg: 'linear-gradient(135deg, #FDFBF7 0%, #F9F5F0 100%)', 
-                            secondary: '#F4E6E0', 
-                            text: '#2C2C2C', 
-                            accent: '#E8C5B5', 
-                            'accent-soft': '#F4E6E0',
-                            bodyClass: 'theme-warm-neutrals'
-                        },
-                        'theme-sage-tones': { 
-                            bg: 'linear-gradient(135deg, #F8FAF7 0%, #F2F6F0 100%)', 
-                            secondary: '#E8F0E3', 
-                            text: '#2C2C2C', 
-                            accent: '#B8C5B1', 
-                            'accent-soft': '#D4E5CE',
-                            bodyClass: 'theme-sage-tones'
-                        },
-                        'theme-matcha-dreams': { 
-                            bg: 'linear-gradient(135deg, #F5F8F4 0%, #EDF4E8 100%)', 
-                            secondary: '#E0EDD8', 
-                            text: '#2C2C2C', 
-                            accent: '#A8C686', 
-                            'accent-soft': '#D4E5C0',
-                            bodyClass: 'theme-matcha-dreams'
-                        },
-                        'theme-lavender-mist': { 
-                            bg: 'linear-gradient(135deg, #FAFAFA 0%, #F5F4F7 100%)', 
-                            secondary: '#E8E4EA', 
-                            text: '#2C2C2C', 
-                            accent: '#C8C3D0', 
-                            'accent-soft': '#E8E4EA',
-                            bodyClass: 'theme-lavender-mist'
-                        },
-                        'theme-soft-beige': { 
-                            bg: 'linear-gradient(135deg, #FDFBF7 0%, #F7F3ED 100%)', 
-                            secondary: '#F2EDE5', 
-                            text: '#2C2C2C', 
-                            accent: '#E8D5C4', 
-                            'accent-soft': '#F2EDE5',
-                            bodyClass: 'theme-soft-beige'
-                        },
-                        'theme-minimal-gray': { 
-                            bg: 'linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%)', 
-                            secondary: '#F0F0F0', 
-                            text: '#2C2C2C', 
-                            accent: '#9A9A9A', 
-                            'accent-soft': '#F0F0F0',
-                            bodyClass: 'theme-minimal-gray'
-                        },
-                        'theme-cream-rose': { 
-                            bg: 'linear-gradient(135deg, #FEFCF8 0%, #FAF6F2 100%)', 
-                            secondary: '#F4EBE6', 
-                            text: '#2C2C2C', 
-                            accent: '#E8C5B5', 
-                            'accent-soft': '#F4EBE6',
-                            bodyClass: 'theme-cream-rose'
-                        }
+                                         colorSchemes: {
+                         'theme-warm-neutrals': { 
+                             bg: 'linear-gradient(135deg, #FDF8F4 0%, #FAF0E8 100%)', 
+                             secondary: '#F9EDE5', 
+                             text: '#A0744D', 
+                             accent: '#E8B89B', 
+                             'accent-soft': '#F2D4C2',
+                             bodyClass: 'theme-warm-neutrals',
+                             icon: '🌸',
+                             name: 'Peachy Dreams'
+                         },
+                         'theme-sage-tones': { 
+                             bg: 'linear-gradient(135deg, #F2F8F2 0%, #E8F5E8 100%)', 
+                             secondary: '#E0F2E0', 
+                             text: '#5A7A5A', 
+                             accent: '#A5C4A5', 
+                             'accent-soft': '#C8E6C8',
+                             bodyClass: 'theme-sage-tones',
+                             icon: '🌿',
+                             name: 'Forest Whisper'
+                         },
+                         'theme-matcha-dreams': { 
+                             bg: 'linear-gradient(135deg, #F5FAF3 0%, #EEFAE8 100%)', 
+                             secondary: '#E8F5E0', 
+                             text: '#6B8E6B', 
+                             accent: '#B8D4A8', 
+                             'accent-soft': '#D5E8C8',
+                             bodyClass: 'theme-matcha-dreams',
+                             icon: '🧋',
+                             name: 'Matcha Latte'
+                         },
+                         'theme-lavender-mist': { 
+                             bg: 'linear-gradient(135deg, #F8F5FA 0%, #F0E8F5 100%)', 
+                             secondary: '#EBE0F0', 
+                             text: '#8B6B9E', 
+                             accent: '#C5A8D4', 
+                             'accent-soft': '#DBC8E6',
+                             bodyClass: 'theme-lavender-mist',
+                             icon: '💜',
+                             name: 'Lavender Fields'
+                         },
+                         'theme-soft-beige': { 
+                             bg: 'linear-gradient(135deg, #FEFBF5 0%, #FAF4E8 100%)', 
+                             secondary: '#F7F0E0', 
+                             text: '#A08B7A', 
+                             accent: '#D2C0A8', 
+                             'accent-soft': '#E5D8C8',
+                             bodyClass: 'theme-soft-beige',
+                             icon: '☕',
+                             name: 'Vanilla Latte'
+                         },
+                         'theme-minimal-gray': { 
+                             bg: 'linear-gradient(135deg, #F8F9FA 0%, #F0F2F5 100%)', 
+                             secondary: '#E8EAED', 
+                             text: '#6B7280', 
+                             accent: '#B0B8C4', 
+                             'accent-soft': '#D1D5DB',
+                             bodyClass: 'theme-minimal-gray',
+                             icon: '⚪',
+                             name: 'Stone Minimal'
+                         },
+                         'theme-cream-rose': { 
+                             bg: 'linear-gradient(135deg, #FDF5F8 0%, #FAE8F0 100%)', 
+                             secondary: '#F5DDE8', 
+                             text: '#A8708A', 
+                             accent: '#D4A8C2', 
+                             'accent-soft': '#E6C8D8',
+                             bodyClass: 'theme-cream-rose',
+                             icon: '🌹',
+                             name: 'Rose Garden'
+                         }
                     }
                 },
 
                 // --- DATA PERSISTENCE ---
-                saveState() {
-                    try {
-                        const stateToSave = {
-                            ...this.state,
-                            lastModified: Date.now(),
-                            version: '2.0'
-                        };
-                        
-                        localStorage.setItem('calendarAppState', JSON.stringify(stateToSave));
-                        sessionStorage.setItem('calendarAppBackup', JSON.stringify(stateToSave));
-                        this.autoSyncToCloud(stateToSave);
-                    } catch (error) {
-                        console.error('Failed to save state:', error);
-                    }
-                },
+                                 saveState() {
+                     try {
+                         const stateToSave = {
+                             ...this.state,
+                             visibleCalendars: Array.from(this.state.visibleCalendars), // Convert Set to Array for JSON
+                             scheduledNotifications: {}, // Don't save timeout IDs, they'll be recreated
+                             lastModified: Date.now(),
+                             version: '2.0'
+                         };
+                         
+                         localStorage.setItem('calendarAppState', JSON.stringify(stateToSave));
+                         sessionStorage.setItem('calendarAppBackup', JSON.stringify(stateToSave));
+                         this.autoSyncToCloud(stateToSave);
+                     } catch (error) {
+                         console.error('Failed to save state:', error);
+                     }
+                 },
 
                 async autoSyncToCloud(data) {
                     try {
@@ -697,22 +820,44 @@
                         console.log('Cloud data unavailable, using local');
                     }
                     
-                    if (bestData) {
-                        bestData.currentDate = new Date(bestData.currentDate);
-                        if(bestData.calendars) {
-                            bestData.calendars.forEach(cal => {
-                                if(cal.events) {
-                                    Object.values(cal.events).forEach(dayEvents => {
-                                        dayEvents.forEach(event => event.date = new Date(event.date));
-                                    });
-                                }
-                            });
-                        }
-                        this.state = bestData;
-                        
-                        localStorage.setItem('calendarAppState', JSON.stringify(bestData));
-                        return;
-                    }
+                                         if (bestData) {
+                         bestData.currentDate = new Date(bestData.currentDate);
+                         if(bestData.calendars) {
+                             bestData.calendars.forEach(cal => {
+                                 if(cal.events) {
+                                     Object.values(cal.events).forEach(dayEvents => {
+                                         dayEvents.forEach(event => event.date = new Date(event.date));
+                                     });
+                                 }
+                             });
+                         }
+                         
+                         // Initialize visibleCalendars as Set if it doesn't exist or is array
+                         if (!bestData.visibleCalendars || Array.isArray(bestData.visibleCalendars)) {
+                             bestData.visibleCalendars = new Set(bestData.visibleCalendars || []);
+                         } else {
+                             bestData.visibleCalendars = new Set(bestData.visibleCalendars);
+                         }
+                         
+                         // Initialize notification settings
+                         if (bestData.notificationsEnabled === undefined) {
+                             bestData.notificationsEnabled = false;
+                         }
+                         if (!bestData.notificationTimes) {
+                             bestData.notificationTimes = [15, 5];
+                         }
+                         if (!bestData.scheduledNotifications) {
+                             bestData.scheduledNotifications = new Map();
+                         }
+                         
+                         this.state = bestData;
+                         
+                         localStorage.setItem('calendarAppState', JSON.stringify({
+                             ...bestData,
+                             visibleCalendars: Array.from(bestData.visibleCalendars)
+                         }));
+                         return;
+                     }
                     
                     console.log('No existing data found, creating new calendar');
                     const defaultId = `cal-${Date.now()}`;
@@ -796,28 +941,52 @@
                 },
 
                 // --- THEME APPLICATION ---
-                applyFullPageTheme(theme) {
-                    const root = document.documentElement;
-                    root.style.setProperty('--bg-primary', theme.bg);
-                    root.style.setProperty('--bg-secondary', theme.secondary);
-                    root.style.setProperty('--text-primary', theme.text);
-                    root.style.setProperty('--accent', theme.accent);
-                    root.style.setProperty('--accent-soft', theme['accent-soft']);
-                    
-                    const mainContent = document.getElementById('main-content');
-                    mainContent.style.background = theme.bg;
-                    mainContent.style.borderColor = theme['accent-soft'];
-                    
-                    document.body.className = theme.bodyClass;
-                    document.body.style.background = theme.bg;
-                    
-                    const header = document.querySelector('header');
-                    if (header) {
-                        header.style.background = `linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))`;
-                        header.style.backdropFilter = 'blur(12px)';
-                        header.style.borderColor = theme['accent-soft'];
-                    }
-                },
+                                 applyFullPageTheme(theme) {
+                     const root = document.documentElement;
+                     root.style.setProperty('--bg-primary', theme.bg);
+                     root.style.setProperty('--bg-secondary', theme.secondary);
+                     root.style.setProperty('--text-primary', theme.text);
+                     root.style.setProperty('--accent', theme.accent);
+                     root.style.setProperty('--accent-soft', theme['accent-soft']);
+                     
+                     const mainContent = document.getElementById('main-content');
+                     mainContent.style.background = theme.bg;
+                     mainContent.style.borderColor = theme['accent-soft'];
+                     mainContent.style.borderWidth = '4px';
+                     mainContent.style.borderRadius = '24px';
+                     mainContent.style.boxShadow = `0 24px 80px ${theme.accent}15`;
+                     
+                     document.body.className = theme.bodyClass;
+                     document.body.style.background = theme.bg;
+                     
+                     // Apply theme-specific typography
+                     const allElements = document.querySelectorAll('*');
+                     allElements.forEach(el => {
+                         if (el.classList.contains('display-font')) {
+                             el.style.color = theme.accent;
+                         }
+                         if (el.classList.contains('content-font')) {
+                             el.style.color = theme.text;
+                         }
+                     });
+                     
+                     const header = document.querySelector('header');
+                     if (header) {
+                         header.style.background = `linear-gradient(135deg, ${theme.secondary}DD, ${theme['accent-soft']}BB)`;
+                         header.style.backdropFilter = 'blur(24px)';
+                         header.style.borderColor = theme['accent-soft'];
+                         header.style.borderWidth = '3px';
+                         header.style.borderRadius = '20px';
+                         header.style.color = theme.text;
+                     }
+                     
+                     // Update page title with theme icon
+                     const pageTitle = document.querySelector('h1');
+                     if (pageTitle) {
+                         pageTitle.innerHTML = `${theme.icon} Family Calendar ${theme.icon}`;
+                         pageTitle.style.color = theme.accent;
+                     }
+                 },
 
                 // --- CORE RENDER FUNCTIONS ---
                 renderCalendar() {
@@ -848,11 +1017,22 @@
                         cell.dataset.date = fullDate.toISOString();
                         
                         const today = new Date();
-                        if (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && day === today.getDate()) {
-                            cell.classList.add('today');
-                            cell.style.background = this.config.colorSchemes[activeCalendar.theme].secondary;
-                            cell.style.borderLeft = `4px solid ${this.config.colorSchemes[activeCalendar.theme].accent}`;
-                        }
+                                                 if (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && day === today.getDate()) {
+                             cell.classList.add('today');
+                             cell.style.background = this.config.colorSchemes[activeCalendar.theme].secondary;
+                             cell.style.border = `5px solid ${this.config.colorSchemes[activeCalendar.theme]['accent-soft']}`;
+                             cell.style.borderRadius = '16px';
+                             cell.style.boxShadow = `0 12px 35px ${this.config.colorSchemes[activeCalendar.theme].accent}20`;
+                             
+                             // Add today indicator
+                             const todayBadge = document.createElement('div');
+                             todayBadge.innerHTML = `${this.config.colorSchemes[activeCalendar.theme].icon} TODAY`;
+                             todayBadge.className = 'absolute top-2 right-2 text-xs font-bold px-3 py-1 rounded-full';
+                             todayBadge.style.background = this.config.colorSchemes[activeCalendar.theme]['accent-soft'];
+                             todayBadge.style.color = this.config.colorSchemes[activeCalendar.theme].text;
+                             cell.style.position = 'relative';
+                             cell.appendChild(todayBadge);
+                         }
                         
                         const dayHeader = document.createElement('div');
                         dayHeader.className = 'flex justify-between items-start mb-2';
@@ -880,35 +1060,97 @@
                         const eventsContainer = document.createElement('div');
                         eventsContainer.className = 'flex-1 space-y-2 overflow-y-auto text-xs';
                         
-                        if (activeCalendar && activeCalendar.events && activeCalendar.events[dateKey]) {
-                            cell.style.background = `linear-gradient(135deg, ${this.config.colorSchemes[activeCalendar.theme].secondary}, rgba(255,255,255,0.8))`;
-                            
-                            activeCalendar.events[dateKey].forEach(event => {
-                                const eventEl = document.createElement('div');
-                                eventEl.className = `event-bubble ${event.color} flex items-center justify-between`;
-                                if(event.completed) eventEl.classList.add('event-bubble-completed');
-                                
-                                const eventText = document.createElement('span');
-                                eventText.textContent = event.name;
-                                eventEl.appendChild(eventText);
+                                                 // Collect all events for this date from active calendar and visible calendars
+                         const allEvents = [];
+                         let hasEvents = false;
+                         
+                         // Add events from active calendar
+                         if (activeCalendar && activeCalendar.events && activeCalendar.events[dateKey]) {
+                             hasEvents = true;
+                             activeCalendar.events[dateKey].forEach(event => {
+                                 allEvents.push({
+                                     ...event,
+                                     calendarId: activeCalendar.id,
+                                     calendarName: activeCalendar.name,
+                                     calendarTheme: activeCalendar.theme,
+                                     isActive: true
+                                 });
+                             });
+                         }
+                         
+                         // Add events from visible calendars (overlay)
+                         this.state.visibleCalendars.forEach(visibleCalendarId => {
+                             const visibleCalendar = this.state.calendars.find(c => c.id === visibleCalendarId);
+                             if (visibleCalendar && visibleCalendar.events && visibleCalendar.events[dateKey]) {
+                                 hasEvents = true;
+                                 visibleCalendar.events[dateKey].forEach(event => {
+                                     allEvents.push({
+                                         ...event,
+                                         calendarId: visibleCalendar.id,
+                                         calendarName: visibleCalendar.name,
+                                         calendarTheme: visibleCalendar.theme,
+                                         isActive: false
+                                     });
+                                 });
+                             }
+                         });
+                         
+                         if (hasEvents) {
+                             cell.style.background = `linear-gradient(135deg, ${this.config.colorSchemes[activeCalendar.theme].secondary}, ${this.config.colorSchemes[activeCalendar.theme]['accent-soft']})`;
+                             cell.style.border = `3px solid ${this.config.colorSchemes[activeCalendar.theme]['accent-soft']}`;
+                             cell.style.borderRadius = '14px';
+                             
+                             // Sort events: active calendar first, then by time
+                             allEvents.sort((a, b) => {
+                                 if (a.isActive && !b.isActive) return -1;
+                                 if (!a.isActive && b.isActive) return 1;
+                                 return new Date(a.date) - new Date(b.date);
+                             });
+                             
+                             allEvents.forEach(event => {
+                                 const eventEl = document.createElement('div');
+                                 eventEl.className = `event-bubble ${event.color} flex items-center justify-between ${!event.isActive ? 'overlay-event' : ''}`;
+                                 if(event.completed) eventEl.classList.add('event-bubble-completed');
+                                 
+                                 const eventText = document.createElement('span');
+                                 const calendarIcon = this.config.colorSchemes[event.calendarTheme].icon;
+                                 eventText.innerHTML = `${event.isActive ? this.getDayTimeIcon() : calendarIcon} ${event.name}`;
+                                 eventText.style.fontWeight = event.isActive ? '600' : '500';
+                                 if (!event.isActive) {
+                                     eventText.innerHTML += ` <span class="text-xs opacity-60">(${event.calendarName})</span>`;
+                                 }
+                                 eventEl.appendChild(eventText);
 
-                                const checkbox = document.createElement('input');
-                                checkbox.type = 'checkbox';
-                                checkbox.checked = event.completed;
-                                checkbox.className = 'ml-2 w-4 h-4 rounded-full';
-                                checkbox.onchange = (e) => {
-                                    e.stopPropagation();
-                                    this.toggleEventCompletion(event.id);
-                                };
-                                eventEl.appendChild(checkbox);
-                                eventsContainer.appendChild(eventEl);
-                            });
-                        }
+                                 // Only add checkbox for active calendar events
+                                 if (event.isActive) {
+                                     const checkbox = document.createElement('input');
+                                     checkbox.type = 'checkbox';
+                                     checkbox.checked = event.completed;
+                                     checkbox.className = 'ml-2 w-4 h-4 rounded-full';
+                                     checkbox.style.accentColor = this.config.colorSchemes[activeCalendar.theme]['accent-soft'];
+                                     checkbox.onchange = (e) => {
+                                         e.stopPropagation();
+                                         this.toggleEventCompletion(event.id);
+                                     };
+                                     eventEl.appendChild(checkbox);
+                                 }
+                                 eventsContainer.appendChild(eventEl);
+                             });
+                         }
                         cell.appendChild(eventsContainer);
 
-                        const addBtn = document.createElement('button');
-                        addBtn.innerHTML = '<i class="fas fa-plus-circle text-2xl"></i>';
-                        addBtn.className = 'self-center mt-auto opacity-0 group-hover:opacity-100 transition-all duration-300 text-purple-400 hover:text-purple-600 hover:scale-110';
+                                                 const addBtn = document.createElement('button');
+                         addBtn.innerHTML = `<span class="text-2xl">${this.getDayTimeIcon()}</span>`;
+                         addBtn.className = 'self-center mt-auto opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110';
+                         addBtn.style.color = this.config.colorSchemes[activeCalendar.theme].text;
+                         addBtn.style.background = `${this.config.colorSchemes[activeCalendar.theme]['accent-soft']}`;
+                         addBtn.style.borderRadius = '50%';
+                         addBtn.style.width = '44px';
+                         addBtn.style.height = '44px';
+                         addBtn.style.display = 'flex';
+                         addBtn.style.alignItems = 'center';
+                         addBtn.style.justifyContent = 'center';
+                         addBtn.style.border = `3px solid ${this.config.colorSchemes[activeCalendar.theme]['accent-soft']}`;
                         addBtn.onclick = (e) => {
                             e.stopPropagation();
                             this.openAddEventModal(fullDate);
@@ -921,37 +1163,62 @@
                     }
                 },
 
-                renderTabs() {
-                    const addBtn = this.elements.addCalendarBtn;
-                    this.elements.tabsContainer.innerHTML = '';
-                    
-                    this.state.calendars.forEach(calendar => {
-                        const tab = document.createElement('button');
-                        tab.className = `tab px-6 py-3 font-medium text-sm transition-all duration-300 content-font`;
-                        tab.textContent = calendar.name;
-                        tab.dataset.calendarId = calendar.id;
-                        
-                        const theme = this.config.colorSchemes[calendar.theme];
-                        if (calendar.id === this.state.activeCalendarId) {
-                            tab.classList.add('tab-active');
-                            tab.style.background = theme.bg;
-                            tab.style.color = theme.text;
-                            tab.style.borderColor = theme['accent-soft'];
-                            
-                            this.applyFullPageTheme(theme);
+                                 renderTabs() {
+                     const addBtn = this.elements.addCalendarBtn;
+                     this.elements.tabsContainer.innerHTML = '';
+                     
+                     this.state.calendars.forEach(calendar => {
+                         const tab = document.createElement('button');
+                         tab.className = `tab px-6 py-3 font-medium text-sm transition-all duration-300 content-font`;
+                         
+                         const theme = this.config.colorSchemes[calendar.theme];
+                         
+                         // Add theme icon and styled text
+                         const isVisible = this.state.visibleCalendars.has(calendar.id);
+                         tab.innerHTML = `
+                             <div class="flex items-center justify-between w-full">
+                                 <div class="flex items-center">
+                                     <span class="text-lg mr-2">${theme.icon}</span>
+                                     <div>
+                                         <span class="font-semibold">${calendar.name}</span>
+                                         <div class="text-xs opacity-75 mt-1">${theme.name}</div>
+                                     </div>
+                                 </div>
+                                 ${calendar.id !== this.state.activeCalendarId ? `
+                                     <label class="toggle-switch ml-3 flex-shrink-0" onclick="event.stopPropagation()">
+                                         <input type="checkbox" ${isVisible ? 'checked' : ''} onchange="event.stopPropagation(); app.toggleCalendarVisibility('${calendar.id}')">
+                                         <span class="toggle-slider"></span>
+                                     </label>
+                                 ` : ''}
+                             </div>
+                         `;
+                         tab.dataset.calendarId = calendar.id;
+                         
+                         if (calendar.id === this.state.activeCalendarId) {
+                             tab.classList.add('tab-active');
+                             tab.style.background = theme.bg;
+                             tab.style.color = theme.text;
+                             tab.style.borderColor = theme['accent-soft'];
+                             tab.style.borderWidth = '4px';
+                             tab.style.borderRadius = '16px';
+                             tab.style.boxShadow = `0 12px 40px ${theme.accent}25`;
+                             
+                             this.applyFullPageTheme(theme);
 
-                        } else {
-                            tab.style.background = 'var(--warm-white)';
-                            tab.style.color = 'var(--medium-gray)';
-                            tab.style.borderColor = 'rgba(0,0,0,0.08)';
-                        }
+                         } else {
+                             tab.style.background = 'rgba(255,255,255,0.7)';
+                             tab.style.color = '#6B7280';
+                             tab.style.borderColor = 'rgba(0,0,0,0.08)';
+                             tab.style.borderWidth = '1px';
+                             tab.style.boxShadow = 'none';
+                         }
 
-                        tab.onclick = () => this.switchCalendar(calendar.id);
-                        this.elements.tabsContainer.appendChild(tab);
-                    });
-                    
-                    this.elements.tabsContainer.appendChild(addBtn);
-                },
+                         tab.onclick = () => this.switchCalendar(calendar.id);
+                         this.elements.tabsContainer.appendChild(tab);
+                     });
+                     
+                     this.elements.tabsContainer.appendChild(addBtn);
+                 },
 
                 renderDailySchedule(date) {
                     const year = date.getFullYear();
@@ -1005,8 +1272,136 @@
                     }
                 },
 
-                // --- EVENT HANDLERS & LOGIC ---
-                changeMonth(offset) {
+                                 // --- UTILITY FUNCTIONS ---
+                 getDayTimeIcon() {
+                     const hour = new Date().getHours();
+                     if (hour >= 6 && hour < 12) {
+                         return '🌅'; // Sunrise (6 AM - 12 PM)
+                     } else if (hour >= 12 && hour < 18) {
+                         return '🌞'; // Sun (12 PM - 6 PM)  
+                     } else if (hour >= 18 && hour < 21) {
+                         return '🌇'; // Sunset (6 PM - 9 PM)
+                     } else {
+                         return '🌙'; // Moon (9 PM - 6 AM)
+                     }
+                 },
+
+                 // --- NOTIFICATION SYSTEM ---
+                 async requestNotificationPermission() {
+                     if (!("Notification" in window)) {
+                         console.log("This browser does not support notifications");
+                         return false;
+                     }
+
+                     if (Notification.permission === "granted") {
+                         this.state.notificationsEnabled = true;
+                         this.updateNotificationIcon();
+                         this.scheduleAllNotifications();
+                         return true;
+                     }
+
+                     if (Notification.permission !== "denied") {
+                         const permission = await Notification.requestPermission();
+                         if (permission === "granted") {
+                             this.state.notificationsEnabled = true;
+                             this.updateNotificationIcon();
+                             this.scheduleAllNotifications();
+                             this.saveState();
+                             return true;
+                         }
+                     }
+                     return false;
+                 },
+
+                 updateNotificationIcon() {
+                     const icon = document.getElementById('notification-icon');
+                     if (icon) {
+                         icon.textContent = this.state.notificationsEnabled ? '🔔' : '🔕';
+                     }
+                 },
+
+                 showNotificationModal() {
+                     this.openModal(document.getElementById('notification-modal'));
+                 },
+
+                 scheduleNotification(event, calendar, minutesBefore) {
+                     if (!this.state.notificationsEnabled) return;
+
+                     const eventTime = new Date(event.date);
+                     const notifyTime = new Date(eventTime.getTime() - (minutesBefore * 60 * 1000));
+                     const now = new Date();
+
+                     if (notifyTime <= now) return; // Don't schedule past notifications
+
+                     const timeoutId = setTimeout(() => {
+                         this.sendNotification(event, calendar, minutesBefore);
+                     }, notifyTime.getTime() - now.getTime());
+
+                     // Store the timeout ID so we can cancel it later if needed
+                     const notificationKey = `${event.id}-${minutesBefore}`;
+                     this.state.scheduledNotifications.set(notificationKey, timeoutId);
+                 },
+
+                 sendNotification(event, calendar, minutesBefore) {
+                     if (!this.state.notificationsEnabled || Notification.permission !== "granted") return;
+
+                     const theme = this.config.colorSchemes[calendar.theme];
+                     const timeText = minutesBefore === 0 ? "now" : `in ${minutesBefore} minutes`;
+                     
+                     const notification = new Notification(`${theme.icon} ${event.name}`, {
+                         body: `Your event "${event.name}" is starting ${timeText}!`,
+                         icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">' + theme.icon + '</text></svg>',
+                         tag: event.id,
+                         requireInteraction: false,
+                         silent: false
+                     });
+
+                     // Auto-close notification after 8 seconds
+                     setTimeout(() => notification.close(), 8000);
+
+                     // Optional: Focus the calendar when notification is clicked
+                     notification.onclick = () => {
+                         window.focus();
+                         notification.close();
+                     };
+                 },
+
+                 scheduleAllNotifications() {
+                     if (!this.state.notificationsEnabled) return;
+
+                     // Clear existing notifications
+                     this.state.scheduledNotifications.forEach(timeoutId => clearTimeout(timeoutId));
+                     this.state.scheduledNotifications.clear();
+
+                     // Schedule notifications for all upcoming events
+                     this.state.calendars.forEach(calendar => {
+                         if (calendar.events) {
+                             Object.values(calendar.events).forEach(dayEvents => {
+                                 dayEvents.forEach(event => {
+                                     if (!event.completed) {
+                                         this.state.notificationTimes.forEach(minutes => {
+                                             this.scheduleNotification(event, calendar, minutes);
+                                         });
+                                     }
+                                 });
+                             });
+                         }
+                     });
+                 },
+
+                 // --- CALENDAR VISIBILITY CONTROLS ---
+                 toggleCalendarVisibility(calendarId) {
+                     if (this.state.visibleCalendars.has(calendarId)) {
+                         this.state.visibleCalendars.delete(calendarId);
+                     } else {
+                         this.state.visibleCalendars.add(calendarId);
+                     }
+                     this.renderCalendar();
+                     this.saveState();
+                 },
+
+                 // --- EVENT HANDLERS & LOGIC ---
+                 changeMonth(offset) {
                     this.state.currentDate.setMonth(this.state.currentDate.getMonth() + offset);
                     this.renderCalendar();
                     this.saveState();
@@ -1030,44 +1425,51 @@
                     this.switchCalendar(newCalendar.id);
                 },
 
-                addEvent(calendarId, date, name, color, linkedCalendarId) {
-                    const calendar = this.state.calendars.find(c => c.id === calendarId);
-                    if (!calendar) return;
+                                 addEvent(calendarId, date, name, color, linkedCalendarId) {
+                     const calendar = this.state.calendars.find(c => c.id === calendarId);
+                     if (!calendar) return;
 
-                    const year = date.getFullYear();
-                    const month = date.getMonth();
-                    const day = date.getDate();
-                    const dateKey = `${year}-${month}-${day}`;
+                     const year = date.getFullYear();
+                     const month = date.getMonth();
+                     const day = date.getDate();
+                     const dateKey = `${year}-${month}-${day}`;
 
-                    if (!calendar.events[dateKey]) {
-                        calendar.events[dateKey] = [];
-                    }
+                     if (!calendar.events[dateKey]) {
+                         calendar.events[dateKey] = [];
+                     }
 
-                    const newEvent = {
-                        id: `evt-${Date.now()}`,
-                        name: name,
-                        color: color,
-                        completed: false,
-                        date: date.toISOString()
-                    };
-                    calendar.events[dateKey].push(newEvent);
-                    
-                    if (linkedCalendarId) {
-                        const linkedCalendar = this.state.calendars.find(c => c.id === linkedCalendarId);
-                        if (linkedCalendar) {
-                            if (!linkedCalendar.events[dateKey]) {
-                                linkedCalendar.events[dateKey] = [];
-                            }
-                            linkedCalendar.events[dateKey].push({...newEvent, id: `evt-${Date.now()}-linked`});
-                        }
-                    }
+                     const newEvent = {
+                         id: `evt-${Date.now()}`,
+                         name: name,
+                         color: color,
+                         completed: false,
+                         date: date.toISOString()
+                     };
+                     calendar.events[dateKey].push(newEvent);
+                     
+                     if (linkedCalendarId) {
+                         const linkedCalendar = this.state.calendars.find(c => c.id === linkedCalendarId);
+                         if (linkedCalendar) {
+                             if (!linkedCalendar.events[dateKey]) {
+                                 linkedCalendar.events[dateKey] = [];
+                             }
+                             linkedCalendar.events[dateKey].push({...newEvent, id: `evt-${Date.now()}-linked`});
+                         }
+                     }
 
-                    this.renderCalendar();
-                    if (this.elements.dailySchedulePanel.classList.contains('open')) {
-                        this.renderDailySchedule(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
-                    }
-                    this.saveState();
-                },
+                     // Schedule notifications for the new event
+                     if (this.state.notificationsEnabled) {
+                         this.state.notificationTimes.forEach(minutes => {
+                             this.scheduleNotification(newEvent, calendar, minutes);
+                         });
+                     }
+
+                     this.renderCalendar();
+                     if (this.elements.dailySchedulePanel.classList.contains('open')) {
+                         this.renderDailySchedule(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
+                     }
+                     this.saveState();
+                 },
                 
                 toggleEventCompletion(eventId) {
                     const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
@@ -1158,19 +1560,62 @@
                         this.applyFullPageTheme(theme);
                     }
                     
-                    this.getLocationAndFetchWeather();
-                    this.renderTabs();
-                    this.renderCalendar();
-                    
-                    this.addEventListeners();
-                    
-                    setInterval(() => this.saveState(), 30000);
+                                         this.getLocationAndFetchWeather();
+                     this.renderTabs();
+                     this.renderCalendar();
+                     
+                     // Initialize notifications
+                     this.updateNotificationIcon();
+                     if (this.state.notificationsEnabled) {
+                         this.scheduleAllNotifications();
+                     }
+                     
+                     this.addEventListeners();
+                     
+                     setInterval(() => this.saveState(), 30000);
                 },
                 
                 addEventListeners() {
-                    this.elements.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
-                    this.elements.nextMonthBtn.addEventListener('click', () => this.changeMonth(1));
-                    this.elements.addCalendarBtn.addEventListener('click', () => this.openAddCalendarModal());
+                                         this.elements.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
+                     this.elements.nextMonthBtn.addEventListener('click', () => this.changeMonth(1));
+                     this.elements.addCalendarBtn.addEventListener('click', () => this.openAddCalendarModal());
+                     
+                     // Notification settings
+                     document.getElementById('notification-settings-btn').addEventListener('click', () => {
+                         if (this.state.notificationsEnabled) {
+                             // Toggle off notifications
+                             this.state.notificationsEnabled = false;
+                             this.state.scheduledNotifications.forEach(timeoutId => clearTimeout(timeoutId));
+                             this.state.scheduledNotifications.clear();
+                             this.updateNotificationIcon();
+                             this.saveState();
+                         } else {
+                             // Show permission modal
+                             this.showNotificationModal();
+                         }
+                     });
+
+                     document.getElementById('enable-notifications').addEventListener('click', async () => {
+                         const granted = await this.requestNotificationPermission();
+                         this.closeModal(document.getElementById('notification-modal'));
+                         if (granted) {
+                             // Show a cute welcome notification
+                             setTimeout(() => {
+                                 const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
+                                 if (activeCalendar) {
+                                     const theme = this.config.colorSchemes[activeCalendar.theme];
+                                     new Notification(`${theme.icon} Notifications Enabled!`, {
+                                         body: "You'll now get cute reminders for your upcoming events!",
+                                         icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">' + theme.icon + '</text></svg>'
+                                     });
+                                 }
+                             }, 500);
+                         }
+                     });
+
+                     document.getElementById('deny-notifications').addEventListener('click', () => {
+                         this.closeModal(document.getElementById('notification-modal'));
+                     });
 
                     document.getElementById('cancel-add-calendar').addEventListener('click', () => this.closeModal(this.elements.addCalendarModal));
                     document.getElementById('cancel-add-event').addEventListener('click', () => this.closeModal(this.elements.addEventModal));
@@ -1235,6 +1680,8 @@
                 }
             };
             
+            // Make app globally available for toggle callbacks
+            window.app = app;
             app.init();
         });
     </script>
