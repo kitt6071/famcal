@@ -546,7 +546,19 @@
     <!-- Modals -->
     <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
 
-                <!-- Notification Permission Modal -->
+                <!-- User Setup Modal -->
+            <div id="user-setup-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
+                <h3 class="text-2xl font-medium mb-4 content-font">🔗 Sync Across Devices</h3>
+                <p class="text-gray-600 mb-4">To sync your calendars across all your devices, create a unique sync code:</p>
+                <input type="text" id="user-sync-code" placeholder="Enter a unique name (e.g., your name)" class="clean-input mb-4">
+                <p class="text-xs text-gray-500 mb-6">💡 Use the same sync code on all your devices to see the same calendars everywhere!</p>
+                <div class="flex justify-end gap-3">
+                    <button id="skip-sync" class="clean-btn secondary">Skip for Now</button>
+                    <button id="setup-sync" class="clean-btn">Setup Sync 🔄</button>
+                </div>
+            </div>
+
+            <!-- Notification Permission Modal -->
             <div id="notification-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
                 <h3 class="text-2xl font-medium mb-4 content-font">📱 Enable Notifications?</h3>
                 <p class="text-gray-600 mb-6">Get cute reminders for your upcoming events! We'll notify you 15 and 5 minutes before each event.</p>
@@ -638,7 +650,9 @@
                      visibleCalendars: new Set(), // Track which calendars are visible for overlay
                      notificationsEnabled: false,
                      notificationTimes: [15, 5], // Notify 15 and 5 minutes before events
-                     scheduledNotifications: new Map() // Track scheduled notifications
+                     scheduledNotifications: new Map(), // Track scheduled notifications
+                     userKey: null,
+                     syncStatus: 'disconnected' // 'disconnected', 'syncing', 'synced', 'error'
                  },
 
                 // --- DOM ELEMENTS ---
@@ -751,9 +765,13 @@
 
                                  async syncToFirebase(data) {
                      try {
-                         const firebaseUrl = 'https://calendar-app-default-rtdb.firebaseio.com/';
                          const userKey = this.getUserKey();
+                         if (!userKey) return; // Can't sync without user key
                          
+                         this.state.syncStatus = 'syncing';
+                         this.updateSyncIcon();
+                         
+                         const firebaseUrl = 'https://calendar-app-default-rtdb.firebaseio.com/';
                          const response = await fetch(`${firebaseUrl}calendars/${userKey}.json`, {
                              method: 'PUT',
                              headers: { 'Content-Type': 'application/json' },
@@ -761,27 +779,41 @@
                          });
                          
                          if (response.ok) {
-                             console.log('✅ Automatically synced to cloud');
+                             this.state.syncStatus = 'synced';
+                             console.log('✅ Synced to cloud');
+                         } else {
+                             this.state.syncStatus = 'error';
                          }
+                         this.updateSyncIcon();
                      } catch (error) {
-                         // Silently handle cloud sync errors (normal for new users)
+                         this.state.syncStatus = 'error';
+                         this.updateSyncIcon();
                      }
                  },
 
-                getUserKey() {
-                    let userKey = localStorage.getItem('calendarUserKey');
-                    if (!userKey) {
-                        userKey = 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
-                        localStorage.setItem('calendarUserKey', userKey);
-                    }
-                    return userKey;
-                },
+                                 getUserKey() {
+                     let userKey = localStorage.getItem('calendarUserKey');
+                     if (!userKey) {
+                         // Show modal to get user identifier for cross-device sync
+                         this.showUserSetupModal();
+                         return null;
+                     }
+                     return userKey;
+                 },
+
+                 setUserKey(userKey) {
+                     localStorage.setItem('calendarUserKey', userKey);
+                     this.state.userKey = userKey;
+                     // Force immediate sync after setting user key
+                     this.loadState();
+                 },
                 
                                  async loadFromCloud() {
                      try {
-                         const firebaseUrl = 'https://calendar-app-default-rtdb.firebaseio.com/';
                          const userKey = this.getUserKey();
+                         if (!userKey) return null; // Can't load without user key
                          
+                         const firebaseUrl = 'https://calendar-app-default-rtdb.firebaseio.com/';
                          const response = await fetch(`${firebaseUrl}calendars/${userKey}.json`);
                          if (response.ok) {
                              const data = await response.json();
@@ -850,6 +882,12 @@
                          }
                          if (!bestData.scheduledNotifications) {
                              bestData.scheduledNotifications = new Map();
+                         }
+                         if (!bestData.userKey) {
+                             bestData.userKey = localStorage.getItem('calendarUserKey');
+                         }
+                         if (!bestData.syncStatus) {
+                             bestData.syncStatus = bestData.userKey ? 'disconnected' : 'disconnected';
                          }
                          
                          this.state = bestData;
@@ -1232,6 +1270,10 @@
                      if (notificationBtn) {
                          this.elements.tabsContainer.appendChild(notificationBtn);
                      }
+                     const syncBtn = document.getElementById('sync-settings-btn');
+                     if (syncBtn) {
+                         this.elements.tabsContainer.appendChild(syncBtn);
+                     }
                  },
 
                 renderDailySchedule(date) {
@@ -1332,6 +1374,33 @@
                      if (icon) {
                          icon.textContent = this.state.notificationsEnabled ? '🔔' : '🔕';
                      }
+                 },
+
+                 updateSyncIcon() {
+                     const icon = document.getElementById('sync-icon');
+                     if (icon) {
+                         switch (this.state.syncStatus) {
+                             case 'synced':
+                                 icon.textContent = '✅';
+                                 icon.title = 'Synced across devices';
+                                 break;
+                             case 'syncing':
+                                 icon.textContent = '🔄';
+                                 icon.title = 'Syncing...';
+                                 break;
+                             case 'error':
+                                 icon.textContent = '⚠️';
+                                 icon.title = 'Sync error';
+                                 break;
+                             default:
+                                 icon.textContent = '🔄';
+                                 icon.title = 'Click to setup sync';
+                         }
+                     }
+                 },
+
+                 showUserSetupModal() {
+                     this.openModal(document.getElementById('user-setup-modal'));
                  },
 
                  showNotificationModal() {
@@ -1594,12 +1663,16 @@
                      
                      // Initialize notifications
                      this.updateNotificationIcon();
+                     this.updateSyncIcon();
                      if (this.state.notificationsEnabled) {
                          this.scheduleAllNotifications();
                      }
                      
-                     // Show welcome modal if no calendars exist
-                     if (this.state.calendars.length === 0) {
+                     // Check if user needs to setup sync
+                     if (!this.state.userKey) {
+                         this.showUserSetupModal();
+                     } else if (this.state.calendars.length === 0) {
+                         // Show welcome modal if no calendars exist
                          this.showWelcomeModal();
                      }
                      
@@ -1627,6 +1700,48 @@
                              } else {
                                  // Show permission modal
                                  this.showNotificationModal();
+                             }
+                         });
+                     }
+
+                     // Sync settings
+                     const syncBtn = document.getElementById('sync-settings-btn');
+                     if (syncBtn) {
+                         syncBtn.addEventListener('click', () => {
+                             this.showUserSetupModal();
+                         });
+                     }
+
+                     // User setup modal handlers
+                     const setupSyncBtn = document.getElementById('setup-sync');
+                     const skipSyncBtn = document.getElementById('skip-sync');
+                     const userSyncCodeInput = document.getElementById('user-sync-code');
+
+                     if (setupSyncBtn) {
+                         setupSyncBtn.addEventListener('click', () => {
+                             const syncCode = userSyncCodeInput.value.trim();
+                             if (syncCode) {
+                                 const userKey = 'user_' + syncCode.toLowerCase().replace(/[^a-z0-9]/g, '');
+                                 this.setUserKey(userKey);
+                                 this.closeModal(document.getElementById('user-setup-modal'));
+                                 // Show success message
+                                 setTimeout(() => {
+                                     if (this.state.calendars.length === 0) {
+                                         this.showWelcomeModal();
+                                     }
+                                 }, 500);
+                             }
+                         });
+                     }
+
+                     if (skipSyncBtn) {
+                         skipSyncBtn.addEventListener('click', () => {
+                             // Generate a temporary local key
+                             const tempKey = 'temp_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+                             this.setUserKey(tempKey);
+                             this.closeModal(document.getElementById('user-setup-modal'));
+                             if (this.state.calendars.length === 0) {
+                                 this.showWelcomeModal();
                              }
                          });
                      }
