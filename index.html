@@ -7,102 +7,90 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@300;400;600;700;800&family=Comfortaa:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --shadow-magical: 0 20px 40px rgba(0,0,0,0.1), 0 15px 12px rgba(0,0,0,0.05);
-            --shadow-soft: 0 10px 25px rgba(0,0,0,0.08), 0 5px 10px rgba(0,0,0,0.04);
-            --shadow-gentle: 0 4px 15px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.02);
+            --cream: #FEFCF8;
+            --warm-white: #FDFBF7;
+            --soft-beige: #F8F6F0;
+            --nude-pink: #F4E6E0;
+            --dusty-rose: #E8C5B5;
+            --sage-green: #B8C5B1;
+            --lavender-gray: #D4D1D7;
+            --charcoal: #2C2C2C;
+            --dark-gray: #4A4A4A;
+            --medium-gray: #7A7A7A;
+            --light-gray: #B5B5B5;
+            
+            --shadow-subtle: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-medium: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-strong: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Comfortaa', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--warm-white) 0%, var(--soft-beige) 100%);
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="g"><stop offset="0%" stop-color="rgba(255,255,255,0.03)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><circle cx="20" cy="20" r="20" fill="url(%23g)"/><circle cx="80" cy="40" r="15" fill="url(%23g)"/><circle cx="40" cy="80" r="25" fill="url(%23g)"/></svg>') repeat;
-            pointer-events: none;
-            z-index: 0;
+            color: var(--charcoal);
+            line-height: 1.6;
         }
 
         .display-font { 
-            font-family: 'Fredoka One', cursive;
-            background: linear-gradient(135deg, #ff6b9d, #c44569, #f8b500);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: var(--charcoal);
         }
 
-        .content-font { font-family: 'Comfortaa', sans-serif; }
+        .content-font { 
+            font-family: 'Inter', sans-serif; 
+            font-weight: 400;
+        }
+
         .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-subtle);
         }
         
         .tab {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: var(--warm-white);
+            border: 1px solid rgba(0,0,0,0.08);
             border-bottom: none;
-            margin-bottom: -2px;
-            box-shadow: var(--shadow-gentle);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: -1px;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.3s ease;
+            border-radius: 12px 12px 0 0;
             position: relative;
-            overflow: hidden;
-        }
-
-        .tab::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.6s;
-        }
-
-        .tab:hover::before {
-            left: 100%;
         }
 
         .tab:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: var(--shadow-soft);
+            background: white;
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-1px);
         }
 
         .tab-active {
-            background: var(--bg-primary, rgba(255, 255, 255, 0.95));
-            border-color: var(--accent-soft, rgba(255, 255, 255, 0.5));
-            border-bottom-color: var(--bg-primary, rgba(255, 255, 255, 0.95)) !important;
+            background: white;
+            border-color: var(--accent-soft, rgba(0,0,0,0.1));
+            border-bottom-color: white !important;
             z-index: 10;
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: var(--shadow-magical);
+            box-shadow: var(--shadow-medium);
         }
         
         #main-content {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            box-shadow: var(--shadow-magical);
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: white;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 0 16px 16px 16px;
+            box-shadow: var(--shadow-medium);
             position: relative;
             z-index: 1;
         }
@@ -110,203 +98,172 @@
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 12px;
+            gap: 1px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         .day-cell {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.2s ease;
+            background: white;
+            border: none;
             position: relative;
-            overflow: hidden;
-        }
-
-        .day-cell::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            transition: all 0.3s ease;
-            opacity: 0;
+            min-height: 120px;
         }
 
         .day-cell:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: var(--shadow-soft);
-            border-color: rgba(255, 255, 255, 0.6);
+            background: var(--soft-beige);
+            transform: none;
         }
 
-        .day-cell:hover::before {
-            opacity: 1;
+        .day-cell.today {
+            background: var(--nude-pink);
+            position: relative;
+        }
+
+        .day-cell.today::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--dusty-rose);
+            border-radius: 50%;
         }
 
         .event-bubble {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 25px;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--event-color, #60a5fa), var(--event-color-dark, #3b82f6));
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .event-bubble::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.4s;
-        }
-
-        .event-bubble:hover::before {
-            left: 100%;
+            transition: all 0.2s ease;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 11px;
+            padding: 6px 8px;
+            margin: 2px 0;
+            border: none;
+            color: var(--charcoal);
+            background: var(--dusty-rose);
         }
 
         .event-bubble:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            transform: none;
+            opacity: 0.8;
         }
 
         .event-bubble-completed {
             text-decoration: line-through;
-            opacity: 0.7;
-            filter: grayscale(30%);
+            opacity: 0.6;
         }
 
+        .event-color-1 { background: var(--dusty-rose); }
+        .event-color-2 { background: var(--sage-green); }
+        .event-color-3 { background: var(--lavender-gray); }
+        .event-color-4 { background: var(--nude-pink); }
+        .event-color-5 { background: #E8D5C4; }
+        .event-color-6 { background: #C8B5A6; }
+
         .daily-schedule {
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s ease;
             transform: translateX(100%);
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
+            background: white;
+            border-left: 1px solid rgba(0,0,0,0.08);
         }
 
         .daily-schedule.open {
             transform: translateX(0);
         }
 
-        .floating-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: var(--shadow-soft);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .clean-btn {
+            background: var(--charcoal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            cursor: pointer;
         }
 
-        .floating-btn:hover {
-            transform: scale(1.1) rotate(90deg);
-            box-shadow: var(--shadow-magical);
+        .clean-btn:hover {
+            background: var(--dark-gray);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-medium);
         }
 
-        .cute-input {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            transition: all 0.3s ease;
+        .clean-btn.secondary {
+            background: var(--light-gray);
+            color: var(--charcoal);
         }
 
-        .cute-input:focus {
-            outline: none;
-            border-color: var(--accent, #667eea);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            transform: scale(1.02);
+        .clean-btn.secondary:hover {
+            background: var(--medium-gray);
+            color: white;
         }
 
-        .cute-button {
-            background: linear-gradient(135deg, var(--btn-color, #667eea) 0%, var(--btn-color-dark, #764ba2) 100%);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cute-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
+        .clean-input {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.4s;
         }
 
-        .cute-button:hover::before {
-            left: 100%;
+        .clean-input:focus {
+            outline: none;
+            border-color: var(--dusty-rose);
+            box-shadow: 0 0 0 3px rgba(232, 197, 181, 0.1);
         }
 
-        .cute-button:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: var(--shadow-soft);
+        .clean-input::placeholder {
+            color: var(--medium-gray);
         }
 
-        .cute-button:active {
-            transform: translateY(0) scale(0.98);
+        /* Clean Color Themes */
+        .theme-warm-neutrals { 
+            --bg-primary: var(--warm-white); 
+            --bg-secondary: var(--nude-pink); 
+            --text-primary: var(--charcoal); 
+            --accent: var(--dusty-rose); 
+            --accent-soft: var(--nude-pink); 
         }
-
-        /* Enhanced Color Scheme Classes with gradients */
-        .theme-cotton-candy { 
-            --bg-primary: linear-gradient(135deg, #FEF6FB 0%, #FCE7F3 100%); 
-            --bg-secondary: #FCE7F3; 
-            --text-primary: #9D446F; 
-            --accent: #F472B6; 
-            --accent-soft: #FBCFE8; 
-            --shadow-color: rgba(219, 39, 119, 0.15);
-            --gradient-theme: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        .theme-sage-tones { 
+            --bg-primary: var(--warm-white); 
+            --bg-secondary: var(--sage-green); 
+            --text-primary: var(--charcoal); 
+            --accent: var(--sage-green); 
+            --accent-soft: #D4E5CE; 
         }
-        .theme-sunny-day { 
-            --bg-primary: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%); 
-            --bg-secondary: #FEF3C7; 
-            --text-primary: #92400E; 
-            --accent: #FBBF24; 
-            --accent-soft: #FDE68A; 
-            --shadow-color: rgba(217, 119, 6, 0.15);
-            --gradient-theme: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+        .theme-lavender-mist { 
+            --bg-primary: var(--warm-white); 
+            --bg-secondary: var(--lavender-gray); 
+            --text-primary: var(--charcoal); 
+            --accent: var(--lavender-gray); 
+            --accent-soft: #E8E4EA; 
         }
-        .theme-minty-fresh { 
-            --bg-primary: linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 100%); 
-            --bg-secondary: #CCFBF1; 
-            --text-primary: #115E59; 
-            --accent: #2DD4BF; 
-            --accent-soft: #99F6E4; 
-            --shadow-color: rgba(13, 148, 136, 0.15);
-            --gradient-theme: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+        .theme-soft-beige { 
+            --bg-primary: var(--warm-white); 
+            --bg-secondary: var(--soft-beige); 
+            --text-primary: var(--charcoal); 
+            --accent: #E8D5C4; 
+            --accent-soft: var(--soft-beige); 
         }
-        .theme-blueberry-muffin { 
-            --bg-primary: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); 
-            --bg-secondary: #DBEAFE; 
-            --text-primary: #1E40AF; 
-            --accent: #60A5FA; 
-            --accent-soft: #BFDBFE; 
-            --shadow-color: rgba(59, 130, 246, 0.15);
-            --gradient-theme: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        .theme-minimal-gray { 
+            --bg-primary: var(--warm-white); 
+            --bg-secondary: #F5F5F5; 
+            --text-primary: var(--charcoal); 
+            --accent: var(--medium-gray); 
+            --accent-soft: #F5F5F5; 
         }
-        .theme-lavender-dreams { 
-            --bg-primary: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%); 
-            --bg-secondary: #E9D5FF; 
-            --text-primary: #581C87; 
-            --accent: #A855F7; 
-            --accent-soft: #DDD6FE; 
-            --shadow-color: rgba(168, 85, 247, 0.15);
-            --gradient-theme: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
-        }
-        .theme-sunset-orange { 
-            --bg-primary: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%); 
-            --bg-secondary: #FFEDD5; 
-            --text-primary: #9A3412; 
-            --accent: #FB923C; 
-            --accent-soft: #FED7AA; 
-            --shadow-color: rgba(251, 146, 60, 0.15);
-            --gradient-theme: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+        .theme-cream-rose { 
+            --bg-primary: var(--cream); 
+            --bg-secondary: #F9F0ED; 
+            --text-primary: var(--charcoal); 
+            --accent: #E8C5B5; 
+            --accent-soft: #F4E6E0; 
         }
         
         .bg-primary { background: var(--bg-primary); }
@@ -315,99 +272,84 @@
         .accent { background-color: var(--accent); }
         .border-accent { border-color: var(--accent); }
 
-        /* Magical animations */
-        @keyframes bounce-in {
-            0% { transform: scale(0) rotate(-360deg); opacity: 0; }
-            50% { transform: scale(1.2) rotate(-180deg); }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        .animate-bounce-in {
-            animation: bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
         .weather-icon {
-            transition: all 0.3s ease;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+            transition: all 0.2s ease;
+            filter: none;
         }
 
         .weather-icon:hover {
-            transform: scale(1.1) rotate(10deg);
+            transform: scale(1.05);
         }
     </style>
 </head>
-<body class="overflow-hidden">
+<body>
 
-    <div id="app" class="flex flex-col h-screen p-4 lg:p-6 relative z-10">
+    <div id="app" class="min-h-screen p-6 relative">
         <!-- Header -->
-        <header class="flex items-center justify-between mb-6 glass-effect rounded-3xl p-6 shadow-lg">
-            <h1 class="display-font text-6xl tracking-wider animate-bounce-in">✨ Kittson's Calendar ✨</h1>
+        <header class="flex items-center justify-between mb-8 bg-white rounded-lg p-6 shadow-md border border-gray-100">
+            <h1 class="display-font text-4xl">Calendar</h1>
             <div id="weather-widget" class="text-right content-font">
-                <div class="glass-effect rounded-2xl p-4 shadow-md">
-                    <p class="font-bold text-lg text-gray-700">📍 Finding Location...</p>
-                    <p class="text-sm text-gray-600">🌤️ Loading weather...</p>
+                <div class="text-sm">
+                    <p class="font-medium text-gray-700">Finding Location...</p>
+                    <p class="text-gray-500">Loading weather...</p>
                 </div>
             </div>
         </header>
 
         <!-- Calendar Tabs -->
-        <div id="tabs-container" class="flex items-end -mb-px z-20 relative">
+        <div id="tabs-container" class="flex items-end -mb-px relative mb-4">
             <!-- Tabs will be dynamically inserted here -->
-            <button id="add-calendar-btn" class="floating-btn flex items-center justify-center w-14 h-14 rounded-full text-white focus:outline-none ml-3 shadow-lg">
-                <i class="fas fa-plus text-xl"></i>
+            <button id="add-calendar-btn" class="clean-btn ml-3 flex items-center gap-2">
+                <i class="fas fa-plus text-sm"></i>
+                <span>Add Calendar</span>
             </button>
         </div>
 
         <!-- Main Content -->
-        <main id="main-content" class="flex-1 rounded-b-3xl rounded-tr-3xl p-8 transition-all duration-500">
+        <main id="main-content" class="p-6 mb-6">
             <!-- Calendar Header -->
             <div class="flex justify-between items-center mb-6">
-                <button id="prev-month" class="cute-button p-4 text-white font-bold hover:shadow-lg">
-                    <i class="fas fa-chevron-left text-lg"></i>
+                <button id="prev-month" class="clean-btn secondary p-3">
+                    <i class="fas fa-chevron-left"></i>
                 </button>
-                <h2 id="month-year" class="text-4xl font-bold content-font text-primary bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"></h2>
-                <button id="next-month" class="cute-button p-4 text-white font-bold hover:shadow-lg">
-                    <i class="fas fa-chevron-right text-lg"></i>
+                <h2 id="month-year" class="text-3xl font-medium display-font"></h2>
+                <button id="next-month" class="clean-btn secondary p-3">
+                    <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
             <!-- Calendar Grid -->
-            <div class="grid grid-cols-7 gap-3 text-center text-lg font-bold mb-4">
-                <div class="glass-effect rounded-2xl py-3 text-purple-600">🌞 Sun</div>
-                <div class="glass-effect rounded-2xl py-3 text-purple-600">🌙 Mon</div>
-                <div class="glass-effect rounded-2xl py-3 text-purple-600">🔥 Tue</div>
-                <div class="glass-effect rounded-2xl py-3 text-purple-600">💧 Wed</div>
-                <div class="glass-effect rounded-2xl py-3 text-purple-600">🌿 Thu</div>
-                <div class="glass-effect rounded-2xl py-3 text-purple-600">💎 Fri</div>
-                <div class="glass-effect rounded-2xl py-3 text-purple-600">⭐ Sat</div>
+            <div class="grid grid-cols-7 gap-0 text-center text-sm font-medium mb-4 text-gray-600">
+                <div class="py-3">Sun</div>
+                <div class="py-3">Mon</div>
+                <div class="py-3">Tue</div>
+                <div class="py-3">Wed</div>
+                <div class="py-3">Thu</div>
+                <div class="py-3">Fri</div>
+                <div class="py-3">Sat</div>
             </div>
-            <div id="calendar-grid" class="calendar-grid h-[calc(100%-140px)]">
+            <div id="calendar-grid" class="calendar-grid mb-8">
                 <!-- Calendar days will be dynamically inserted here -->
             </div>
         </main>
     </div>
 
     <!-- Daily Schedule Sidebar -->
-    <div id="daily-schedule" class="daily-schedule fixed top-0 right-0 h-full w-full md:w-96 shadow-2xl p-6 z-50 overflow-y-auto rounded-l-3xl">
-        <div class="flex justify-between items-center mb-6 glass-effect rounded-2xl p-4">
-            <h3 class="text-2xl font-bold content-font text-purple-600" id="schedule-date">📅 Schedule</h3>
-            <button id="close-schedule" class="floating-btn p-3 rounded-full text-white">
+    <div id="daily-schedule" class="daily-schedule fixed top-0 right-0 h-full w-full md:w-96 p-6 z-50 overflow-y-auto">
+        <div class="flex justify-between items-center mb-6 bg-white rounded-lg p-4 shadow-sm border">
+            <h3 class="text-xl font-medium content-font" id="schedule-date">Schedule</h3>
+            <button id="close-schedule" class="clean-btn secondary p-2">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div id="schedule-content" class="space-y-3">
+        <div id="schedule-content" class="space-y-2 mb-6">
             <!-- Hourly slots will be dynamically inserted here -->
         </div>
-        <div class="mt-6 glass-effect rounded-2xl p-6">
-            <h4 class="font-bold mb-4 text-purple-600 content-font text-lg">✨ Add New Event</h4>
-            <input type="text" id="schedule-event-input" class="cute-input w-full p-4 mb-3 content-font" placeholder="🎉 Event name...">
-            <input type="time" id="schedule-event-time" class="cute-input w-full p-4 mb-3 content-font">
-            <button id="schedule-add-event-btn" class="cute-button w-full text-white p-4 font-bold content-font">
-                ➕ Add Event
+        <div class="bg-white rounded-lg p-6 shadow-sm border">
+            <h4 class="font-medium mb-4 content-font">Add New Event</h4>
+            <input type="text" id="schedule-event-input" class="clean-input mb-3" placeholder="Event name...">
+            <input type="time" id="schedule-event-time" class="clean-input mb-4">
+            <button id="schedule-add-event-btn" class="clean-btn w-full">
+                Add Event
             </button>
         </div>
     </div>
@@ -416,56 +358,56 @@
     <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
 
     <!-- Add Calendar Modal -->
-    <div id="add-calendar-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 glass-effect rounded-3xl shadow-2xl p-8 z-50 hidden w-96 animate-bounce-in">
-        <h3 class="text-3xl font-bold mb-6 text-center content-font text-purple-600">🎨 Create New Calendar</h3>
-        <input type="text" id="new-calendar-name" placeholder="📝 Calendar Name (e.g., John's Calendar)" class="cute-input w-full p-4 mb-6 content-font">
-        <p class="font-semibold mb-4 text-purple-600 content-font text-lg">🌈 Choose a color scheme:</p>
-        <div class="grid grid-cols-2 gap-4 mb-6">
-            <div class="color-scheme-option cursor-pointer transition-all duration-300 hover:scale-105" data-theme="theme-cotton-candy">
-                <div class="w-full h-16 rounded-xl flex items-center justify-center font-bold theme-cotton-candy border-2 shadow-md">🍭 Cotton Candy</div>
+    <div id="add-calendar-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
+        <h3 class="text-2xl font-medium mb-6 content-font">Create New Calendar</h3>
+        <input type="text" id="new-calendar-name" placeholder="Calendar Name (e.g., John's Calendar)" class="clean-input mb-6">
+        <p class="font-medium mb-4 content-font">Choose a color scheme:</p>
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-warm-neutrals">
+                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-warm-neutrals border">Warm Neutrals</div>
             </div>
-            <div class="color-scheme-option cursor-pointer transition-all duration-300 hover:scale-105" data-theme="theme-sunny-day">
-                <div class="w-full h-16 rounded-xl flex items-center justify-center font-bold theme-sunny-day border-2 shadow-md">☀️ Sunny Day</div>
+            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-sage-tones">
+                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-sage-tones border">Sage Tones</div>
             </div>
-            <div class="color-scheme-option cursor-pointer transition-all duration-300 hover:scale-105" data-theme="theme-minty-fresh">
-                <div class="w-full h-16 rounded-xl flex items-center justify-center font-bold theme-minty-fresh border-2 shadow-md">🌿 Minty Fresh</div>
+            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-lavender-mist">
+                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-lavender-mist border">Lavender Mist</div>
             </div>
-            <div class="color-scheme-option cursor-pointer transition-all duration-300 hover:scale-105" data-theme="theme-blueberry-muffin">
-                <div class="w-full h-16 rounded-xl flex items-center justify-center font-bold theme-blueberry-muffin border-2 shadow-md">🫐 Blueberry Muffin</div>
+            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-soft-beige">
+                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-soft-beige border">Soft Beige</div>
             </div>
-            <div class="color-scheme-option cursor-pointer transition-all duration-300 hover:scale-105" data-theme="theme-lavender-dreams">
-                <div class="w-full h-16 rounded-xl flex items-center justify-center font-bold theme-lavender-dreams border-2 shadow-md">💜 Lavender Dreams</div>
+            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-minimal-gray">
+                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-minimal-gray border">Minimal Gray</div>
             </div>
-            <div class="color-scheme-option cursor-pointer transition-all duration-300 hover:scale-105" data-theme="theme-sunset-orange">
-                <div class="w-full h-16 rounded-xl flex items-center justify-center font-bold theme-sunset-orange border-2 shadow-md">🧡 Sunset Orange</div>
+            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-cream-rose">
+                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-cream-rose border">Cream Rose</div>
             </div>
         </div>
-        <div class="flex justify-end gap-4">
-            <button id="cancel-add-calendar" class="cute-button px-6 py-3 text-gray-600 font-bold content-font bg-gray-200">❌ Cancel</button>
-            <button id="confirm-add-calendar" class="cute-button px-6 py-3 text-white font-bold content-font">✨ Create</button>
+        <div class="flex justify-end gap-3">
+            <button id="cancel-add-calendar" class="clean-btn secondary">Cancel</button>
+            <button id="confirm-add-calendar" class="clean-btn">Create</button>
         </div>
     </div>
 
     <!-- Add Event Modal -->
-    <div id="add-event-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 glass-effect rounded-3xl shadow-2xl p-8 z-50 hidden w-96 animate-bounce-in">
-        <h3 class="text-3xl font-bold mb-6 content-font text-purple-600">🎉 Add Event for <span id="event-modal-date" class="text-pink-500"></span></h3>
-        <input type="text" id="event-name-input" placeholder="🎯 Event Name" class="cute-input w-full p-4 mb-6 content-font">
-        <p class="font-semibold mb-4 text-purple-600 content-font text-lg">🎨 Event Color:</p>
-        <div id="event-colors" class="flex gap-3 mb-6 justify-center">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-red-400 to-red-600 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110" data-color="bg-gradient-to-br from-red-400 to-red-600"></div>
-            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110" data-color="bg-gradient-to-br from-blue-400 to-blue-600"></div>
-            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110" data-color="bg-gradient-to-br from-green-400 to-green-600"></div>
-            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110" data-color="bg-gradient-to-br from-yellow-400 to-yellow-600"></div>
-            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110" data-color="bg-gradient-to-br from-purple-400 to-purple-600"></div>
-            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 cursor-pointer shadow-lg transition-all duration-300 hover:scale-110" data-color="bg-gradient-to-br from-pink-400 to-pink-600"></div>
+    <div id="add-event-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
+        <h3 class="text-2xl font-medium mb-6 content-font">Add Event for <span id="event-modal-date" class="font-normal text-gray-600"></span></h3>
+        <input type="text" id="event-name-input" placeholder="Event Name" class="clean-input mb-6">
+        <p class="font-medium mb-4 content-font">Event Color:</p>
+        <div id="event-colors" class="flex gap-2 mb-6">
+            <div class="w-8 h-8 rounded cursor-pointer transition-all duration-200 hover:scale-110 event-color-1" data-color="event-color-1"></div>
+            <div class="w-8 h-8 rounded cursor-pointer transition-all duration-200 hover:scale-110 event-color-2" data-color="event-color-2"></div>
+            <div class="w-8 h-8 rounded cursor-pointer transition-all duration-200 hover:scale-110 event-color-3" data-color="event-color-3"></div>
+            <div class="w-8 h-8 rounded cursor-pointer transition-all duration-200 hover:scale-110 event-color-4" data-color="event-color-4"></div>
+            <div class="w-8 h-8 rounded cursor-pointer transition-all duration-200 hover:scale-110 event-color-5" data-color="event-color-5"></div>
+            <div class="w-8 h-8 rounded cursor-pointer transition-all duration-200 hover:scale-110 event-color-6" data-color="event-color-6"></div>
         </div>
-        <p class="font-semibold mb-4 text-purple-600 content-font text-lg">🔗 Link with another calendar (optional):</p>
-        <select id="link-calendar-select" class="cute-input w-full p-4 mb-6 content-font">
+        <p class="font-medium mb-4 content-font">Link with another calendar (optional):</p>
+        <select id="link-calendar-select" class="clean-input mb-6">
             <option value="">None</option>
         </select>
-        <div class="flex justify-end gap-4">
-            <button id="cancel-add-event" class="cute-button px-6 py-3 text-gray-600 font-bold content-font bg-gray-200">❌ Cancel</button>
-            <button id="save-event" class="cute-button px-6 py-3 text-white font-bold content-font">💾 Save Event</button>
+        <div class="flex justify-end gap-3">
+            <button id="cancel-add-event" class="clean-btn secondary">Cancel</button>
+            <button id="save-event" class="clean-btn">Save Event</button>
         </div>
     </div>
 
@@ -506,59 +448,47 @@
             const WEATHER_API_KEY = '973209301a5a4be53a5337c204db93c2'; 
             const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             const colorSchemes = {
-                'theme-cotton-candy': { 
-                    bg: 'linear-gradient(135deg, #FEF6FB 0%, #FCE7F3 100%)', 
-                    secondary: '#FCE7F3', 
-                    text: '#9D446F', 
-                    accent: '#F472B6', 
-                    'accent-soft': '#FBCFE8', 
-                    'shadow-color': 'rgba(219, 39, 119, 0.15)',
-                    'gradient-theme': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+                'theme-warm-neutrals': { 
+                    bg: '#FDFBF7', 
+                    secondary: '#F4E6E0', 
+                    text: '#2C2C2C', 
+                    accent: '#E8C5B5', 
+                    'accent-soft': '#F4E6E0'
                 },
-                'theme-sunny-day': { 
-                    bg: 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)', 
-                    secondary: '#FEF3C7', 
-                    text: '#92400E', 
-                    accent: '#FBBF24', 
-                    'accent-soft': '#FDE68A', 
-                    'shadow-color': 'rgba(217, 119, 6, 0.15)',
-                    'gradient-theme': 'linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%)'
+                'theme-sage-tones': { 
+                    bg: '#FDFBF7', 
+                    secondary: '#B8C5B1', 
+                    text: '#2C2C2C', 
+                    accent: '#B8C5B1', 
+                    'accent-soft': '#D4E5CE'
                 },
-                'theme-minty-fresh': { 
-                    bg: 'linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 100%)', 
-                    secondary: '#CCFBF1', 
-                    text: '#115E59', 
-                    accent: '#2DD4BF', 
-                    'accent-soft': '#99F6E4', 
-                    'shadow-color': 'rgba(13, 148, 136, 0.15)',
-                    'gradient-theme': 'linear-gradient(135deg, #00b894 0%, #00cec9 100%)'
+                'theme-lavender-mist': { 
+                    bg: '#FDFBF7', 
+                    secondary: '#D4D1D7', 
+                    text: '#2C2C2C', 
+                    accent: '#D4D1D7', 
+                    'accent-soft': '#E8E4EA'
                 },
-                'theme-blueberry-muffin': { 
-                    bg: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)', 
-                    secondary: '#DBEAFE', 
-                    text: '#1E40AF', 
-                    accent: '#60A5FA', 
-                    'accent-soft': '#BFDBFE', 
-                    'shadow-color': 'rgba(59, 130, 246, 0.15)',
-                    'gradient-theme': 'linear-gradient(135deg, #74b9ff 0%, #0984e3 100%)'
+                'theme-soft-beige': { 
+                    bg: '#FDFBF7', 
+                    secondary: '#F8F6F0', 
+                    text: '#2C2C2C', 
+                    accent: '#E8D5C4', 
+                    'accent-soft': '#F8F6F0'
                 },
-                'theme-lavender-dreams': { 
-                    bg: 'linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%)', 
-                    secondary: '#E9D5FF', 
-                    text: '#581C87', 
-                    accent: '#A855F7', 
-                    'accent-soft': '#DDD6FE', 
-                    'shadow-color': 'rgba(168, 85, 247, 0.15)',
-                    'gradient-theme': 'linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%)'
+                'theme-minimal-gray': { 
+                    bg: '#FDFBF7', 
+                    secondary: '#F5F5F5', 
+                    text: '#2C2C2C', 
+                    accent: '#7A7A7A', 
+                    'accent-soft': '#F5F5F5'
                 },
-                'theme-sunset-orange': { 
-                    bg: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)', 
-                    secondary: '#FFEDD5', 
-                    text: '#9A3412', 
-                    accent: '#FB923C', 
-                    'accent-soft': '#FED7AA', 
-                    'shadow-color': 'rgba(251, 146, 60, 0.15)',
-                    'gradient-theme': 'linear-gradient(135deg, #fdcb6e 0%, #e17055 100%)'
+                'theme-cream-rose': { 
+                    bg: '#FEFCF8', 
+                    secondary: '#F9F0ED', 
+                    text: '#2C2C2C', 
+                    accent: '#E8C5B5', 
+                    'accent-soft': '#F4E6E0'
                 }
             };
 
@@ -589,24 +519,24 @@
                     const defaultId = `cal-${Date.now()}`;
                     state.calendars.push({
                         id: defaultId,
-                        name: "Kittson's Calendar",
-                        theme: 'theme-cotton-candy',
+                        name: "Calendar",
+                        theme: 'theme-warm-neutrals',
                         events: {}
                     });
                     state.activeCalendarId = defaultId;
                     
-                    // Add some sample events to showcase the beautiful interface
+                    // Add some sample events to showcase the interface
                     const today = new Date();
                     const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
                     const tomorrowKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() + 1}`;
                     
                     state.calendars[0].events[todayKey] = [
-                        { id: 'sample1', name: '🌟 Morning Coffee', color: 'bg-gradient-to-br from-yellow-400 to-yellow-600', completed: false, date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 8, 0).toISOString() },
-                        { id: 'sample2', name: '💻 Work Meeting', color: 'bg-gradient-to-br from-blue-400 to-blue-600', completed: true, date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 10, 30).toISOString() }
+                        { id: 'sample1', name: 'Morning Coffee', color: 'event-color-1', completed: false, date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 8, 0).toISOString() },
+                        { id: 'sample2', name: 'Work Meeting', color: 'event-color-2', completed: true, date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 10, 30).toISOString() }
                     ];
                     
                     state.calendars[0].events[tomorrowKey] = [
-                        { id: 'sample3', name: '🎨 Creative Project', color: 'bg-gradient-to-br from-purple-400 to-purple-600', completed: false, date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 14, 0).toISOString() }
+                        { id: 'sample3', name: 'Creative Project', color: 'event-color-3', completed: false, date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 14, 0).toISOString() }
                     ];
                 }
             }
