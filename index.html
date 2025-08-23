@@ -749,22 +749,24 @@
                     }
                 },
 
-                async syncToFirebase(data) {
-                    try {
-                        const firebaseUrl = 'https://calendar-app-default-rtdb.firebaseio.com/';
-                        const userKey = this.getUserKey();
-                        
-                        await fetch(`${firebaseUrl}calendars/${userKey}.json`, {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(data)
-                        });
-                        
-                        console.log('✅ Automatically synced to cloud');
-                    } catch (error) {
-                        console.log('Cloud sync failed, continuing with local storage');
-                    }
-                },
+                                 async syncToFirebase(data) {
+                     try {
+                         const firebaseUrl = 'https://calendar-app-default-rtdb.firebaseio.com/';
+                         const userKey = this.getUserKey();
+                         
+                         const response = await fetch(`${firebaseUrl}calendars/${userKey}.json`, {
+                             method: 'PUT',
+                             headers: { 'Content-Type': 'application/json' },
+                             body: JSON.stringify(data)
+                         });
+                         
+                         if (response.ok) {
+                             console.log('✅ Automatically synced to cloud');
+                         }
+                     } catch (error) {
+                         // Silently handle cloud sync errors (normal for new users)
+                     }
+                 },
 
                 getUserKey() {
                     let userKey = localStorage.getItem('calendarUserKey');
@@ -775,22 +777,22 @@
                     return userKey;
                 },
                 
-                async loadFromCloud() {
-                    try {
-                        const firebaseUrl = 'https://calendar-app-default-rtdb.firebaseio.com/';
-                        const userKey = this.getUserKey();
-                        
-                        const response = await fetch(`${firebaseUrl}calendars/${userKey}.json`);
-                        if (response.ok) {
-                            const data = await response.json();
-                            return data;
-                        }
-                        return null;
-                    } catch (error) {
-                        console.log('Cloud load failed');
-                        return null;
-                    }
-                },
+                                 async loadFromCloud() {
+                     try {
+                         const firebaseUrl = 'https://calendar-app-default-rtdb.firebaseio.com/';
+                         const userKey = this.getUserKey();
+                         
+                         const response = await fetch(`${firebaseUrl}calendars/${userKey}.json`);
+                         if (response.ok) {
+                             const data = await response.json();
+                             // Firebase returns null for non-existent data, which is normal for new users
+                             return data;
+                         }
+                         return null;
+                     } catch (error) {
+                         return null;
+                     }
+                 },
 
                 async loadState() {
                     let bestData = null;
@@ -809,16 +811,16 @@
                         }
                     }
                     
-                    try {
-                        const cloudData = await this.loadFromCloud();
-                        if (cloudData && cloudData.lastModified > bestTimestamp) {
-                            bestData = cloudData;
-                            bestTimestamp = cloudData.lastModified;
-                            console.log('📥 Using newer cloud data');
-                        }
-                    } catch (e) {
-                        console.log('Cloud data unavailable, using local');
-                    }
+                                         try {
+                         const cloudData = await this.loadFromCloud();
+                         if (cloudData && cloudData.lastModified > bestTimestamp) {
+                             bestData = cloudData;
+                             bestTimestamp = cloudData.lastModified;
+                             console.log('📥 Using newer cloud data');
+                         }
+                     } catch (e) {
+                         // Cloud data unavailable, continue with local only
+                     }
                     
                                          if (bestData) {
                          bestData.currentDate = new Date(bestData.currentDate);
@@ -859,15 +861,7 @@
                          return;
                      }
                     
-                    console.log('No existing data found, creating new calendar');
-                    const defaultId = `cal-${Date.now()}`;
-                    this.state.calendars.push({
-                        id: defaultId,
-                        name: "Calendar",
-                        theme: 'theme-warm-neutrals',
-                        events: {}
-                    });
-                    this.state.activeCalendarId = defaultId;
+                                         // No existing data found - user will create their first calendar
                 },
 
                 // --- WEATHER API ---
@@ -989,18 +983,34 @@
                  },
 
                 // --- CORE RENDER FUNCTIONS ---
-                renderCalendar() {
-                    const date = this.state.currentDate;
-                    const year = date.getFullYear();
-                    const month = date.getMonth();
+                                 renderCalendar() {
+                     const date = this.state.currentDate;
+                     const year = date.getFullYear();
+                     const month = date.getMonth();
 
-                    this.elements.monthYearHeader.textContent = `${this.config.months[month]} ${year}`;
-                    this.elements.calendarGrid.innerHTML = '';
+                     this.elements.monthYearHeader.textContent = `${this.config.months[month]} ${year}`;
+                     this.elements.calendarGrid.innerHTML = '';
 
-                    const firstDayOfMonth = new Date(year, month, 1).getDay();
-                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+                     // If no calendars exist, show a message
+                     if (this.state.calendars.length === 0) {
+                         const welcomeMessage = document.createElement('div');
+                         welcomeMessage.className = 'col-span-7 text-center py-12';
+                         welcomeMessage.innerHTML = `
+                             <div class="text-6xl mb-4">🌸</div>
+                             <h2 class="text-2xl font-bold mb-2 display-font">Welcome to Your Calendar!</h2>
+                             <p class="text-gray-600 mb-6">Create your first calendar to get started</p>
+                             <button onclick="app.openAddCalendarModal()" class="clean-btn">
+                                 <i class="fas fa-plus mr-2"></i>Create Your First Calendar
+                             </button>
+                         `;
+                         this.elements.calendarGrid.appendChild(welcomeMessage);
+                         return;
+                     }
 
-                    const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
+                     const firstDayOfMonth = new Date(year, month, 1).getDay();
+                     const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                     const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
                     
                     for (let i = 0; i < firstDayOfMonth; i++) {
                         const cell = document.createElement('div');
@@ -1165,6 +1175,7 @@
 
                                  renderTabs() {
                      const addBtn = this.elements.addCalendarBtn;
+                     const notificationBtn = document.getElementById('notification-settings-btn');
                      this.elements.tabsContainer.innerHTML = '';
                      
                      this.state.calendars.forEach(calendar => {
@@ -1218,6 +1229,9 @@
                      });
                      
                      this.elements.tabsContainer.appendChild(addBtn);
+                     if (notificationBtn) {
+                         this.elements.tabsContainer.appendChild(notificationBtn);
+                     }
                  },
 
                 renderDailySchedule(date) {
@@ -1501,9 +1515,23 @@
                     modal.classList.add('hidden');
                 },
 
-                openAddCalendarModal() {
-                    this.openModal(this.elements.addCalendarModal);
-                },
+                                 showWelcomeModal() {
+                     this.openModal(this.elements.addCalendarModal);
+                     // Update the modal title for first-time users
+                     const modalTitle = document.querySelector('#add-calendar-modal h3');
+                     if (modalTitle && this.state.calendars.length === 0) {
+                         modalTitle.textContent = 'Welcome! Create Your First Calendar 🌟';
+                     }
+                 },
+
+                 openAddCalendarModal() {
+                     this.openModal(this.elements.addCalendarModal);
+                     // Reset title for regular add calendar
+                     const modalTitle = document.querySelector('#add-calendar-modal h3');
+                     if (modalTitle) {
+                         modalTitle.textContent = 'Create New Calendar';
+                     }
+                 },
 
                 openAddEventModal(date) {
                     this.selectedDateForEvent = date;
@@ -1570,6 +1598,11 @@
                          this.scheduleAllNotifications();
                      }
                      
+                     // Show welcome modal if no calendars exist
+                     if (this.state.calendars.length === 0) {
+                         this.showWelcomeModal();
+                     }
+                     
                      this.addEventListeners();
                      
                      setInterval(() => this.saveState(), 30000);
@@ -1580,42 +1613,52 @@
                      this.elements.nextMonthBtn.addEventListener('click', () => this.changeMonth(1));
                      this.elements.addCalendarBtn.addEventListener('click', () => this.openAddCalendarModal());
                      
-                     // Notification settings
-                     document.getElementById('notification-settings-btn').addEventListener('click', () => {
-                         if (this.state.notificationsEnabled) {
-                             // Toggle off notifications
-                             this.state.notificationsEnabled = false;
-                             this.state.scheduledNotifications.forEach(timeoutId => clearTimeout(timeoutId));
-                             this.state.scheduledNotifications.clear();
-                             this.updateNotificationIcon();
-                             this.saveState();
-                         } else {
-                             // Show permission modal
-                             this.showNotificationModal();
-                         }
-                     });
+                     // Notification settings (only if button exists)
+                     const notificationBtn = document.getElementById('notification-settings-btn');
+                     if (notificationBtn) {
+                         notificationBtn.addEventListener('click', () => {
+                             if (this.state.notificationsEnabled) {
+                                 // Toggle off notifications
+                                 this.state.notificationsEnabled = false;
+                                 this.state.scheduledNotifications.forEach(timeoutId => clearTimeout(timeoutId));
+                                 this.state.scheduledNotifications.clear();
+                                 this.updateNotificationIcon();
+                                 this.saveState();
+                             } else {
+                                 // Show permission modal
+                                 this.showNotificationModal();
+                             }
+                         });
+                     }
 
-                     document.getElementById('enable-notifications').addEventListener('click', async () => {
-                         const granted = await this.requestNotificationPermission();
-                         this.closeModal(document.getElementById('notification-modal'));
-                         if (granted) {
-                             // Show a cute welcome notification
-                             setTimeout(() => {
-                                 const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
-                                 if (activeCalendar) {
-                                     const theme = this.config.colorSchemes[activeCalendar.theme];
-                                     new Notification(`${theme.icon} Notifications Enabled!`, {
-                                         body: "You'll now get cute reminders for your upcoming events!",
-                                         icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">' + theme.icon + '</text></svg>'
-                                     });
-                                 }
-                             }, 500);
-                         }
-                     });
+                     const enableBtn = document.getElementById('enable-notifications');
+                     const denyBtn = document.getElementById('deny-notifications');
+                     
+                     if (enableBtn) {
+                         enableBtn.addEventListener('click', async () => {
+                             const granted = await this.requestNotificationPermission();
+                             this.closeModal(document.getElementById('notification-modal'));
+                             if (granted) {
+                                 // Show a cute welcome notification
+                                 setTimeout(() => {
+                                     const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
+                                     if (activeCalendar) {
+                                         const theme = this.config.colorSchemes[activeCalendar.theme];
+                                         new Notification(`${theme.icon} Notifications Enabled!`, {
+                                             body: "You'll now get cute reminders for your upcoming events!",
+                                             icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="80" font-size="80">' + theme.icon + '</text></svg>'
+                                         });
+                                     }
+                                 }, 500);
+                             }
+                         });
+                     }
 
-                     document.getElementById('deny-notifications').addEventListener('click', () => {
-                         this.closeModal(document.getElementById('notification-modal'));
-                     });
+                     if (denyBtn) {
+                         denyBtn.addEventListener('click', () => {
+                             this.closeModal(document.getElementById('notification-modal'));
+                         });
+                     }
 
                     document.getElementById('cancel-add-calendar').addEventListener('click', () => this.closeModal(this.elements.addCalendarModal));
                     document.getElementById('cancel-add-event').addEventListener('click', () => this.closeModal(this.elements.addEventModal));
