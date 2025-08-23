@@ -40,6 +40,60 @@
             -moz-osx-font-smoothing: grayscale;
             color: var(--charcoal);
             line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Decorative Background Elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+            background-size: 300px 300px;
+            background-repeat: repeat;
+            transition: all 0.8s ease;
+        }
+
+        /* Theme-specific decorative backgrounds */
+        body.theme-sage-tones::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cdefs%3E%3Cstyle%3E.vine%7Bfill:none;stroke:%23B8C5B1;stroke-width:2;opacity:0.6%7D.leaf%7Bfill:%23B8C5B1;opacity:0.4%7D%3C/style%3E%3C/defs%3E%3Cpath class='vine' d='M50 50Q150 100 250 50M50 150Q150 200 250 150M50 250Q150 300 250 250'/%3E%3Cellipse class='leaf' cx='100' cy='75' rx='8' ry='15' transform='rotate(30 100 75)'/%3E%3Cellipse class='leaf' cx='200' cy='125' rx='8' ry='15' transform='rotate(-45 200 125)'/%3E%3Cellipse class='leaf' cx='150' cy='225' rx='8' ry='15' transform='rotate(60 150 225)'/%3E%3C/svg%3E");
+            opacity: 0.15;
+        }
+
+        body.theme-matcha-dreams::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cdefs%3E%3Cstyle%3E.boba%7Bfill:%23A8C686;opacity:0.3%7D.ice%7Bfill:%23E8F5E8;opacity:0.4;stroke:%23A8C686;stroke-width:1%7D%3C/style%3E%3C/defs%3E%3Ccircle class='boba' cx='80' cy='80' r='12'/%3E%3Ccircle class='boba' cx='220' cy='120' r='10'/%3E%3Ccircle class='boba' cx='150' cy='200' r='14'/%3E%3Ccircle class='boba' cx='50' cy='250' r='8'/%3E%3Cpolygon class='ice' points='100,50 120,70 110,90 90,85'/%3E%3Cpolygon class='ice' points='200,180 225,200 210,225 185,210'/%3E%3Cpolygon class='ice' points='250,80 270,95 260,115 240,105'/%3E%3C/svg%3E");
+            opacity: 0.2;
+        }
+
+        body.theme-warm-neutrals::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cdefs%3E%3Cstyle%3E.petal%7Bfill:%23E8C5B5;opacity:0.3%7D.stem%7Bfill:none;stroke:%23D4B5A0;stroke-width:1.5;opacity:0.4%7D%3C/style%3E%3C/defs%3E%3Cpath class='stem' d='M150 150Q120 120 100 100M150 150Q180 120 200 100M150 150Q120 180 100 200M150 150Q180 180 200 200'/%3E%3Cellipse class='petal' cx='105' cy='105' rx='6' ry='12' transform='rotate(45 105 105)'/%3E%3Cellipse class='petal' cx='195' cy='105' rx='6' ry='12' transform='rotate(-45 195 105)'/%3E%3Cellipse class='petal' cx='105' cy='195' rx='6' ry='12' transform='rotate(-45 105 195)'/%3E%3Cellipse class='petal' cx='195' cy='195' rx='6' ry='12' transform='rotate(45 195 195)'/%3E%3C/svg%3E");
+            opacity: 0.12;
+        }
+
+        body.theme-lavender-mist::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cdefs%3E%3Cstyle%3E.cloud%7Bfill:%23D4D1D7;opacity:0.25%7D.star%7Bfill:%23C8C3D0;opacity:0.3%7D%3C/style%3E%3C/defs%3E%3Cellipse class='cloud' cx='80' cy='100' rx='30' ry='15'/%3E%3Cellipse class='cloud' cx='200' cy='80' rx='25' ry='12'/%3E%3Cellipse class='cloud' cx='120' cy='220' rx='35' ry='18'/%3E%3Cpath class='star' d='M150 50l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z'/%3E%3Cpath class='star' d='M250 150l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z'/%3E%3Cpath class='star' d='M60 200l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z'/%3E%3C/svg%3E");
+            opacity: 0.18;
+        }
+
+        body.theme-soft-beige::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cdefs%3E%3Cstyle%3E.grain%7Bfill:%23E8D5C4;opacity:0.2%7D.texture%7Bfill:%23D4C0A8;opacity:0.15%7D%3C/style%3E%3C/defs%3E%3Ccircle class='grain' cx='80' cy='80' r='2'/%3E%3Ccircle class='grain' cx='220' cy='120' r='1.5'/%3E%3Ccircle class='grain' cx='150' cy='200' r='2.5'/%3E%3Ccircle class='grain' cx='50' cy='250' r='1'/%3E%3Ccircle class='texture' cx='180' cy='60' r='1'/%3E%3Ccircle class='texture' cx='100' cy='180' r='1.5'/%3E%3Ccircle class='texture' cx='250' cy='200' r='1'/%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        body.theme-minimal-gray::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cdefs%3E%3Cstyle%3E.line%7Bstroke:%237A7A7A;stroke-width:0.5;opacity:0.2%7D%3C/style%3E%3C/defs%3E%3Cline class='line' x1='0' y1='100' x2='300' y2='100'/%3E%3Cline class='line' x1='0' y1='200' x2='300' y2='200'/%3E%3Cline class='line' x1='100' y1='0' x2='100' y2='300'/%3E%3Cline class='line' x1='200' y1='0' x2='200' y2='300'/%3E%3C/svg%3E");
+            opacity: 0.08;
+        }
+
+        body.theme-cream-rose::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cdefs%3E%3Cstyle%3E.rose%7Bfill:%23E8C5B5;opacity:0.25%7D.bud%7Bfill:%23D4A28F;opacity:0.2%7D%3C/style%3E%3C/defs%3E%3Ccircle class='rose' cx='150' cy='150' r='8'/%3E%3Ccircle class='bud' cx='100' cy='100' r='4'/%3E%3Ccircle class='bud' cx='200' cy='200' r='5'/%3E%3Ccircle class='bud' cx='80' cy='220' r='3'/%3E%3Ccircle class='bud' cx='220' cy='80' r='4'/%3E%3Cpath class='rose' d='M150 142c-4 0-8 4-8 8s4 8 8 8 8-4 8-8-4-8-8-8z' opacity='0.3'/%3E%3C/svg%3E");
+            opacity: 0.15;
         }
 
         .display-font { 
@@ -265,6 +319,13 @@
             --accent: #E8C5B5; 
             --accent-soft: #F4E6E0; 
         }
+        .theme-matcha-dreams { 
+            --bg-primary: #F5F8F4; 
+            --bg-secondary: #E0EDD8; 
+            --text-primary: var(--charcoal); 
+            --accent: #A8C686; 
+            --accent-soft: #D4E5C0; 
+        }
         
         .bg-primary { background: var(--bg-primary); }
         .bg-secondary { background-color: var(--bg-secondary); }
@@ -279,6 +340,54 @@
 
         .weather-icon:hover {
             transform: scale(1.05);
+        }
+
+        /* Floating decorative elements */
+        .floating-element {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.1;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+
+        .floating-element.slow {
+            animation-duration: 30s;
+        }
+
+        .floating-element.fast {
+            animation-duration: 15s;
+        }
+
+        /* Enhanced theme transitions */
+        body, #main-content, header {
+            transition: background 0.8s ease, border-color 0.8s ease;
+        }
+
+        /* Sophisticated hover effects */
+        .day-cell {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day-cell::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .day-cell:hover::after {
+            left: 100%;
         }
     </style>
 </head>
@@ -369,6 +478,9 @@
             <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-sage-tones">
                 <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-sage-tones border">Sage Tones</div>
             </div>
+            <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-matcha-dreams">
+                <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-matcha-dreams border">Matcha Dreams</div>
+            </div>
             <div class="color-scheme-option cursor-pointer transition-all duration-200 hover:scale-105" data-theme="theme-lavender-mist">
                 <div class="w-full h-12 rounded-lg flex items-center justify-center text-sm font-medium theme-lavender-mist border">Lavender Mist</div>
             </div>
@@ -413,615 +525,717 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- STATE MANAGEMENT ---
-            let state = {
-                currentDate: new Date(),
-                calendars: [],
-                activeCalendarId: null,
-                weatherData: {}
-            };
-
-            // --- DOM ELEMENTS ---
-            const calendarGrid = document.getElementById('calendar-grid');
-            const monthYearHeader = document.getElementById('month-year');
-            const prevMonthBtn = document.getElementById('prev-month');
-            const nextMonthBtn = document.getElementById('next-month');
-            const tabsContainer = document.getElementById('tabs-container');
-            const mainContent = document.getElementById('main-content');
-            const appContainer = document.getElementById('app');
-            
-            // Modals
-            const modalBackdrop = document.getElementById('modal-backdrop');
-            const addCalendarModal = document.getElementById('add-calendar-modal');
-            const addEventModal = document.getElementById('add-event-modal');
-
-            // Daily Schedule
-            const dailySchedulePanel = document.getElementById('daily-schedule');
-            const scheduleDateHeader = document.getElementById('schedule-date');
-            const scheduleContent = document.getElementById('schedule-content');
-            
-            // --- CONSTANTS & CONFIG ---
-            // IMPORTANT: The weather feature requires a free API key from OpenWeatherMap.
-            // 1. Go to https://openweathermap.org/appid
-            // 2. Sign up and get your API key.
-            // 3. Paste it here. This API provides weather data for locations worldwide.
-            const WEATHER_API_KEY = '973209301a5a4be53a5337c204db93c2'; 
-            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const colorSchemes = {
-                'theme-warm-neutrals': { 
-                    bg: '#FDFBF7', 
-                    secondary: '#F4E6E0', 
-                    text: '#2C2C2C', 
-                    accent: '#E8C5B5', 
-                    'accent-soft': '#F4E6E0'
+            const app = {
+                // --- STATE MANAGEMENT ---
+                state: {
+                    currentDate: new Date(),
+                    calendars: [],
+                    activeCalendarId: null,
+                    weatherData: {}
                 },
-                'theme-sage-tones': { 
-                    bg: '#FDFBF7', 
-                    secondary: '#B8C5B1', 
-                    text: '#2C2C2C', 
-                    accent: '#B8C5B1', 
-                    'accent-soft': '#D4E5CE'
-                },
-                'theme-lavender-mist': { 
-                    bg: '#FDFBF7', 
-                    secondary: '#D4D1D7', 
-                    text: '#2C2C2C', 
-                    accent: '#D4D1D7', 
-                    'accent-soft': '#E8E4EA'
-                },
-                'theme-soft-beige': { 
-                    bg: '#FDFBF7', 
-                    secondary: '#F8F6F0', 
-                    text: '#2C2C2C', 
-                    accent: '#E8D5C4', 
-                    'accent-soft': '#F8F6F0'
-                },
-                'theme-minimal-gray': { 
-                    bg: '#FDFBF7', 
-                    secondary: '#F5F5F5', 
-                    text: '#2C2C2C', 
-                    accent: '#7A7A7A', 
-                    'accent-soft': '#F5F5F5'
-                },
-                'theme-cream-rose': { 
-                    bg: '#FEFCF8', 
-                    secondary: '#F9F0ED', 
-                    text: '#2C2C2C', 
-                    accent: '#E8C5B5', 
-                    'accent-soft': '#F4E6E0'
-                }
-            };
 
+                // --- DOM ELEMENTS ---
+                elements: {},
 
-            // --- DATA PERSISTENCE ---
-            function saveState() {
-                localStorage.setItem('calendarAppState', JSON.stringify(state));
-            }
-
-            function loadState() {
-                const savedState = localStorage.getItem('calendarAppState');
-                if (savedState) {
-                    const parsedState = JSON.parse(savedState);
-                    // Convert date strings back to Date objects
-                    parsedState.currentDate = new Date(parsedState.currentDate);
-                    if(parsedState.calendars) {
-                        parsedState.calendars.forEach(cal => {
-                            if(cal.events) {
-                                Object.values(cal.events).forEach(dayEvents => {
-                                    dayEvents.forEach(event => event.date = new Date(event.date));
-                                });
-                            }
-                        });
+                // --- CONSTANTS & CONFIG ---
+                config: {
+                    WEATHER_API_KEY: '973209301a5a4be53a5337c204db93c2',
+                    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                    colorSchemes: {
+                        'theme-warm-neutrals': { 
+                            bg: 'linear-gradient(135deg, #FDFBF7 0%, #F9F5F0 100%)', 
+                            secondary: '#F4E6E0', 
+                            text: '#2C2C2C', 
+                            accent: '#E8C5B5', 
+                            'accent-soft': '#F4E6E0',
+                            bodyClass: 'theme-warm-neutrals'
+                        },
+                        'theme-sage-tones': { 
+                            bg: 'linear-gradient(135deg, #F8FAF7 0%, #F2F6F0 100%)', 
+                            secondary: '#E8F0E3', 
+                            text: '#2C2C2C', 
+                            accent: '#B8C5B1', 
+                            'accent-soft': '#D4E5CE',
+                            bodyClass: 'theme-sage-tones'
+                        },
+                        'theme-matcha-dreams': { 
+                            bg: 'linear-gradient(135deg, #F5F8F4 0%, #EDF4E8 100%)', 
+                            secondary: '#E0EDD8', 
+                            text: '#2C2C2C', 
+                            accent: '#A8C686', 
+                            'accent-soft': '#D4E5C0',
+                            bodyClass: 'theme-matcha-dreams'
+                        },
+                        'theme-lavender-mist': { 
+                            bg: 'linear-gradient(135deg, #FAFAFA 0%, #F5F4F7 100%)', 
+                            secondary: '#E8E4EA', 
+                            text: '#2C2C2C', 
+                            accent: '#C8C3D0', 
+                            'accent-soft': '#E8E4EA',
+                            bodyClass: 'theme-lavender-mist'
+                        },
+                        'theme-soft-beige': { 
+                            bg: 'linear-gradient(135deg, #FDFBF7 0%, #F7F3ED 100%)', 
+                            secondary: '#F2EDE5', 
+                            text: '#2C2C2C', 
+                            accent: '#E8D5C4', 
+                            'accent-soft': '#F2EDE5',
+                            bodyClass: 'theme-soft-beige'
+                        },
+                        'theme-minimal-gray': { 
+                            bg: 'linear-gradient(135deg, #FAFAFA 0%, #F5F5F5 100%)', 
+                            secondary: '#F0F0F0', 
+                            text: '#2C2C2C', 
+                            accent: '#9A9A9A', 
+                            'accent-soft': '#F0F0F0',
+                            bodyClass: 'theme-minimal-gray'
+                        },
+                        'theme-cream-rose': { 
+                            bg: 'linear-gradient(135deg, #FEFCF8 0%, #FAF6F2 100%)', 
+                            secondary: '#F4EBE6', 
+                            text: '#2C2C2C', 
+                            accent: '#E8C5B5', 
+                            'accent-soft': '#F4EBE6',
+                            bodyClass: 'theme-cream-rose'
+                        }
                     }
-                    state = parsedState;
-                } else {
-                    // Initialize with a default calendar if none exists
+                },
+
+                // --- DATA PERSISTENCE ---
+                saveState() {
+                    try {
+                        const stateToSave = {
+                            ...this.state,
+                            lastModified: Date.now(),
+                            version: '2.0'
+                        };
+                        
+                        localStorage.setItem('calendarAppState', JSON.stringify(stateToSave));
+                        sessionStorage.setItem('calendarAppBackup', JSON.stringify(stateToSave));
+                        this.autoSyncToCloud(stateToSave);
+                    } catch (error) {
+                        console.error('Failed to save state:', error);
+                    }
+                },
+
+                async autoSyncToCloud(data) {
+                    try {
+                        await this.syncToFirebase(data);
+                    } catch (error) {
+                        console.log('Cloud sync unavailable, using local storage');
+                    }
+                },
+
+                async syncToFirebase(data) {
+                    try {
+                        const firebaseUrl = 'https://calendar-app-default-rtdb.firebaseio.com/';
+                        const userKey = this.getUserKey();
+                        
+                        await fetch(`${firebaseUrl}calendars/${userKey}.json`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        
+                        console.log('✅ Automatically synced to cloud');
+                    } catch (error) {
+                        console.log('Cloud sync failed, continuing with local storage');
+                    }
+                },
+
+                getUserKey() {
+                    let userKey = localStorage.getItem('calendarUserKey');
+                    if (!userKey) {
+                        userKey = 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+                        localStorage.setItem('calendarUserKey', userKey);
+                    }
+                    return userKey;
+                },
+                
+                async loadFromCloud() {
+                    try {
+                        const firebaseUrl = 'https://calendar-app-default-rtdb.firebaseio.com/';
+                        const userKey = this.getUserKey();
+                        
+                        const response = await fetch(`${firebaseUrl}calendars/${userKey}.json`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            return data;
+                        }
+                        return null;
+                    } catch (error) {
+                        console.log('Cloud load failed');
+                        return null;
+                    }
+                },
+
+                async loadState() {
+                    let bestData = null;
+                    let bestTimestamp = 0;
+                    
+                    const localData = localStorage.getItem('calendarAppState');
+                    if (localData) {
+                        try {
+                            const parsed = JSON.parse(localData);
+                            if (parsed.lastModified > bestTimestamp) {
+                                bestData = parsed;
+                                bestTimestamp = parsed.lastModified;
+                            }
+                        } catch (e) {
+                            console.log('Local data corrupted, ignoring');
+                        }
+                    }
+                    
+                    try {
+                        const cloudData = await this.loadFromCloud();
+                        if (cloudData && cloudData.lastModified > bestTimestamp) {
+                            bestData = cloudData;
+                            bestTimestamp = cloudData.lastModified;
+                            console.log('📥 Using newer cloud data');
+                        }
+                    } catch (e) {
+                        console.log('Cloud data unavailable, using local');
+                    }
+                    
+                    if (bestData) {
+                        bestData.currentDate = new Date(bestData.currentDate);
+                        if(bestData.calendars) {
+                            bestData.calendars.forEach(cal => {
+                                if(cal.events) {
+                                    Object.values(cal.events).forEach(dayEvents => {
+                                        dayEvents.forEach(event => event.date = new Date(event.date));
+                                    });
+                                }
+                            });
+                        }
+                        this.state = bestData;
+                        
+                        localStorage.setItem('calendarAppState', JSON.stringify(bestData));
+                        return;
+                    }
+                    
+                    console.log('No existing data found, creating new calendar');
                     const defaultId = `cal-${Date.now()}`;
-                    state.calendars.push({
+                    this.state.calendars.push({
                         id: defaultId,
                         name: "Calendar",
                         theme: 'theme-warm-neutrals',
                         events: {}
                     });
-                    state.activeCalendarId = defaultId;
-                    
-                    // Add some sample events to showcase the interface
-                    const today = new Date();
-                    const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
-                    const tomorrowKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() + 1}`;
-                    
-                    state.calendars[0].events[todayKey] = [
-                        { id: 'sample1', name: 'Morning Coffee', color: 'event-color-1', completed: false, date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 8, 0).toISOString() },
-                        { id: 'sample2', name: 'Work Meeting', color: 'event-color-2', completed: true, date: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 10, 30).toISOString() }
-                    ];
-                    
-                    state.calendars[0].events[tomorrowKey] = [
-                        { id: 'sample3', name: 'Creative Project', color: 'event-color-3', completed: false, date: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1, 14, 0).toISOString() }
-                    ];
-                }
-            }
+                    this.state.activeCalendarId = defaultId;
+                },
 
-            // --- WEATHER API ---
-            async function getWeatherData(lat, lon, cityName) {
-                document.querySelector('#weather-widget p:first-child').textContent = cityName;
-                if (!WEATHER_API_KEY) {
-                    console.warn("Weather API key is missing.");
-                    document.querySelector('#weather-widget p:last-child').textContent = 'API Key needed';
-                    return;
-                }
-                const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`;
-                try {
-                    const response = await fetch(url);
-                    const data = await response.json();
-                    
-                    if (!response.ok || !data.list || data.list.length === 0) {
-                        console.error("Weather API error or empty response:", data);
-                        let errorMessage = 'Weather data unavailable';
-                        if (data && data.message) {
-                             errorMessage = `Weather Error: ${data.message}`;
-                        }
-                        document.querySelector('#weather-widget p:last-child').textContent = errorMessage;
+                // --- WEATHER API ---
+                async getWeatherData(lat, lon, cityName) {
+                    document.querySelector('#weather-widget p:first-child').textContent = cityName;
+                    if (!this.config.WEATHER_API_KEY) {
+                        console.warn("Weather API key is missing.");
+                        document.querySelector('#weather-widget p:last-child').textContent = 'API Key needed';
                         return;
                     }
-
-                    document.querySelector('#weather-widget p:last-child').textContent = 
-                        `${Math.round(data.list[0].main.temp)}°C, ${data.list[0].weather[0].main}`;
-
-                    state.weatherData = {};
-                    const dailyData = {};
-                    data.list.forEach(item => {
-                        const date = new Date(item.dt * 1000);
-                        const dateKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-                        if (!dailyData[dateKey] || date.getHours() === 12) {
-                             dailyData[dateKey] = {
-                                temp: Math.round(item.main.temp),
-                                icon: item.weather[0].icon
-                            };
+                    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${this.config.WEATHER_API_KEY}&units=imperial`;
+                    try {
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        
+                        if (!response.ok || !data.list || data.list.length === 0) {
+                            console.error("Weather API error or empty response:", data);
+                            let errorMessage = 'Weather data unavailable';
+                            if (data && data.message) {
+                                 errorMessage = `Weather Error: ${data.message}`;
+                            }
+                            document.querySelector('#weather-widget p:last-child').textContent = errorMessage;
+                            return;
                         }
-                    });
-                    state.weatherData = dailyData;
 
-                    renderCalendar();
-                } catch (error) {
-                    console.error("Error fetching weather data:", error);
-                    document.querySelector('#weather-widget p:last-child').textContent = 'Weather unavailable';
-                }
-            }
-            
-            function getLocationAndFetchWeather() {
-                 if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(async position => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        let cityName = "Your Location";
-                        if(WEATHER_API_KEY) {
-                            try {
-                                const geoUrl = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${WEATHER_API_KEY}`;
-                                const geoResponse = await fetch(geoUrl);
-                                const geoData = await geoResponse.json();
-                                if(geoData[0]) cityName = geoData[0].name;
-                            } catch (e) { console.error("Could not reverse geocode."); }
+                        document.querySelector('#weather-widget p:last-child').textContent = 
+                            `${Math.round(data.list[0].main.temp)}°F, ${data.list[0].weather[0].main}`;
+
+                        this.state.weatherData = {};
+                        const dailyData = {};
+                        data.list.forEach(item => {
+                            const date = new Date(item.dt * 1000);
+                            const dateKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+                            if (!dailyData[dateKey] || date.getHours() === 12) {
+                                 dailyData[dateKey] = {
+                                    temp: Math.round(item.main.temp),
+                                    icon: item.weather[0].icon
+                                };
+                            }
+                        });
+                        this.state.weatherData = dailyData;
+
+                        this.renderCalendar();
+                    } catch (error) {
+                        console.error("Error fetching weather data:", error);
+                        document.querySelector('#weather-widget p:last-child').textContent = 'Weather unavailable';
+                    }
+                },
+
+                getLocationAndFetchWeather() {
+                     if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(async position => {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+                            let cityName = "Your Location";
+                            if(this.config.WEATHER_API_KEY) {
+                                try {
+                                    const geoUrl = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${this.config.WEATHER_API_KEY}`;
+                                    const geoResponse = await fetch(geoUrl);
+                                    const geoData = await geoResponse.json();
+                                    if(geoData[0]) cityName = geoData[0].name;
+                                } catch (e) { console.error("Could not reverse geocode."); }
+                            }
+                            this.getWeatherData(lat, lon, cityName);
+                        }, () => {
+                            this.getWeatherData(51.5072, -0.1276, "London, UK");
+                        });
+                    } else {
+                        this.getWeatherData(51.5072, -0.1276, "London, UK");
+                    }
+                },
+
+                // --- THEME APPLICATION ---
+                applyFullPageTheme(theme) {
+                    const root = document.documentElement;
+                    root.style.setProperty('--bg-primary', theme.bg);
+                    root.style.setProperty('--bg-secondary', theme.secondary);
+                    root.style.setProperty('--text-primary', theme.text);
+                    root.style.setProperty('--accent', theme.accent);
+                    root.style.setProperty('--accent-soft', theme['accent-soft']);
+                    
+                    const mainContent = document.getElementById('main-content');
+                    mainContent.style.background = theme.bg;
+                    mainContent.style.borderColor = theme['accent-soft'];
+                    
+                    document.body.className = theme.bodyClass;
+                    document.body.style.background = theme.bg;
+                    
+                    const header = document.querySelector('header');
+                    if (header) {
+                        header.style.background = `linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))`;
+                        header.style.backdropFilter = 'blur(12px)';
+                        header.style.borderColor = theme['accent-soft'];
+                    }
+                },
+
+                // --- CORE RENDER FUNCTIONS ---
+                renderCalendar() {
+                    const date = this.state.currentDate;
+                    const year = date.getFullYear();
+                    const month = date.getMonth();
+
+                    this.elements.monthYearHeader.textContent = `${this.config.months[month]} ${year}`;
+                    this.elements.calendarGrid.innerHTML = '';
+
+                    const firstDayOfMonth = new Date(year, month, 1).getDay();
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                    const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
+                    
+                    for (let i = 0; i < firstDayOfMonth; i++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'p-2 border rounded-2xl bg-gray-50 opacity-50';
+                        this.elements.calendarGrid.appendChild(cell);
+                    }
+
+                    for (let day = 1; day <= daysInMonth; day++) {
+                        const cell = document.createElement('div');
+                        const fullDate = new Date(year, month, day);
+                        const dateKey = `${year}-${month}-${day}`;
+                        
+                        cell.className = 'day-cell p-4 flex flex-col cursor-pointer min-h-[140px] group';
+                        cell.dataset.date = fullDate.toISOString();
+                        
+                        const today = new Date();
+                        if (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && day === today.getDate()) {
+                            cell.classList.add('today');
+                            cell.style.background = this.config.colorSchemes[activeCalendar.theme].secondary;
+                            cell.style.borderLeft = `4px solid ${this.config.colorSchemes[activeCalendar.theme].accent}`;
                         }
-                        getWeatherData(lat, lon, cityName);
-                    }, () => {
-                        getWeatherData(51.5072, -0.1276, "London, UK");
+                        
+                        const dayHeader = document.createElement('div');
+                        dayHeader.className = 'flex justify-between items-start mb-2';
+
+                        const dayNumber = document.createElement('span');
+                        dayNumber.className = 'font-bold text-xl content-font text-gray-700';
+                        dayNumber.textContent = day;
+                        dayHeader.appendChild(dayNumber);
+                        
+                        if(this.state.weatherData[dateKey]) {
+                            const weatherContainer = document.createElement('div');
+                            weatherContainer.className = 'flex flex-col items-center text-xs text-gray-600';
+                            const weatherIcon = document.createElement('img');
+                            weatherIcon.src = `https://openweathermap.org/img/wn/${this.state.weatherData[dateKey].icon}.png`;
+                            weatherIcon.className = 'w-8 h-8 weather-icon';
+                            weatherContainer.appendChild(weatherIcon);
+                            const tempSpan = document.createElement('span');
+                            tempSpan.textContent = `${this.state.weatherData[dateKey].temp}°F`;
+                            tempSpan.className = 'font-semibold';
+                            weatherContainer.appendChild(tempSpan);
+                            dayHeader.appendChild(weatherContainer);
+                        }
+                        cell.appendChild(dayHeader);
+
+                        const eventsContainer = document.createElement('div');
+                        eventsContainer.className = 'flex-1 space-y-2 overflow-y-auto text-xs';
+                        
+                        if (activeCalendar && activeCalendar.events && activeCalendar.events[dateKey]) {
+                            cell.style.background = `linear-gradient(135deg, ${this.config.colorSchemes[activeCalendar.theme].secondary}, rgba(255,255,255,0.8))`;
+                            
+                            activeCalendar.events[dateKey].forEach(event => {
+                                const eventEl = document.createElement('div');
+                                eventEl.className = `event-bubble ${event.color} flex items-center justify-between`;
+                                if(event.completed) eventEl.classList.add('event-bubble-completed');
+                                
+                                const eventText = document.createElement('span');
+                                eventText.textContent = event.name;
+                                eventEl.appendChild(eventText);
+
+                                const checkbox = document.createElement('input');
+                                checkbox.type = 'checkbox';
+                                checkbox.checked = event.completed;
+                                checkbox.className = 'ml-2 w-4 h-4 rounded-full';
+                                checkbox.onchange = (e) => {
+                                    e.stopPropagation();
+                                    this.toggleEventCompletion(event.id);
+                                };
+                                eventEl.appendChild(checkbox);
+                                eventsContainer.appendChild(eventEl);
+                            });
+                        }
+                        cell.appendChild(eventsContainer);
+
+                        const addBtn = document.createElement('button');
+                        addBtn.innerHTML = '<i class="fas fa-plus-circle text-2xl"></i>';
+                        addBtn.className = 'self-center mt-auto opacity-0 group-hover:opacity-100 transition-all duration-300 text-purple-400 hover:text-purple-600 hover:scale-110';
+                        addBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            this.openAddEventModal(fullDate);
+                        };
+                        cell.appendChild(addBtn);
+                        
+                        cell.onclick = () => this.openDailySchedule(fullDate);
+
+                        this.elements.calendarGrid.appendChild(cell);
+                    }
+                },
+
+                renderTabs() {
+                    const addBtn = this.elements.addCalendarBtn;
+                    this.elements.tabsContainer.innerHTML = '';
+                    
+                    this.state.calendars.forEach(calendar => {
+                        const tab = document.createElement('button');
+                        tab.className = `tab px-6 py-3 font-medium text-sm transition-all duration-300 content-font`;
+                        tab.textContent = calendar.name;
+                        tab.dataset.calendarId = calendar.id;
+                        
+                        const theme = this.config.colorSchemes[calendar.theme];
+                        if (calendar.id === this.state.activeCalendarId) {
+                            tab.classList.add('tab-active');
+                            tab.style.background = theme.bg;
+                            tab.style.color = theme.text;
+                            tab.style.borderColor = theme['accent-soft'];
+                            
+                            this.applyFullPageTheme(theme);
+
+                        } else {
+                            tab.style.background = 'var(--warm-white)';
+                            tab.style.color = 'var(--medium-gray)';
+                            tab.style.borderColor = 'rgba(0,0,0,0.08)';
+                        }
+
+                        tab.onclick = () => this.switchCalendar(calendar.id);
+                        this.elements.tabsContainer.appendChild(tab);
                     });
-                } else {
-                    getWeatherData(51.5072, -0.1276, "London, UK");
-                }
-            }
+                    
+                    this.elements.tabsContainer.appendChild(addBtn);
+                },
 
-
-            // --- CORE RENDER FUNCTIONS ---
-            function renderCalendar() {
-                const date = state.currentDate;
-                const year = date.getFullYear();
-                const month = date.getMonth();
-
-                monthYearHeader.textContent = `${months[month]} ${year}`;
-                calendarGrid.innerHTML = '';
-
-                const firstDayOfMonth = new Date(year, month, 1).getDay();
-                const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-                const activeCalendar = state.calendars.find(c => c.id === state.activeCalendarId);
-                
-                for (let i = 0; i < firstDayOfMonth; i++) {
-                    const cell = document.createElement('div');
-                    cell.className = 'p-2 border rounded-2xl bg-gray-50 opacity-50';
-                    calendarGrid.appendChild(cell);
-                }
-
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const cell = document.createElement('div');
-                    const fullDate = new Date(year, month, day);
+                renderDailySchedule(date) {
+                    const year = date.getFullYear();
+                    const month = date.getMonth();
+                    const day = date.getDate();
                     const dateKey = `${year}-${month}-${day}`;
                     
-                    cell.className = 'day-cell p-4 flex flex-col cursor-pointer min-h-[140px] group';
-                    cell.dataset.date = fullDate.toISOString();
-                    
-                    const today = new Date();
-                    if (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && day === today.getDate()) {
-                        cell.style.border = '3px solid var(--accent)';
-                        cell.style.boxShadow = '0 0 20px rgba(var(--accent), 0.3)';
-                        cell.classList.add('animate-bounce-in');
-                    }
-                    
-                    const dayHeader = document.createElement('div');
-                    dayHeader.className = 'flex justify-between items-start mb-2';
+                    this.elements.scheduleDateHeader.textContent = `📅 ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
+                    this.elements.scheduleContent.innerHTML = '';
 
-                    const dayNumber = document.createElement('span');
-                    dayNumber.className = 'font-bold text-xl content-font text-gray-700';
-                    dayNumber.textContent = day;
-                    dayHeader.appendChild(dayNumber);
-                    
-                    if(state.weatherData[dateKey]) {
-                        const weatherContainer = document.createElement('div');
-                        weatherContainer.className = 'flex flex-col items-center text-xs text-gray-600';
-                        const weatherIcon = document.createElement('img');
-                        weatherIcon.src = `https://openweathermap.org/img/wn/${state.weatherData[dateKey].icon}.png`;
-                        weatherIcon.className = 'w-8 h-8 weather-icon';
-                        weatherContainer.appendChild(weatherIcon);
-                        const tempSpan = document.createElement('span');
-                        tempSpan.textContent = `${state.weatherData[dateKey].temp}°C`;
-                        tempSpan.className = 'font-semibold';
-                        weatherContainer.appendChild(tempSpan);
-                        dayHeader.appendChild(weatherContainer);
-                    }
-                    cell.appendChild(dayHeader);
+                    const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
+                    const events = (activeCalendar && activeCalendar.events[dateKey]) ? [...activeCalendar.events[dateKey]] : [];
+                    events.sort((a,b) => new Date(a.date) - new Date(b.date));
 
-                    const eventsContainer = document.createElement('div');
-                    eventsContainer.className = 'flex-1 space-y-2 overflow-y-auto text-xs';
-                    
-                    if (activeCalendar && activeCalendar.events && activeCalendar.events[dateKey]) {
-                        cell.style.background = `linear-gradient(135deg, ${colorSchemes[activeCalendar.theme].secondary}, rgba(255,255,255,0.9))`;
-                        activeCalendar.events[dateKey].forEach(event => {
-                            const eventEl = document.createElement('div');
-                            eventEl.className = `event-bubble p-2 text-center text-white flex items-center justify-between text-xs font-semibold`;
-                            eventEl.style.background = event.color || 'linear-gradient(135deg, #60a5fa, #3b82f6)';
-                            if(event.completed) eventEl.classList.add('event-bubble-completed');
-                            
-                            const eventText = document.createElement('span');
-                            eventText.textContent = event.name;
-                            eventEl.appendChild(eventText);
-
-                            const checkbox = document.createElement('input');
-                            checkbox.type = 'checkbox';
-                            checkbox.checked = event.completed;
-                            checkbox.className = 'ml-2 w-4 h-4 rounded-full';
-                            checkbox.onchange = (e) => {
-                                e.stopPropagation();
-                                toggleEventCompletion(event.id);
-                            };
-                            eventEl.appendChild(checkbox);
-                            eventsContainer.appendChild(eventEl);
-                        });
-                    }
-                    cell.appendChild(eventsContainer);
-
-                    const addBtn = document.createElement('button');
-                    addBtn.innerHTML = '<i class="fas fa-plus-circle text-2xl"></i>';
-                    addBtn.className = 'self-center mt-auto opacity-0 group-hover:opacity-100 transition-all duration-300 text-purple-400 hover:text-purple-600 hover:scale-110';
-                    addBtn.onclick = (e) => {
-                        e.stopPropagation();
-                        openAddEventModal(fullDate);
-                    };
-                    cell.appendChild(addBtn);
-                    
-                    cell.onclick = () => openDailySchedule(fullDate);
-
-                    calendarGrid.appendChild(cell);
-                }
-            }
-
-            function renderTabs() {
-                const addBtn = document.getElementById('add-calendar-btn');
-                tabsContainer.innerHTML = '';
-                
-                state.calendars.forEach(calendar => {
-                    const tab = document.createElement('button');
-                    tab.className = `tab px-8 py-4 rounded-t-2xl font-bold text-lg transition-all duration-500 relative content-font`;
-                    
-                    // Add emoji and styling based on theme
-                    const themeEmojis = {
-                        'theme-cotton-candy': '🍭',
-                        'theme-sunny-day': '☀️',
-                        'theme-minty-fresh': '🌿',
-                        'theme-blueberry-muffin': '🫐',
-                        'theme-lavender-dreams': '💜',
-                        'theme-sunset-orange': '🧡'
-                    };
-                    
-                    tab.innerHTML = `${themeEmojis[calendar.theme] || '📅'} ${calendar.name}`;
-                    tab.dataset.calendarId = calendar.id;
-                    
-                    const theme = colorSchemes[calendar.theme];
-                    if (calendar.id === state.activeCalendarId) {
-                        tab.classList.add('tab-active');
-                        tab.style.background = theme.bg;
-                        tab.style.color = theme.text;
-                        tab.style.borderColor = theme['accent-soft'];
+                    for (let hour = 0; hour < 24; hour++) {
+                        const hourEl = document.createElement('div');
+                        hourEl.className = 'flex mb-3';
                         
-                        // Set CSS variables on the root for global access
-                        const root = document.documentElement;
-                        root.style.setProperty('--bg-primary', theme.bg);
-                        root.style.setProperty('--bg-secondary', theme.secondary);
-                        root.style.setProperty('--text-primary', theme.text);
-                        root.style.setProperty('--accent', theme.accent);
-                        root.style.setProperty('--accent-soft', theme['accent-soft']);
-                        root.style.setProperty('--shadow-color', theme['shadow-color']);
+                        const timeEl = document.createElement('div');
+                        timeEl.className = 'w-20 text-sm text-purple-600 pr-3 text-right font-bold content-font glass-effect rounded-l-2xl p-2 flex items-center justify-center';
+                        const timeIcon = hour < 6 ? '🌙' : hour < 12 ? '🌅' : hour < 18 ? '☀️' : '🌆';
+                        timeEl.innerHTML = `${timeIcon}<br>${hour % 12 === 0 ? 12 : hour % 12} ${hour < 12 ? 'AM' : 'PM'}`;
+                        
+                        const slotEl = document.createElement('div');
+                        slotEl.className = 'flex-1 glass-effect rounded-r-2xl p-3 min-h-[60px] flex flex-col justify-center';
+                        
+                        const eventsThisHour = events.filter(e => new Date(e.date).getHours() === hour);
 
-                    } else {
-                        tab.style.background = 'rgba(255, 255, 255, 0.8)';
-                        tab.style.color = '#6b7280';
+                        if (eventsThisHour.length === 0) {
+                            const emptySlot = document.createElement('div');
+                            emptySlot.className = 'text-gray-400 text-sm content-font text-center';
+                            emptySlot.textContent = '✨ Free time';
+                            slotEl.appendChild(emptySlot);
+                        } else {
+                            eventsThisHour.forEach(event => {
+                                const eventDiv = document.createElement('div');
+                                eventDiv.innerHTML = `<strong>${new Date(event.date).getMinutes().toString().padStart(2, '0')}:</strong> ${event.name}`;
+                                eventDiv.className = `text-sm p-3 rounded-2xl text-white font-semibold mb-2 last:mb-0 shadow-md`;
+                                eventDiv.style.background = event.color || 'linear-gradient(135deg, #60a5fa, #3b82f6)';
+                                if (event.completed) {
+                                    eventDiv.style.textDecoration = 'line-through';
+                                    eventDiv.style.opacity = '0.7';
+                                }
+                                slotEl.appendChild(eventDiv);
+                            });
+                        }
+
+                        hourEl.appendChild(timeEl);
+                        hourEl.appendChild(slotEl);
+                        this.elements.scheduleContent.appendChild(hourEl);
+                    }
+                },
+
+                // --- EVENT HANDLERS & LOGIC ---
+                changeMonth(offset) {
+                    this.state.currentDate.setMonth(this.state.currentDate.getMonth() + offset);
+                    this.renderCalendar();
+                    this.saveState();
+                },
+
+                switchCalendar(calendarId) {
+                    this.state.activeCalendarId = calendarId;
+                    this.renderTabs();
+                    this.renderCalendar();
+                    this.saveState();
+                },
+                
+                addCalendar(name, theme) {
+                    const newCalendar = {
+                        id: `cal-${Date.now()}`,
+                        name: name,
+                        theme: theme,
+                        events: {}
+                    };
+                    this.state.calendars.push(newCalendar);
+                    this.switchCalendar(newCalendar.id);
+                },
+
+                addEvent(calendarId, date, name, color, linkedCalendarId) {
+                    const calendar = this.state.calendars.find(c => c.id === calendarId);
+                    if (!calendar) return;
+
+                    const year = date.getFullYear();
+                    const month = date.getMonth();
+                    const day = date.getDate();
+                    const dateKey = `${year}-${month}-${day}`;
+
+                    if (!calendar.events[dateKey]) {
+                        calendar.events[dateKey] = [];
                     }
 
-                    tab.onclick = () => switchCalendar(calendar.id);
-                    tabsContainer.appendChild(tab);
-                });
-                
-                tabsContainer.appendChild(addBtn);
-                addBtn.addEventListener('click', openAddCalendarModal);
-            }
-
-            function renderDailySchedule(date) {
-                const year = date.getFullYear();
-                const month = date.getMonth();
-                const day = date.getDate();
-                const dateKey = `${year}-${month}-${day}`;
-                
-                scheduleDateHeader.textContent = `📅 ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
-                scheduleContent.innerHTML = '';
-
-                const activeCalendar = state.calendars.find(c => c.id === state.activeCalendarId);
-                const events = (activeCalendar && activeCalendar.events[dateKey]) ? [...activeCalendar.events[dateKey]] : [];
-                events.sort((a,b) => new Date(a.date) - new Date(b.date));
-
-                for (let hour = 0; hour < 24; hour++) {
-                    const hourEl = document.createElement('div');
-                    hourEl.className = 'flex mb-3';
+                    const newEvent = {
+                        id: `evt-${Date.now()}`,
+                        name: name,
+                        color: color,
+                        completed: false,
+                        date: date.toISOString()
+                    };
+                    calendar.events[dateKey].push(newEvent);
                     
-                    const timeEl = document.createElement('div');
-                    timeEl.className = 'w-20 text-sm text-purple-600 pr-3 text-right font-bold content-font glass-effect rounded-l-2xl p-2 flex items-center justify-center';
-                    const timeIcon = hour < 6 ? '🌙' : hour < 12 ? '🌅' : hour < 18 ? '☀️' : '🌆';
-                    timeEl.innerHTML = `${timeIcon}<br>${hour % 12 === 0 ? 12 : hour % 12} ${hour < 12 ? 'AM' : 'PM'}`;
-                    
-                    const slotEl = document.createElement('div');
-                    slotEl.className = 'flex-1 glass-effect rounded-r-2xl p-3 min-h-[60px] flex flex-col justify-center';
-                    
-                    const eventsThisHour = events.filter(e => new Date(e.date).getHours() === hour);
-
-                    if (eventsThisHour.length === 0) {
-                        const emptySlot = document.createElement('div');
-                        emptySlot.className = 'text-gray-400 text-sm content-font text-center';
-                        emptySlot.textContent = '✨ Free time';
-                        slotEl.appendChild(emptySlot);
-                    } else {
-                        eventsThisHour.forEach(event => {
-                            const eventDiv = document.createElement('div');
-                            eventDiv.innerHTML = `<strong>${new Date(event.date).getMinutes().toString().padStart(2, '0')}:</strong> ${event.name}`;
-                            eventDiv.className = `text-sm p-3 rounded-2xl text-white font-semibold mb-2 last:mb-0 shadow-md`;
-                            eventDiv.style.background = event.color || 'linear-gradient(135deg, #60a5fa, #3b82f6)';
-                            if (event.completed) {
-                                eventDiv.style.textDecoration = 'line-through';
-                                eventDiv.style.opacity = '0.7';
+                    if (linkedCalendarId) {
+                        const linkedCalendar = this.state.calendars.find(c => c.id === linkedCalendarId);
+                        if (linkedCalendar) {
+                            if (!linkedCalendar.events[dateKey]) {
+                                linkedCalendar.events[dateKey] = [];
                             }
-                            slotEl.appendChild(eventDiv);
+                            linkedCalendar.events[dateKey].push({...newEvent, id: `evt-${Date.now()}-linked`});
+                        }
+                    }
+
+                    this.renderCalendar();
+                    if (this.elements.dailySchedulePanel.classList.contains('open')) {
+                        this.renderDailySchedule(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
+                    }
+                    this.saveState();
+                },
+                
+                toggleEventCompletion(eventId) {
+                    const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
+                    if (activeCalendar && activeCalendar.events) {
+                        for (const dateKey in activeCalendar.events) {
+                            const event = activeCalendar.events[dateKey].find(e => e.id === eventId);
+                            if (event) {
+                                event.completed = !event.completed;
+                                break;
+                            }
+                        }
+                    }
+                    this.renderCalendar();
+                    this.saveState();
+                },
+
+                // --- MODAL & SIDEBAR CONTROLS ---
+                selectedDateForEvent: null,
+                selectedColorScheme: 'theme-warm-neutrals',
+                selectedEventColor: 'event-color-1',
+
+                openModal(modal) {
+                    this.elements.modalBackdrop.classList.remove('hidden');
+                    modal.classList.remove('hidden');
+                },
+
+                closeModal(modal) {
+                    this.elements.modalBackdrop.classList.add('hidden');
+                    modal.classList.add('hidden');
+                },
+
+                openAddCalendarModal() {
+                    this.openModal(this.elements.addCalendarModal);
+                },
+
+                openAddEventModal(date) {
+                    this.selectedDateForEvent = date;
+                    document.getElementById('event-modal-date').textContent = date.toLocaleDateString();
+                    
+                    const select = document.getElementById('link-calendar-select');
+                    select.innerHTML = '<option value="">None</option>';
+                    this.state.calendars
+                        .filter(c => c.id !== this.state.activeCalendarId)
+                        .forEach(c => {
+                            const option = document.createElement('option');
+                            option.value = c.id;
+                            option.textContent = c.name;
+                            select.appendChild(option);
                         });
-                    }
 
-                    hourEl.appendChild(timeEl);
-                    hourEl.appendChild(slotEl);
-                    scheduleContent.appendChild(hourEl);
-                }
-            }
+                    this.openModal(this.elements.addEventModal);
+                },
 
+                openDailySchedule(date) {
+                    this.renderDailySchedule(date);
+                    this.elements.dailySchedulePanel.classList.add('open');
+                    this.elements.modalBackdrop.classList.remove('hidden');
+                    this.elements.dailySchedulePanel.dataset.date = date.toISOString();
+                },
 
-            // --- EVENT HANDLERS & LOGIC ---
-            function changeMonth(offset) {
-                state.currentDate.setMonth(state.currentDate.getMonth() + offset);
-                renderCalendar();
-                saveState();
-            }
-
-            function switchCalendar(calendarId) {
-                state.activeCalendarId = calendarId;
-                renderTabs();
-                renderCalendar();
-                saveState();
-            }
-            
-            function addCalendar(name, theme) {
-                const newCalendar = {
-                    id: `cal-${Date.now()}`,
-                    name: name,
-                    theme: theme,
-                    events: {}
-                };
-                state.calendars.push(newCalendar);
-                switchCalendar(newCalendar.id); // Use switchCalendar to set active and render
-            }
-
-            function addEvent(calendarId, date, name, color, linkedCalendarId) {
-                const calendar = state.calendars.find(c => c.id === calendarId);
-                if (!calendar) return;
-
-                const year = date.getFullYear();
-                const month = date.getMonth();
-                const day = date.getDate();
-                const dateKey = `${year}-${month}-${day}`;
-
-                if (!calendar.events[dateKey]) {
-                    calendar.events[dateKey] = [];
-                }
-
-                const newEvent = {
-                    id: `evt-${Date.now()}`,
-                    name: name,
-                    color: color,
-                    completed: false,
-                    date: date.toISOString()
-                };
-                calendar.events[dateKey].push(newEvent);
+                closeDailySchedule() {
+                    this.elements.dailySchedulePanel.classList.remove('open');
+                    this.elements.modalBackdrop.classList.add('hidden');
+                },
                 
-                if (linkedCalendarId) {
-                    const linkedCalendar = state.calendars.find(c => c.id === linkedCalendarId);
-                    if (linkedCalendar) {
-                        if (!linkedCalendar.events[dateKey]) {
-                            linkedCalendar.events[dateKey] = [];
-                        }
-                        linkedCalendar.events[dateKey].push({...newEvent, id: `evt-${Date.now()}-linked`});
+                // --- INITIALIZATION ---
+                async init() {
+                    this.elements = {
+                        calendarGrid: document.getElementById('calendar-grid'),
+                        monthYearHeader: document.getElementById('month-year'),
+                        prevMonthBtn: document.getElementById('prev-month'),
+                        nextMonthBtn: document.getElementById('next-month'),
+                        tabsContainer: document.getElementById('tabs-container'),
+                        modalBackdrop: document.getElementById('modal-backdrop'),
+                        addCalendarModal: document.getElementById('add-calendar-modal'),
+                        addEventModal: document.getElementById('add-event-modal'),
+                        dailySchedulePanel: document.getElementById('daily-schedule'),
+                        scheduleDateHeader: document.getElementById('schedule-date'),
+                        scheduleContent: document.getElementById('schedule-content'),
+                        addCalendarBtn: document.getElementById('add-calendar-btn')
+                    };
+
+                    await this.loadState();
+                    
+                    const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
+                    if (activeCalendar) {
+                        const theme = this.config.colorSchemes[activeCalendar.theme];
+                        this.applyFullPageTheme(theme);
                     }
-                }
-
-                renderCalendar();
-                if (dailySchedulePanel.classList.contains('open')) {
-                    renderDailySchedule(new Date(date.getFullYear(), date.getMonth(), date.getDate()));
-                }
-                saveState();
-            }
-            
-            function toggleEventCompletion(eventId) {
-                const activeCalendar = state.calendars.find(c => c.id === state.activeCalendarId);
-                if (activeCalendar && activeCalendar.events) {
-                    for (const dateKey in activeCalendar.events) {
-                        const event = activeCalendar.events[dateKey].find(e => e.id === eventId);
-                        if (event) {
-                            event.completed = !event.completed;
-                            break;
-                        }
-                    }
-                }
-                renderCalendar();
-                saveState();
-            }
-
-
-            // --- MODAL & SIDEBAR CONTROLS ---
-            let selectedDateForEvent = null;
-            let selectedColorScheme = 'theme-cotton-candy';
-            let selectedEventColor = 'bg-red-400';
-
-            function openModal(modal) {
-                modalBackdrop.classList.remove('hidden');
-                modal.classList.remove('hidden');
-            }
-
-            function closeModal(modal) {
-                modalBackdrop.classList.add('hidden');
-                modal.classList.add('hidden');
-            }
-
-            function openAddCalendarModal() {
-                openModal(addCalendarModal);
-            }
-
-            function openAddEventModal(date) {
-                selectedDateForEvent = date;
-                document.getElementById('event-modal-date').textContent = date.toLocaleDateString();
+                    
+                    this.getLocationAndFetchWeather();
+                    this.renderTabs();
+                    this.renderCalendar();
+                    
+                    this.addEventListeners();
+                    
+                    setInterval(() => this.saveState(), 30000);
+                },
                 
-                const select = document.getElementById('link-calendar-select');
-                select.innerHTML = '<option value="">None</option>';
-                state.calendars
-                    .filter(c => c.id !== state.activeCalendarId)
-                    .forEach(c => {
-                        const option = document.createElement('option');
-                        option.value = c.id;
-                        option.textContent = c.name;
-                        select.appendChild(option);
+                addEventListeners() {
+                    this.elements.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
+                    this.elements.nextMonthBtn.addEventListener('click', () => this.changeMonth(1));
+                    this.elements.addCalendarBtn.addEventListener('click', () => this.openAddCalendarModal());
+
+                    document.getElementById('cancel-add-calendar').addEventListener('click', () => this.closeModal(this.elements.addCalendarModal));
+                    document.getElementById('cancel-add-event').addEventListener('click', () => this.closeModal(this.elements.addEventModal));
+                    this.elements.modalBackdrop.addEventListener('click', () => {
+                        this.closeModal(this.elements.addCalendarModal);
+                        this.closeModal(this.elements.addEventModal);
+                        this.closeDailySchedule();
+                    });
+                    document.getElementById('close-schedule').addEventListener('click', () => this.closeDailySchedule());
+
+                    document.querySelectorAll('.color-scheme-option').forEach(el => {
+                        el.addEventListener('click', () => {
+                            document.querySelectorAll('.color-scheme-option div').forEach(div => div.classList.remove('ring-4', 'ring-offset-2', 'ring-blue-500'));
+                            el.querySelector('div').classList.add('ring-4', 'ring-offset-2', 'ring-blue-500');
+                            this.selectedColorScheme = el.dataset.theme;
+                        });
                     });
 
-                openModal(addEventModal);
-            }
+                    document.getElementById('confirm-add-calendar').addEventListener('click', () => {
+                        const name = document.getElementById('new-calendar-name').value;
+                        if (name && this.selectedColorScheme) {
+                            this.addCalendar(name, this.selectedColorScheme);
+                            this.closeModal(this.elements.addCalendarModal);
+                            document.getElementById('new-calendar-name').value = '';
+                        }
+                    });
 
-            function openDailySchedule(date) {
-                renderDailySchedule(date);
-                dailySchedulePanel.classList.add('open');
-                modalBackdrop.classList.remove('hidden');
-                dailySchedulePanel.dataset.date = date.toISOString();
-            }
+                    document.getElementById('event-colors').addEventListener('click', (e) => {
+                        if (e.target.dataset.color) {
+                            this.selectedEventColor = e.target.dataset.color;
+                            document.querySelectorAll('#event-colors div').forEach(div => div.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500'));
+                            e.target.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500');
+                        }
+                    });
 
-            function closeDailySchedule() {
-                dailySchedulePanel.classList.remove('open');
-                modalBackdrop.classList.add('hidden');
-            }
-
-            // Event Listeners for Modals & Sidebar
-            document.getElementById('add-calendar-btn').addEventListener('click', openAddCalendarModal);
-            document.getElementById('cancel-add-calendar').addEventListener('click', () => closeModal(addCalendarModal));
-            document.getElementById('cancel-add-event').addEventListener('click', () => closeModal(addEventModal));
-            modalBackdrop.addEventListener('click', () => {
-                closeModal(addCalendarModal);
-                closeModal(addEventModal);
-                closeDailySchedule();
-            });
-            document.getElementById('close-schedule').addEventListener('click', closeDailySchedule);
-
-            document.querySelectorAll('.color-scheme-option').forEach(el => {
-                el.addEventListener('click', () => {
-                    document.querySelectorAll('.color-scheme-option div').forEach(div => div.classList.remove('ring-4', 'ring-offset-2', 'ring-blue-500'));
-                    el.querySelector('div').classList.add('ring-4', 'ring-offset-2', 'ring-blue-500');
-                    selectedColorScheme = el.dataset.theme;
-                });
-            });
-
-            document.getElementById('confirm-add-calendar').addEventListener('click', () => {
-                const name = document.getElementById('new-calendar-name').value;
-                if (name && selectedColorScheme) {
-                    addCalendar(name, selectedColorScheme);
-                    closeModal(addCalendarModal);
-                    document.getElementById('new-calendar-name').value = '';
+                    document.getElementById('save-event').addEventListener('click', () => {
+                        const name = document.getElementById('event-name-input').value;
+                        const linkedCalendarId = document.getElementById('link-calendar-select').value;
+                        if (name && this.selectedDateForEvent) {
+                            const eventDate = new Date(this.selectedDateForEvent);
+                            eventDate.setHours(12, 0, 0, 0);
+                            this.addEvent(this.state.activeCalendarId, eventDate, name, this.selectedEventColor, linkedCalendarId);
+                            this.closeModal(this.elements.addEventModal);
+                            document.getElementById('event-name-input').value = '';
+                        }
+                    });
+                    
+                    document.getElementById('schedule-add-event-btn').addEventListener('click', () => {
+                        const name = document.getElementById('schedule-event-input').value;
+                        const time = document.getElementById('schedule-event-time').value;
+                        const baseDate = new Date(this.elements.dailySchedulePanel.dataset.date);
+                        
+                        if (name && time) {
+                            const [hours, minutes] = time.split(':');
+                            baseDate.setHours(parseInt(hours), parseInt(minutes));
+                            this.addEvent(this.state.activeCalendarId, baseDate, name, 'event-color-1', null);
+                            this.renderDailySchedule(new Date(this.elements.dailySchedulePanel.dataset.date));
+                            document.getElementById('schedule-event-input').value = '';
+                            document.getElementById('schedule-event-time').value = '';
+                        }
+                    });
                 }
-            });
-
-            document.getElementById('event-colors').addEventListener('click', (e) => {
-                if (e.target.dataset.color) {
-                    selectedEventColor = e.target.dataset.color;
-                    document.querySelectorAll('#event-colors div').forEach(div => div.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500'));
-                    e.target.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500');
-                }
-            });
-
-            document.getElementById('save-event').addEventListener('click', () => {
-                const name = document.getElementById('event-name-input').value;
-                const linkedCalendarId = document.getElementById('link-calendar-select').value;
-                if (name && selectedDateForEvent) {
-                    const eventDate = new Date(selectedDateForEvent);
-                    eventDate.setHours(12, 0, 0, 0);
-                    addEvent(state.activeCalendarId, eventDate, name, selectedEventColor, linkedCalendarId);
-                    closeModal(addEventModal);
-                    document.getElementById('event-name-input').value = '';
-                }
-            });
+            };
             
-            document.getElementById('schedule-add-event-btn').addEventListener('click', () => {
-                const name = document.getElementById('schedule-event-input').value;
-                const time = document.getElementById('schedule-event-time').value;
-                const baseDate = new Date(dailySchedulePanel.dataset.date);
-                
-                if (name && time) {
-                    const [hours, minutes] = time.split(':');
-                    baseDate.setHours(parseInt(hours), parseInt(minutes));
-                    addEvent(state.activeCalendarId, baseDate, name, 'bg-blue-400', null);
-                    renderDailySchedule(new Date(dailySchedulePanel.dataset.date));
-                    document.getElementById('schedule-event-input').value = '';
-                    document.getElementById('schedule-event-time').value = '';
-                }
-            });
-
-
-            // --- INITIALIZATION ---
-            function init() {
-                prevMonthBtn.addEventListener('click', () => changeMonth(-1));
-                nextMonthBtn.addEventListener('click', () => changeMonth(1));
-
-                loadState();
-                getLocationAndFetchWeather();
-                renderTabs();
-                renderCalendar();
-            }
-
-            init();
+            app.init();
         });
     </script>
 </body>
