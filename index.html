@@ -599,12 +599,6 @@
                 <button id="notification-settings-btn" class="clean-btn p-2" title="Notification Settings">
                     <span id="notification-icon">🔕</span>
                 </button>
-                <button id="sync-settings-btn" class="clean-btn p-2" title="Sync Settings">
-                    <span id="sync-icon">🔄</span>
-                </button>
-                <button id="switch-sync-btn" class="clean-btn p-2" title="Switch Sync Session">
-                    <span>🔄</span>
-                </button>
             </div>
         </header>
 
@@ -685,46 +679,11 @@
     <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
 
                 <div id="user-setup-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
-                <h3 class="text-2xl font-medium mb-4 content-font">🔗 Sync Across Devices</h3>
-                <p class="text-gray-600 mb-4">To sync your calendars across all your devices, create a unique sync code:</p>
-                <input type="text" id="user-sync-code" placeholder="Enter a unique name (e.g., your name)" class="clean-input mb-4">
-                <p class="text-xs text-gray-500 mb-6">💡 Use the same sync code on all your devices to see the same calendars everywhere!</p>
+                <h3 class="text-2xl font-medium mb-4 content-font">🔗 Join a Calendar Session</h3>
+                <p class="text-gray-600 mb-4">To sync your calendar, please enter a session code. Use the same code on all your devices.</p>
+                <input type="text" id="user-sync-code" placeholder="e.g., 'family-vacation' or 'work-team'" class="clean-input mb-4">
                 <div class="flex justify-end gap-3">
-                    <button id="skip-sync" class="clean-btn secondary">Skip for Now</button>
-                    <button id="setup-sync" class="clean-btn">Setup Sync 🔄</button>
-                </div>
-            </div>
-
-            <div id="sync-management-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
-                <h3 class="text-2xl font-medium mb-4 content-font">🔄 Sync Management</h3>
-                
-                <div class="mb-6">
-                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="font-medium">Current Session:</span>
-                            <span class="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full" id="current-sync-session">Loading...</span>
-                        </div>
-                        <div class="text-sm text-gray-600">
-                            <div>Status: <span id="current-sync-status">Loading...</span></div>
-                            <div>Last Sync: <span id="last-sync-time">Loading...</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-3 mb-6">
-                    <button id="refresh-sync-btn" class="clean-btn w-full">
-                        <span>🔄</span> Refresh from Cloud
-                    </button>
-                    <button id="switch-session-btn" class="clean-btn secondary w-full">
-                        <span>🔄</span> Switch to Different Session
-                    </button>
-                    <button id="clear-sync-btn" class="clean-btn secondary w-full text-red-600">
-                        <span>🗑️</span> Clear & Start Fresh
-                    </button>
-                </div>
-
-                <div class="flex justify-end">
-                    <button id="close-sync-modal" class="clean-btn secondary">Close</button>
+                    <button id="setup-sync" class="clean-btn">Join Session 🔄</button>
                 </div>
             </div>
 
@@ -836,7 +795,6 @@
                      notificationTimes: [15, 5], // Notify 15 and 5 minutes before events
                      scheduledNotifications: new Map(), // Track scheduled notifications
                      userKey: null,
-                     syncStatus: 'disconnected', // 'disconnected', 'syncing', 'synced', 'error'
                      polls: [], // Store all polls/voting events
                      currentView: 'calendar' // 'calendar' or 'voting'
                  },
@@ -925,67 +883,34 @@
                 },
 
                 // --- DATA PERSISTENCE & SYNC ---
-                syncManager: {
-                    isSyncing: false,
-                    lastSyncTimestamp: 0,
-                    
-                    async syncToCloud(data) {
-                        if (this.isSyncing) return;
-                        this.isSyncing = true;
-                        app.state.syncStatus = 'syncing';
-                        app.updateSyncIcon();
+                async syncToCloud(data) {
+                    try {
+                        const userKey = this.getUserKey();
+                        if (!userKey) return;
                         
-                        try {
-                            const userKey = app.getUserKey();
-                            if (!userKey) {
-                                throw new Error("User key not set.");
-                            }
-                            
-                            const response = await fetch(`${app.config.FIREBASE_URL}calendars/${userKey}.json`, {
-                                method: 'PUT',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(data)
-                            });
-                            
-                            if (response.ok) {
-                                app.state.syncStatus = 'synced';
-                                this.lastSyncTimestamp = Date.now();
-                                console.log('✅ Synced to cloud');
-                            } else {
-                                throw new Error(`Firebase PUT failed with status: ${response.status}`);
-                            }
-                        } catch (error) {
-                            app.state.syncStatus = 'error';
-                            console.error('Sync to cloud failed:', error);
-                        } finally {
-                            this.isSyncing = false;
-                            app.updateSyncIcon();
+                        await fetch(`${this.config.FIREBASE_URL}calendars/${userKey}.json`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                    } catch (error) {
+                        console.error('Sync to cloud failed:', error);
+                    }
+                },
+                
+                async loadFromCloud() {
+                    try {
+                        const userKey = this.getUserKey();
+                        if (!userKey) return null;
+                        
+                        const response = await fetch(`${this.config.FIREBASE_URL}calendars/${userKey}.json`);
+                        if (response.ok) {
+                            return await response.json();
                         }
-                    },
-                    
-                    async loadFromCloud() {
-                        try {
-                            const userKey = app.getUserKey();
-                            if (!userKey) return null;
-                            
-                            const response = await fetch(`${app.config.FIREBASE_URL}calendars/${userKey}.json`);
-                            if (response.ok) {
-                                const data = await response.json();
-                                return data;
-                            }
-                            return null;
-                        } catch (error) {
-                            console.error('Load from cloud failed:', error);
-                            return null;
-                        }
-                    },
-                    
-                    mergeData(localData, cloudData) {
-                        if (!cloudData) return localData;
-                        if (!localData) return cloudData;
-
-                        // Simple last-write-wins based on timestamp
-                        return cloudData.lastModified > localData.lastModified ? cloudData : localData;
+                        return null;
+                    } catch (error) {
+                        console.error('Load from cloud failed:', error);
+                        return null;
                     }
                 },
 
@@ -1000,38 +925,29 @@
                         };
                         
                         localStorage.setItem('calendarAppState', JSON.stringify(stateToSave));
-                        this.syncManager.syncToCloud(stateToSave);
+                        this.syncToCloud(stateToSave);
                     } catch (error) {
                         console.error('Failed to save state:', error);
                     }
                 },
 
                 async loadState() {
-                    const localDataRaw = localStorage.getItem('calendarAppState');
-                    const localData = localDataRaw ? JSON.parse(localDataRaw) : null;
-                    
-                    const cloudData = await this.syncManager.loadFromCloud();
-                    
-                    const bestData = this.syncManager.mergeData(localData, cloudData);
+                    const cloudData = await this.loadFromCloud();
 
-                    if (bestData) {
+                    if (cloudData) {
                         this.state = {
-                            ...this.state, // keep defaults for any missing properties
-                            ...bestData,
-                            currentDate: new Date(bestData.currentDate),
-                            visibleCalendars: new Set(bestData.visibleCalendars),
-                            userKey: localStorage.getItem('calendarUserKey'),
+                            ...this.state, // keep defaults
+                            ...cloudData,
+                            currentDate: new Date(cloudData.currentDate),
+                            visibleCalendars: new Set(cloudData.visibleCalendars),
                         };
-
-                        if(this.state.calendars && this.state.calendars.length > 0) {
-                            if (!this.state.activeCalendarId) {
-                                this.state.activeCalendarId = this.state.calendars[0].id;
-                            }
-                        }
                         
-                        console.log('✅ State loaded successfully.');
+                        if(this.state.calendars && this.state.calendars.length > 0 && !this.state.activeCalendarId) {
+                            this.state.activeCalendarId = this.state.calendars[0].id;
+                        }
+                        console.log('✅ State loaded from cloud.');
                     } else {
-                        console.log('🆕 No existing data found, starting fresh');
+                        console.log('🆕 No cloud data found for this session, starting fresh.');
                     }
                 },
                 
@@ -1042,6 +958,7 @@
                 setUserKey(userKey) {
                     localStorage.setItem('calendarUserKey', userKey);
                     this.state.userKey = userKey;
+                    
                     this.loadState().then(() => {
                         this.renderTabs();
                         this.renderCalendar();
@@ -1416,10 +1333,6 @@
                      if (notificationBtn) {
                          this.elements.tabsContainer.appendChild(notificationBtn);
                      }
-                     const syncBtn = document.getElementById('sync-settings-btn');
-                     if (syncBtn) {
-                         this.elements.tabsContainer.appendChild(syncBtn);
-                     }
                  },
 
                 renderDailySchedule(date) {
@@ -1519,123 +1432,6 @@
                      const icon = document.getElementById('notification-icon');
                      if (icon) {
                          icon.textContent = this.state.notificationsEnabled ? '🔔' : '🔕';
-                     }
-                 },
-
-                 updateSyncIcon() {
-                     const icon = document.getElementById('sync-icon');
-                     if (icon) {
-                         switch (this.state.syncStatus) {
-                             case 'synced':
-                                 icon.textContent = '✅';
-                                 icon.title = 'Synced across devices - click to refresh';
-                                 break;
-                             case 'syncing':
-                                 icon.textContent = '🔄';
-                                 icon.title = 'Syncing...';
-                                 break;
-                             case 'error':
-                                 icon.textContent = '⚠️';
-                                 icon.title = 'Sync error - click to retry';
-                                 break;
-                             default:
-                                 icon.textContent = '🔄';
-                                 icon.title = 'Click to setup sync';
-                         }
-                     }
-                 },
-
-                 async forceRefreshFromCloud() {
-                    this.state.syncStatus = 'syncing';
-                    this.updateSyncIcon();
-                    await this.loadState();
-                    this.renderTabs();
-                    this.renderCalendar();
-                    this.state.syncStatus = 'synced';
-                    this.updateSyncIcon();
-                 },
-
-                 openSyncManagementModal() {
-                     const modal = document.getElementById('sync-management-modal');
-                     if (!modal) return;
-                     
-                     // Update modal content with current sync info
-                     const sessionSpan = document.getElementById('current-sync-session');
-                     const statusSpan = document.getElementById('current-sync-status');
-                     const timeSpan = document.getElementById('last-sync-time');
-                     
-                     if (sessionSpan) {
-                         const userKey = this.state.userKey || 'Not set';
-                         sessionSpan.textContent = userKey.replace('user_', '').replace('temp_', '');
-                     }
-                     
-                     if (statusSpan) {
-                         statusSpan.textContent = this.state.syncStatus;
-                     }
-                     
-                     if (timeSpan) {
-                         const lastSync = this.state.lastModified ? new Date(this.state.lastModified).toLocaleString() : 'Never';
-                         timeSpan.textContent = lastSync;
-                     }
-                     
-                     this.openModal(modal);
-                 },
-
-                 async switchToNewSession() {
-                     // Clear current session
-                     localStorage.removeItem('calendarAppState');
-                     localStorage.removeItem('calendarUserKey');
-                     
-                     // Reset state
-                     this.state = {
-                         currentDate: new Date(),
-                         calendars: [],
-                         activeCalendarId: null,
-                         weatherData: {},
-                         visibleCalendars: new Set(),
-                         notificationsEnabled: false,
-                         notificationTimes: [15, 5],
-                         scheduledNotifications: new Map(),
-                         userKey: null,
-                         syncStatus: 'disconnected',
-                         polls: [],
-                         currentView: 'calendar'
-                     };
-                     
-                     // Close modal and show setup
-                     this.closeModal(document.getElementById('sync-management-modal'));
-                     this.showUserSetupModal();
-                 },
-
-                 clearAndStartFresh() {
-                     if (confirm('⚠️ This will clear ALL your calendars and events. Are you sure?')) {
-                         // Clear everything
-                         localStorage.removeItem('calendarAppState');
-                         localStorage.removeItem('calendarUserKey');
-                         
-                         // Reset state
-                         this.state = {
-                             currentDate: new Date(),
-                             calendars: [],
-                             activeCalendarId: null,
-                             weatherData: {},
-                             visibleCalendars: new Set(),
-                             notificationsEnabled: false,
-                             notificationTimes: [15, 5],
-                             scheduledNotifications: new Map(),
-                             userKey: null,
-                             syncStatus: 'disconnected',
-                             polls: [],
-                             currentView: 'calendar'
-                         };
-                         
-                         // Close modal and show welcome
-                         this.closeModal(document.getElementById('sync-management-modal'));
-                         this.showWelcomeModal();
-                         
-                         // Re-render
-                         this.renderTabs();
-                         this.renderCalendar();
                      }
                  },
 
@@ -2043,50 +1839,39 @@
                         scheduleContent: document.getElementById('schedule-content'),
                         addCalendarBtn: document.getElementById('add-calendar-btn')
                     };
-
-                    await this.loadState();
                     
-                    const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
-                    if (activeCalendar) {
-                        const theme = this.config.colorSchemes[activeCalendar.theme];
-                        this.applyFullPageTheme(theme);
+                    this.addEventListeners();
+                    this.switchView('calendar');
+                    
+                    const userKey = this.getUserKey();
+                    
+                    if (!userKey) {
+                        this.showUserSetupModal();
+                    } else {
+                        await this.loadState();
+                        
+                        const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
+                        if (activeCalendar) {
+                            this.applyFullPageTheme(this.config.colorSchemes[activeCalendar.theme]);
+                        }
+                        
+                        this.getLocationAndFetchWeather();
+                        this.renderTabs();
+                        this.renderCalendar();
+                        
+                        if (this.state.notificationsEnabled) {
+                            this.scheduleAllNotifications();
+                        }
                     }
-                    
-                                         this.getLocationAndFetchWeather();
-                     this.renderTabs();
-                     this.renderCalendar();
                      
-                     // Initialize notifications
-                     this.updateNotificationIcon();
-                     this.updateSyncIcon();
-                     if (this.state.notificationsEnabled) {
-                         this.scheduleAllNotifications();
-                     }
-                     
-                     // Check if user needs to setup sync
-                     if (!this.state.userKey) {
-                         this.showUserSetupModal();
-                     } else if (this.state.calendars.length === 0) {
-                         // Show welcome modal if no calendars exist
-                         this.showWelcomeModal();
-                     }
-                     
-                     this.addEventListeners();
-                     
-                     // Set initial view
-                     this.switchView('calendar');
-                     
-                     // Auto-save every 30 seconds
-                     setInterval(() => this.saveState(), 30000);
-                     
-                     // Auto-sync from cloud every 2 minutes to keep calendars in sync
+                     // Auto-sync from cloud every 2 minutes
                      setInterval(async () => {
-                         if (this.state.userKey && this.state.syncStatus !== 'syncing') {
+                         if (this.getUserKey()) {
                             await this.loadState();
                             this.renderTabs();
                             this.renderCalendar();
                          }
-                     }, 120000); // 2 minutes
+                     }, 120000);
                 },
                 
                 addEventListeners() {
@@ -2120,80 +1905,24 @@
                          }
                      });
                      
-                     // Notification settings (only if button exists)
+                     // Notification settings
                      const notificationBtn = document.getElementById('notification-settings-btn');
                      if (notificationBtn) {
                          notificationBtn.addEventListener('click', () => {
                              if (this.state.notificationsEnabled) {
-                                 // Toggle off notifications
                                  this.state.notificationsEnabled = false;
                                  this.state.scheduledNotifications.forEach(timeoutId => clearTimeout(timeoutId));
                                  this.state.scheduledNotifications.clear();
                                  this.updateNotificationIcon();
                                  this.saveState();
                              } else {
-                                 // Show permission modal
                                  this.showNotificationModal();
                              }
                          });
                      }
 
-                     // Sync settings
-                     const syncBtn = document.getElementById('sync-settings-btn');
-                     if (syncBtn) {
-                         syncBtn.addEventListener('click', () => {
-                             // If already synced, force refresh from cloud
-                             if (this.state.syncStatus === 'synced') {
-                                 this.forceRefreshFromCloud();
-                             } else {
-                                 // Otherwise show setup modal
-                                 this.showUserSetupModal();
-                             }
-                         });
-                     }
-
-                     // Switch sync button
-                     const switchSyncBtn = document.getElementById('switch-sync-btn');
-                     if (switchSyncBtn) {
-                         switchSyncBtn.addEventListener('click', () => {
-                             this.openSyncManagementModal();
-                         });
-                     }
-
-                     // Sync management modal handlers
-                     const refreshSyncBtn = document.getElementById('refresh-sync-btn');
-                     const switchSessionBtn = document.getElementById('switch-session-btn');
-                     const clearSyncBtn = document.getElementById('clear-sync-btn');
-                     const closeSyncModal = document.getElementById('close-sync-modal');
-
-                     if (refreshSyncBtn) {
-                         refreshSyncBtn.addEventListener('click', () => {
-                             this.forceRefreshFromCloud();
-                             this.closeModal(document.getElementById('sync-management-modal'));
-                         });
-                     }
-
-                     if (switchSessionBtn) {
-                         switchSessionBtn.addEventListener('click', () => {
-                             this.switchToNewSession();
-                         });
-                     }
-
-                     if (clearSyncBtn) {
-                         clearSyncBtn.addEventListener('click', () => {
-                             this.clearAndStartFresh();
-                         });
-                     }
-
-                     if (closeSyncModal) {
-                         closeSyncModal.addEventListener('click', () => {
-                             this.closeModal(document.getElementById('sync-management-modal'));
-                         });
-                     }
-
                      // User setup modal handlers
                      const setupSyncBtn = document.getElementById('setup-sync');
-                     const skipSyncBtn = document.getElementById('skip-sync');
                      const userSyncCodeInput = document.getElementById('user-sync-code');
 
                      if (setupSyncBtn) {
@@ -2203,24 +1932,9 @@
                                  const userKey = 'user_' + syncCode.toLowerCase().replace(/[^a-z0-9]/g, '');
                                  this.setUserKey(userKey);
                                  this.closeModal(document.getElementById('user-setup-modal'));
-                                 // Show success message
-                                 setTimeout(() => {
-                                     if (this.state.calendars.length === 0) {
-                                         this.showWelcomeModal();
-                                     }
-                                 }, 500);
-                             }
-                         });
-                     }
-
-                     if (skipSyncBtn) {
-                         skipSyncBtn.addEventListener('click', () => {
-                             // Generate a temporary local key
-                             const tempKey = 'temp_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
-                             this.setUserKey(tempKey);
-                             this.closeModal(document.getElementById('user-setup-modal'));
-                             if (this.state.calendars.length === 0) {
-                                 this.showWelcomeModal();
+                                 
+                                 // After setting the key, initialize the main app view
+                                 this.init(); 
                              }
                          });
                      }
@@ -2233,7 +1947,6 @@
                              const granted = await this.requestNotificationPermission();
                              this.closeModal(document.getElementById('notification-modal'));
                              if (granted) {
-                                 // Show a cute welcome notification
                                  setTimeout(() => {
                                      const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
                                      if (activeCalendar) {
