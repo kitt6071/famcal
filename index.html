@@ -1178,7 +1178,7 @@
                     }
                 },
 
-                async loadState() {
+                                async loadState() {
                     const cloudData = await this.loadFromCloud();
 
                     if (cloudData) {
@@ -1189,11 +1189,20 @@
                             visibleCalendars: new Set(cloudData.visibleCalendars),
                         };
                         
+                        // Ensure all calendars have events object
+                        if (this.state.calendars) {
+                            this.state.calendars.forEach(calendar => {
+                                if (!calendar.events) {
+                                    calendar.events = {};
+                                }
+                            });
+                        }
+                        
                         if(this.state.calendars && this.state.calendars.length > 0 && !this.state.activeCalendarId) {
                             this.state.activeCalendarId = this.state.calendars[0].id;
                         }
                         console.log('✅ State loaded from cloud.');
-                } else {
+                    } else {
                         console.log('🆕 No cloud data found for this session, starting fresh.');
                     }
                 },
@@ -1625,17 +1634,24 @@
                      }
                  },
 
-                renderDailySchedule(date) {
-                const year = date.getFullYear();
-                const month = date.getMonth();
-                const day = date.getDate();
-                const dateKey = `${year}-${month}-${day}`;
-                
+                                renderDailySchedule(date) {
+                    const year = date.getFullYear();
+                    const month = date.getMonth();
+                    const day = date.getDate();
+                    const dateKey = `${year}-${month}-${day}`;
+                    
                     this.elements.scheduleDateHeader.textContent = `📅 ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
                     this.elements.scheduleContent.innerHTML = '';
 
                     const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
-                const events = (activeCalendar && activeCalendar.events[dateKey]) ? [...activeCalendar.events[dateKey]] : [];
+                    if (!activeCalendar) return;
+                    
+                    // Ensure events object exists
+                    if (!activeCalendar.events) {
+                        activeCalendar.events = {};
+                    }
+                    
+                    const events = activeCalendar.events[dateKey] ? [...activeCalendar.events[dateKey]] : [];
                 events.sort((a,b) => new Date(a.date) - new Date(b.date));
 
                 for (let hour = 0; hour < 24; hour++) {
@@ -2127,18 +2143,23 @@
                     this.switchCalendar(newCalendar.id);
                 },
 
-                                 addEvent(calendarId, date, name, color, linkedCalendarId) {
-                     const calendar = this.state.calendars.find(c => c.id === calendarId);
-                if (!calendar) return;
+                                                 addEvent(calendarId, date, name, color, linkedCalendarId) {
+                    const calendar = this.state.calendars.find(c => c.id === calendarId);
+                    if (!calendar) return;
 
-                const year = date.getFullYear();
-                const month = date.getMonth();
-                const day = date.getDate();
-                const dateKey = `${year}-${month}-${day}`;
+                    // Ensure events object exists
+                    if (!calendar.events) {
+                        calendar.events = {};
+                    }
 
-                if (!calendar.events[dateKey]) {
-                    calendar.events[dateKey] = [];
-                }
+                    const year = date.getFullYear();
+                    const month = date.getMonth();
+                    const day = date.getDate();
+                    const dateKey = `${year}-${month}-${day}`;
+
+                    if (!calendar.events[dateKey]) {
+                        calendar.events[dateKey] = [];
+                    }
 
                 const newEvent = {
                     id: `evt-${Date.now()}`,
@@ -2149,9 +2170,13 @@
                 };
                 calendar.events[dateKey].push(newEvent);
                 
-                if (linkedCalendarId) {
-                         const linkedCalendar = this.state.calendars.find(c => c.id === linkedCalendarId);
+                                if (linkedCalendarId) {
+                    const linkedCalendar = this.state.calendars.find(c => c.id === linkedCalendarId);
                     if (linkedCalendar) {
+                        // Ensure events object exists
+                        if (!linkedCalendar.events) {
+                            linkedCalendar.events = {};
+                        }
                         if (!linkedCalendar.events[dateKey]) {
                             linkedCalendar.events[dateKey] = [];
                         }
