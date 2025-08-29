@@ -447,6 +447,18 @@
             transform: translateY(-1px);
         }
 
+        /* Daily Schedule Sidebar */
+        .daily-schedule {
+            transition: transform 0.3s ease;
+            transform: translateX(100%);
+            background: white;
+            border-left: 1px solid rgba(0,0,0,0.08);
+        }
+
+        .daily-schedule.open {
+            transform: translateX(0);
+        }
+
         /* Mobile Responsiveness Improvements */
         @media (max-width: 768px) {
             .card-elevated {
@@ -734,11 +746,11 @@
         <header class="flex items-center justify-between mb-8 card-elevated p-6 fade-in">
             <h1 class="display-font text-4xl">Calendar</h1>
             <div class="flex items-center gap-3">
-                <div id="weather-widget" class="text-right content-font">
+            <div id="weather-widget" class="text-right content-font">
                     <div class="text-sm">
                         <p class="font-medium text-gray-700">Finding Location...</p>
                         <p class="text-gray-500">Loading weather...</p>
-                    </div>
+                </div>
                 </div>
                 <button id="notification-settings-btn" class="clean-btn px-3 py-2 text-xs" title="Notification Settings">
                     <span id="notification-icon">🔕</span> Notifications
@@ -772,15 +784,15 @@
 
         <main id="main-content" class="card-elevated p-6 mb-6 slide-up">
             <div id="calendar-view">
-                <div class="flex justify-between items-center mb-6">
+            <div class="flex justify-between items-center mb-6">
                     <button id="prev-month" class="clean-btn secondary p-3">
                         <i class="fas fa-chevron-left"></i>
-                    </button>
+                </button>
                     <h2 id="month-year" class="text-3xl font-medium display-font"></h2>
                     <button id="next-month" class="clean-btn secondary p-3">
                         <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
+                </button>
+            </div>
                 <div class="grid grid-cols-7 gap-0 text-center text-sm font-medium mb-4 text-gray-600">
                     <div class="py-3">Sun</div>
                     <div class="py-3">Mon</div>
@@ -789,7 +801,7 @@
                     <div class="py-3">Thu</div>
                     <div class="py-3">Fri</div>
                     <div class="py-3">Sat</div>
-                </div>
+            </div>
                 <div id="calendar-grid" class="calendar-grid mb-8">
                     </div>
             </div>
@@ -858,7 +870,7 @@
             </button>
         </div>
         <div id="schedule-content" class="space-y-2 mb-6">
-            </div>
+        </div>
         <div class="bg-white rounded-lg p-6 shadow-sm border">
             <h4 class="font-medium mb-4 content-font">Add New Event</h4>
             <input type="text" id="schedule-event-input" class="clean-input mb-3" placeholder="Event name...">
@@ -877,7 +889,7 @@
                 <input type="text" id="user-sync-code" placeholder="e.g., 'family-vacation' or 'work-team'" class="clean-input mb-4">
                 <div class="flex justify-end gap-3">
                     <button id="setup-sync" class="clean-btn">Join Session 🔄</button>
-                </div>
+            </div>
             </div>
 
             <!-- Session Info Modal -->
@@ -888,21 +900,21 @@
                     <div class="mb-2">
                         <span class="font-medium">Session Code:</span>
                         <span class="ml-2 text-blue-600 font-mono" id="current-session-display">Loading...</span>
-                    </div>
+            </div>
                     <div class="text-sm text-gray-600">
                         This code syncs your calendars across all devices
-                    </div>
-                </div>
+            </div>
+            </div>
 
                 <div class="space-y-3 mb-6">
                     <button id="switch-session-btn" class="clean-btn w-full">
                         🔄 Switch to Different Session
                     </button>
-                </div>
+            </div>
 
                 <div class="flex justify-end">
                     <button id="close-session-modal" class="clean-btn secondary">Close</button>
-                </div>
+        </div>
             </div>
 
             <div id="create-poll-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 modal-glass rounded-xl shadow-2xl p-8 z-50 hidden w-96 slide-up">
@@ -919,8 +931,8 @@
                 <div class="flex justify-end gap-3">
                     <button id="cancel-create-poll" class="clean-btn secondary">Cancel</button>
                     <button id="confirm-create-poll" class="clean-btn">Create Poll ✨</button>
-                </div>
-            </div>
+        </div>
+    </div>
 
             <!-- Add Chore Modal -->
             <div id="add-chore-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 modal-glass rounded-xl shadow-2xl p-8 z-50 hidden w-96 slide-up">
@@ -935,7 +947,7 @@
                 <div class="flex justify-end gap-3">
                     <button id="cancel-add-chore" class="clean-btn secondary">Cancel</button>
                     <button id="confirm-add-chore" class="clean-btn">Add Chore ✨</button>
-                </div>
+        </div>
             </div>
 
             <div id="notification-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
@@ -1018,11 +1030,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const app = {
-                // --- STATE MANAGEMENT ---
+            // --- STATE MANAGEMENT ---
                                                  state: {
-                    currentDate: new Date(),
-                    calendars: [],
-                    activeCalendarId: null,
+                currentDate: new Date(),
+                calendars: [],
+                activeCalendarId: null,
                     weatherData: {},
                     visibleCalendars: new Set(), // Track which calendars are visible for overlay
                     notificationsEnabled: false,
@@ -1034,7 +1046,7 @@
                     currentView: 'calendar' // 'calendar', 'voting', or 'chores'
                 },
 
-                // --- DOM ELEMENTS ---
+            // --- DOM ELEMENTS ---
                 elements: {},
 
                 // --- CONSTANTS & CONFIG -- -
@@ -1181,7 +1193,7 @@
                             this.state.activeCalendarId = this.state.calendars[0].id;
                         }
                         console.log('✅ State loaded from cloud.');
-                    } else {
+                } else {
                         console.log('🆕 No cloud data found for this session, starting fresh.');
                     }
                 },
@@ -1243,72 +1255,72 @@
                      this.showUserSetupModal();
                  },
 
-                // --- WEATHER API ---
+            // --- WEATHER API ---
                 async getWeatherData(lat, lon, cityName) {
-                    document.querySelector('#weather-widget p:first-child').textContent = cityName;
+                document.querySelector('#weather-widget p:first-child').textContent = cityName;
                     if (!this.config.WEATHER_API_KEY) {
-                        console.warn("Weather API key is missing.");
-                        document.querySelector('#weather-widget p:last-child').textContent = 'API Key needed';
+                    console.warn("Weather API key is missing.");
+                    document.querySelector('#weather-widget p:last-child').textContent = 'API Key needed';
+                    return;
+                }
+                    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${this.config.WEATHER_API_KEY}&units=imperial`;
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    
+                    if (!response.ok || !data.list || data.list.length === 0) {
+                        console.error("Weather API error or empty response:", data);
+                        let errorMessage = 'Weather data unavailable';
+                        if (data && data.message) {
+                             errorMessage = `Weather Error: ${data.message}`;
+                        }
+                        document.querySelector('#weather-widget p:last-child').textContent = errorMessage;
                         return;
                     }
-                    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${this.config.WEATHER_API_KEY}&units=imperial`;
-                    try {
-                        const response = await fetch(url);
-                        const data = await response.json();
-                        
-                        if (!response.ok || !data.list || data.list.length === 0) {
-                            console.error("Weather API error or empty response:", data);
-                            let errorMessage = 'Weather data unavailable';
-                            if (data && data.message) {
-                                 errorMessage = `Weather Error: ${data.message}`;
-                            }
-                            document.querySelector('#weather-widget p:last-child').textContent = errorMessage;
-                            return;
-                        }
 
-                        document.querySelector('#weather-widget p:last-child').textContent = 
+                    document.querySelector('#weather-widget p:last-child').textContent = 
                             `${Math.round(data.list[0].main.temp)}°F, ${data.list[0].weather[0].main}`;
 
                         this.state.weatherData = {};
-                        const dailyData = {};
-                        data.list.forEach(item => {
-                            const date = new Date(item.dt * 1000);
-                            const dateKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-                            if (!dailyData[dateKey] || date.getHours() === 12) {
-                                 dailyData[dateKey] = {
-                                    temp: Math.round(item.main.temp),
-                                    icon: item.weather[0].icon
-                                };
-                            }
-                        });
+                    const dailyData = {};
+                    data.list.forEach(item => {
+                        const date = new Date(item.dt * 1000);
+                        const dateKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+                        if (!dailyData[dateKey] || date.getHours() === 12) {
+                             dailyData[dateKey] = {
+                                temp: Math.round(item.main.temp),
+                                icon: item.weather[0].icon
+                            };
+                        }
+                    });
                         this.state.weatherData = dailyData;
 
                         this.renderCalendar();
-                    } catch (error) {
-                        console.error("Error fetching weather data:", error);
-                        document.querySelector('#weather-widget p:last-child').textContent = 'Weather unavailable';
-                    }
+                } catch (error) {
+                    console.error("Error fetching weather data:", error);
+                    document.querySelector('#weather-widget p:last-child').textContent = 'Weather unavailable';
+                }
                 },
-
+            
                 getLocationAndFetchWeather() {
-                     if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(async position => {
-                            const lat = position.coords.latitude;
-                            const lon = position.coords.longitude;
-                            let cityName = "Your Location";
+                 if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(async position => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        let cityName = "Your Location";
                             if(this.config.WEATHER_API_KEY) {
-                                try {
+                            try {
                                     const geoUrl = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${this.config.WEATHER_API_KEY}`;
-                                    const geoResponse = await fetch(geoUrl);
-                                    const geoData = await geoResponse.json();
-                                    if(geoData[0]) cityName = geoData[0].name;
-                                } catch (e) { console.error("Could not reverse geocode."); }
-                            }
+                                const geoResponse = await fetch(geoUrl);
+                                const geoData = await geoResponse.json();
+                                if(geoData[0]) cityName = geoData[0].name;
+                            } catch (e) { console.error("Could not reverse geocode."); }
+                        }
                             this.getWeatherData(lat, lon, cityName);
-                        }, () => {
+                    }, () => {
                             this.getWeatherData(51.5072, -0.1276, "London, UK");
-                        });
-                    } else {
+                    });
+                } else {
                         this.getWeatherData(51.5072, -0.1276, "London, UK");
                     }
                 },
@@ -1361,11 +1373,11 @@
                      }
                  },
 
-                // --- CORE RENDER FUNCTIONS ---
+            // --- CORE RENDER FUNCTIONS ---
                                  renderCalendar() {
                      const date = this.state.currentDate;
-                     const year = date.getFullYear();
-                     const month = date.getMonth();
+                const year = date.getFullYear();
+                const month = date.getMonth();
 
                      this.elements.monthYearHeader.textContent = `${this.config.months[month]} ${year}`;
                      this.elements.calendarGrid.innerHTML = '';
@@ -1386,27 +1398,27 @@
                          return;
                      }
 
-                     const firstDayOfMonth = new Date(year, month, 1).getDay();
-                     const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
 
                      const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
-                    
-                    for (let i = 0; i < firstDayOfMonth; i++) {
-                        const cell = document.createElement('div');
-                        cell.className = 'p-2 border rounded-2xl bg-gray-50 opacity-50';
+                
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'p-2 border rounded-2xl bg-gray-50 opacity-50';
                         this.elements.calendarGrid.appendChild(cell);
-                    }
+                }
 
-                    for (let day = 1; day <= daysInMonth; day++) {
-                        const cell = document.createElement('div');
-                        const fullDate = new Date(year, month, day);
-                        const dateKey = `${year}-${month}-${day}`;
-                        
-                        cell.className = 'day-cell p-4 flex flex-col cursor-pointer min-h-[140px] group';
-                        cell.dataset.date = fullDate.toISOString();
-                        
-                        const today = new Date();
-                                                 if (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && day === today.getDate()) {
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const cell = document.createElement('div');
+                    const fullDate = new Date(year, month, day);
+                    const dateKey = `${year}-${month}-${day}`;
+                    
+                    cell.className = 'day-cell p-4 flex flex-col cursor-pointer min-h-[140px] group';
+                    cell.dataset.date = fullDate.toISOString();
+                    
+                    const today = new Date();
+                    if (date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && day === today.getDate()) {
                              cell.classList.add('today');
                              cell.style.background = this.config.colorSchemes[activeCalendar.theme].secondary;
                              cell.style.border = `5px solid ${this.config.colorSchemes[activeCalendar.theme]['accent-soft']}`;
@@ -1421,42 +1433,42 @@
                              todayBadge.style.color = this.config.colorSchemes[activeCalendar.theme].text;
                              cell.style.position = 'relative';
                              cell.appendChild(todayBadge);
-                         }
-                        
-                        const dayHeader = document.createElement('div');
-                        dayHeader.className = 'flex justify-between items-start mb-2';
+                    }
+                    
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'flex justify-between items-start mb-2';
 
-                        const dayNumber = document.createElement('span');
-                        dayNumber.className = 'font-bold text-xl content-font text-gray-700';
-                        dayNumber.textContent = day;
-                        dayHeader.appendChild(dayNumber);
-                        
+                    const dayNumber = document.createElement('span');
+                    dayNumber.className = 'font-bold text-xl content-font text-gray-700';
+                    dayNumber.textContent = day;
+                    dayHeader.appendChild(dayNumber);
+                    
                         if(this.state.weatherData[dateKey]) {
-                            const weatherContainer = document.createElement('div');
-                            weatherContainer.className = 'flex flex-col items-center text-xs text-gray-600';
-                            const weatherIcon = document.createElement('img');
+                        const weatherContainer = document.createElement('div');
+                        weatherContainer.className = 'flex flex-col items-center text-xs text-gray-600';
+                        const weatherIcon = document.createElement('img');
                             weatherIcon.src = `https://openweathermap.org/img/wn/${this.state.weatherData[dateKey].icon}.png`;
-                            weatherIcon.className = 'w-8 h-8 weather-icon';
-                            weatherContainer.appendChild(weatherIcon);
-                            const tempSpan = document.createElement('span');
+                        weatherIcon.className = 'w-8 h-8 weather-icon';
+                        weatherContainer.appendChild(weatherIcon);
+                        const tempSpan = document.createElement('span');
                             tempSpan.textContent = `${this.state.weatherData[dateKey].temp}°F`;
-                            tempSpan.className = 'font-semibold';
-                            weatherContainer.appendChild(tempSpan);
-                            dayHeader.appendChild(weatherContainer);
-                        }
-                        cell.appendChild(dayHeader);
+                        tempSpan.className = 'font-semibold';
+                        weatherContainer.appendChild(tempSpan);
+                        dayHeader.appendChild(weatherContainer);
+                    }
+                    cell.appendChild(dayHeader);
 
-                        const eventsContainer = document.createElement('div');
-                        eventsContainer.className = 'flex-1 space-y-2 overflow-y-auto text-xs';
-                        
+                    const eventsContainer = document.createElement('div');
+                    eventsContainer.className = 'flex-1 space-y-2 overflow-y-auto text-xs';
+                    
                                                  // Collect all events for this date from active calendar and visible calendars
                          const allEvents = [];
                          let hasEvents = false;
                          
                          // Add events from active calendar
-                         if (activeCalendar && activeCalendar.events && activeCalendar.events[dateKey]) {
+                    if (activeCalendar && activeCalendar.events && activeCalendar.events[dateKey]) {
                              hasEvents = true;
-                             activeCalendar.events[dateKey].forEach(event => {
+                        activeCalendar.events[dateKey].forEach(event => {
                                  allEvents.push({
                                      ...event,
                                      calendarId: activeCalendar.id,
@@ -1497,38 +1509,38 @@
                              });
                              
                              allEvents.forEach(event => {
-                                 const eventEl = document.createElement('div');
+                            const eventEl = document.createElement('div');
                                  eventEl.className = `event-bubble ${event.color} flex items-center justify-between ${!event.isActive ? 'overlay-event' : ''}`;
-                                 if(event.completed) eventEl.classList.add('event-bubble-completed');
-                                 
-                                 const eventText = document.createElement('span');
+                            if(event.completed) eventEl.classList.add('event-bubble-completed');
+                            
+                            const eventText = document.createElement('span');
                                  const calendarIcon = this.config.colorSchemes[event.calendarTheme].icon;
                                  eventText.innerHTML = `${event.isActive ? this.getDayTimeIcon() : calendarIcon} ${event.name}`;
                                  eventText.style.fontWeight = event.isActive ? '600' : '500';
                                  if (!event.isActive) {
                                      eventText.innerHTML += ` <span class="text-xs opacity-60">(${event.calendarName})</span>`;
                                  }
-                                 eventEl.appendChild(eventText);
+                            eventEl.appendChild(eventText);
 
                                  // Only add checkbox for active calendar events
                                  if (event.isActive) {
-                                     const checkbox = document.createElement('input');
-                                     checkbox.type = 'checkbox';
-                                     checkbox.checked = event.completed;
-                                     checkbox.className = 'ml-2 w-4 h-4 rounded-full';
+                            const checkbox = document.createElement('input');
+                            checkbox.type = 'checkbox';
+                            checkbox.checked = event.completed;
+                            checkbox.className = 'ml-2 w-4 h-4 rounded-full';
                                      checkbox.style.accentColor = this.config.colorSchemes[activeCalendar.theme]['accent-soft'];
-                                     checkbox.onchange = (e) => {
-                                         e.stopPropagation();
+                            checkbox.onchange = (e) => {
+                                e.stopPropagation();
                                          this.toggleEventCompletion(event.id);
-                                     };
-                                     eventEl.appendChild(checkbox);
+                            };
+                            eventEl.appendChild(checkbox);
                                  }
-                                 eventsContainer.appendChild(eventEl);
-                             });
-                         }
-                        cell.appendChild(eventsContainer);
+                            eventsContainer.appendChild(eventEl);
+                        });
+                    }
+                    cell.appendChild(eventsContainer);
 
-                                                 const addBtn = document.createElement('button');
+                    const addBtn = document.createElement('button');
                          addBtn.innerHTML = `<span class="text-2xl">${this.getDayTimeIcon()}</span>`;
                          addBtn.className = 'self-center mt-auto opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110';
                          addBtn.style.color = this.config.colorSchemes[activeCalendar.theme].text;
@@ -1540,12 +1552,12 @@
                          addBtn.style.alignItems = 'center';
                          addBtn.style.justifyContent = 'center';
                          addBtn.style.border = `3px solid ${this.config.colorSchemes[activeCalendar.theme]['accent-soft']}`;
-                        addBtn.onclick = (e) => {
-                            e.stopPropagation();
+                    addBtn.onclick = (e) => {
+                        e.stopPropagation();
                             this.openAddEventModal(fullDate);
-                        };
-                        cell.appendChild(addBtn);
-                        
+                    };
+                    cell.appendChild(addBtn);
+                    
                         cell.onclick = () => this.openDailySchedule(fullDate);
 
                         this.elements.calendarGrid.appendChild(cell);
@@ -1558,7 +1570,7 @@
                      this.elements.tabsContainer.innerHTML = '';
                      
                      this.state.calendars.forEach(calendar => {
-                         const tab = document.createElement('button');
+                    const tab = document.createElement('button');
                          tab.className = `tab px-6 py-3 font-medium text-sm transition-all duration-300 content-font`;
                          
                          const theme = this.config.colorSchemes[calendar.theme];
@@ -1582,20 +1594,20 @@
                                  ` : ''}
                              </div>
                          `;
-                         tab.dataset.calendarId = calendar.id;
-                         
+                    tab.dataset.calendarId = calendar.id;
+                    
                          if (calendar.id === this.state.activeCalendarId) {
-                             tab.classList.add('tab-active');
-                             tab.style.background = theme.bg;
-                             tab.style.color = theme.text;
-                             tab.style.borderColor = theme['accent-soft'];
+                        tab.classList.add('tab-active');
+                        tab.style.background = theme.bg;
+                        tab.style.color = theme.text;
+                        tab.style.borderColor = theme['accent-soft'];
                              tab.style.borderWidth = '4px';
                              tab.style.borderRadius = '16px';
                              tab.style.boxShadow = `0 12px 40px ${theme.accent}25`;
                              
                              this.applyFullPageTheme(theme);
 
-                         } else {
+                    } else {
                              tab.style.background = 'rgba(255,255,255,0.7)';
                              tab.style.color = '#6B7280';
                              tab.style.borderColor = 'rgba(0,0,0,0.08)';
@@ -1614,53 +1626,53 @@
                  },
 
                 renderDailySchedule(date) {
-                    const year = date.getFullYear();
-                    const month = date.getMonth();
-                    const day = date.getDate();
-                    const dateKey = `${year}-${month}-${day}`;
-                    
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const day = date.getDate();
+                const dateKey = `${year}-${month}-${day}`;
+                
                     this.elements.scheduleDateHeader.textContent = `📅 ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
                     this.elements.scheduleContent.innerHTML = '';
 
                     const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
-                    const events = (activeCalendar && activeCalendar.events[dateKey]) ? [...activeCalendar.events[dateKey]] : [];
-                    events.sort((a,b) => new Date(a.date) - new Date(b.date));
+                const events = (activeCalendar && activeCalendar.events[dateKey]) ? [...activeCalendar.events[dateKey]] : [];
+                events.sort((a,b) => new Date(a.date) - new Date(b.date));
 
-                    for (let hour = 0; hour < 24; hour++) {
-                        const hourEl = document.createElement('div');
-                        hourEl.className = 'flex mb-3';
-                        
-                        const timeEl = document.createElement('div');
-                        timeEl.className = 'w-20 text-sm text-purple-600 pr-3 text-right font-bold content-font glass-effect rounded-l-2xl p-2 flex items-center justify-center';
-                        const timeIcon = hour < 6 ? '🌙' : hour < 12 ? '🌅' : hour < 18 ? '☀️' : '🌆';
-                        timeEl.innerHTML = `${timeIcon}<br>${hour % 12 === 0 ? 12 : hour % 12} ${hour < 12 ? 'AM' : 'PM'}`;
-                        
-                        const slotEl = document.createElement('div');
-                        slotEl.className = 'flex-1 glass-effect rounded-r-2xl p-3 min-h-[60px] flex flex-col justify-center';
-                        
-                        const eventsThisHour = events.filter(e => new Date(e.date).getHours() === hour);
+                for (let hour = 0; hour < 24; hour++) {
+                    const hourEl = document.createElement('div');
+                    hourEl.className = 'flex mb-3';
+                    
+                    const timeEl = document.createElement('div');
+                    timeEl.className = 'w-20 text-sm text-purple-600 pr-3 text-right font-bold content-font glass-effect rounded-l-2xl p-2 flex items-center justify-center';
+                    const timeIcon = hour < 6 ? '🌙' : hour < 12 ? '🌅' : hour < 18 ? '☀️' : '🌆';
+                    timeEl.innerHTML = `${timeIcon}<br>${hour % 12 === 0 ? 12 : hour % 12} ${hour < 12 ? 'AM' : 'PM'}`;
+                    
+                    const slotEl = document.createElement('div');
+                    slotEl.className = 'flex-1 glass-effect rounded-r-2xl p-3 min-h-[60px] flex flex-col justify-center';
+                    
+                    const eventsThisHour = events.filter(e => new Date(e.date).getHours() === hour);
 
-                        if (eventsThisHour.length === 0) {
-                            const emptySlot = document.createElement('div');
-                            emptySlot.className = 'text-gray-400 text-sm content-font text-center';
-                            emptySlot.textContent = '✨ Free time';
-                            slotEl.appendChild(emptySlot);
-                        } else {
-                            eventsThisHour.forEach(event => {
-                                const eventDiv = document.createElement('div');
-                                eventDiv.innerHTML = `<strong>${new Date(event.date).getMinutes().toString().padStart(2, '0')}:</strong> ${event.name}`;
-                                eventDiv.className = `text-sm p-3 rounded-2xl text-white font-semibold mb-2 last:mb-0 shadow-md`;
-                                eventDiv.style.background = event.color || 'linear-gradient(135deg, #60a5fa, #3b82f6)';
-                                if (event.completed) {
-                                    eventDiv.style.textDecoration = 'line-through';
-                                    eventDiv.style.opacity = '0.7';
-                                }
-                                slotEl.appendChild(eventDiv);
-                            });
-                        }
+                    if (eventsThisHour.length === 0) {
+                        const emptySlot = document.createElement('div');
+                        emptySlot.className = 'text-gray-400 text-sm content-font text-center';
+                        emptySlot.textContent = '✨ Free time';
+                        slotEl.appendChild(emptySlot);
+                    } else {
+                        eventsThisHour.forEach(event => {
+                            const eventDiv = document.createElement('div');
+                            eventDiv.innerHTML = `<strong>${new Date(event.date).getMinutes().toString().padStart(2, '0')}:</strong> ${event.name}`;
+                            eventDiv.className = `text-sm p-3 rounded-2xl text-white font-semibold mb-2 last:mb-0 shadow-md`;
+                            eventDiv.style.background = event.color || 'linear-gradient(135deg, #60a5fa, #3b82f6)';
+                            if (event.completed) {
+                                eventDiv.style.textDecoration = 'line-through';
+                                eventDiv.style.opacity = '0.7';
+                            }
+                            slotEl.appendChild(eventDiv);
+                        });
+                    }
 
-                        hourEl.appendChild(timeEl);
-                        hourEl.appendChild(slotEl);
+                    hourEl.appendChild(timeEl);
+                    hourEl.appendChild(slotEl);
                         this.elements.scheduleContent.appendChild(hourEl);
                     }
                 },
@@ -2105,47 +2117,47 @@
                 },
                 
                 addCalendar(name, theme) {
-                    const newCalendar = {
-                        id: `cal-${Date.now()}`,
-                        name: name,
-                        theme: theme,
-                        events: {}
-                    };
+                const newCalendar = {
+                    id: `cal-${Date.now()}`,
+                    name: name,
+                    theme: theme,
+                    events: {}
+                };
                     this.state.calendars.push(newCalendar);
                     this.switchCalendar(newCalendar.id);
                 },
 
                                  addEvent(calendarId, date, name, color, linkedCalendarId) {
                      const calendar = this.state.calendars.find(c => c.id === calendarId);
-                     if (!calendar) return;
+                if (!calendar) return;
 
-                     const year = date.getFullYear();
-                     const month = date.getMonth();
-                     const day = date.getDate();
-                     const dateKey = `${year}-${month}-${day}`;
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const day = date.getDate();
+                const dateKey = `${year}-${month}-${day}`;
 
-                     if (!calendar.events[dateKey]) {
-                         calendar.events[dateKey] = [];
-                     }
+                if (!calendar.events[dateKey]) {
+                    calendar.events[dateKey] = [];
+                }
 
-                     const newEvent = {
-                         id: `evt-${Date.now()}`,
-                         name: name,
-                         color: color,
-                         completed: false,
-                         date: date.toISOString()
-                     };
-                     calendar.events[dateKey].push(newEvent);
-                     
-                     if (linkedCalendarId) {
+                const newEvent = {
+                    id: `evt-${Date.now()}`,
+                    name: name,
+                    color: color,
+                    completed: false,
+                    date: date.toISOString()
+                };
+                calendar.events[dateKey].push(newEvent);
+                
+                if (linkedCalendarId) {
                          const linkedCalendar = this.state.calendars.find(c => c.id === linkedCalendarId);
-                         if (linkedCalendar) {
-                             if (!linkedCalendar.events[dateKey]) {
-                                 linkedCalendar.events[dateKey] = [];
-                             }
-                             linkedCalendar.events[dateKey].push({...newEvent, id: `evt-${Date.now()}-linked`});
-                         }
-                     }
+                    if (linkedCalendar) {
+                        if (!linkedCalendar.events[dateKey]) {
+                            linkedCalendar.events[dateKey] = [];
+                        }
+                        linkedCalendar.events[dateKey].push({...newEvent, id: `evt-${Date.now()}-linked`});
+                    }
+                }
 
                      // Schedule notifications for the new event
                      if (this.state.notificationsEnabled) {
@@ -2163,32 +2175,32 @@
                 
                 toggleEventCompletion(eventId) {
                     const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
-                    if (activeCalendar && activeCalendar.events) {
-                        for (const dateKey in activeCalendar.events) {
-                            const event = activeCalendar.events[dateKey].find(e => e.id === eventId);
-                            if (event) {
-                                event.completed = !event.completed;
-                                break;
-                            }
+                if (activeCalendar && activeCalendar.events) {
+                    for (const dateKey in activeCalendar.events) {
+                        const event = activeCalendar.events[dateKey].find(e => e.id === eventId);
+                        if (event) {
+                            event.completed = !event.completed;
+                            break;
                         }
                     }
+                }
                     this.renderCalendar();
                     this.saveState();
                 },
 
-                // --- MODAL & SIDEBAR CONTROLS ---
+            // --- MODAL & SIDEBAR CONTROLS ---
                 selectedDateForEvent: null,
                 selectedColorScheme: 'theme-warm-neutrals',
                 selectedEventColor: 'event-color-1',
 
                 openModal(modal) {
                     this.elements.modalBackdrop.classList.remove('hidden');
-                    modal.classList.remove('hidden');
+                modal.classList.remove('hidden');
                 },
 
                 closeModal(modal) {
                     this.elements.modalBackdrop.classList.add('hidden');
-                    modal.classList.add('hidden');
+                modal.classList.add('hidden');
                 },
 
                                  showWelcomeModal() {
@@ -2211,18 +2223,28 @@
 
                 openAddEventModal(date) {
                     this.selectedDateForEvent = date;
-                    document.getElementById('event-modal-date').textContent = date.toLocaleDateString();
+                document.getElementById('event-modal-date').textContent = date.toLocaleDateString();
                     
-                    const select = document.getElementById('link-calendar-select');
-                    select.innerHTML = '<option value="">None</option>';
+                    // Clear the event name input
+                    document.getElementById('event-name-input').value = '';
+                    
+                    // Reset event color selection
+                    this.selectedEventColor = 'event-color-1';
+                    document.querySelectorAll('#event-colors div').forEach(div => {
+                        div.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500');
+                    });
+                    document.querySelector('#event-colors div[data-color="event-color-1"]').classList.add('ring-2', 'ring-offset-2', 'ring-blue-500');
+                
+                const select = document.getElementById('link-calendar-select');
+                select.innerHTML = '<option value="">None</option>';
                     this.state.calendars
                         .filter(c => c.id !== this.state.activeCalendarId)
-                        .forEach(c => {
-                            const option = document.createElement('option');
-                            option.value = c.id;
-                            option.textContent = c.name;
-                            select.appendChild(option);
-                        });
+                    .forEach(c => {
+                        const option = document.createElement('option');
+                        option.value = c.id;
+                        option.textContent = c.name;
+                        select.appendChild(option);
+                    });
 
                     this.openModal(this.elements.addEventModal);
                 },
@@ -2437,56 +2459,83 @@
                     });
                     document.getElementById('close-schedule').addEventListener('click', () => this.closeDailySchedule());
 
-                    document.querySelectorAll('.color-scheme-option').forEach(el => {
-                        el.addEventListener('click', () => {
-                            document.querySelectorAll('.color-scheme-option div').forEach(div => div.classList.remove('ring-4', 'ring-offset-2', 'ring-blue-500'));
-                            el.querySelector('div').classList.add('ring-4', 'ring-offset-2', 'ring-blue-500');
+            document.querySelectorAll('.color-scheme-option').forEach(el => {
+                el.addEventListener('click', () => {
+                    document.querySelectorAll('.color-scheme-option div').forEach(div => div.classList.remove('ring-4', 'ring-offset-2', 'ring-blue-500'));
+                    el.querySelector('div').classList.add('ring-4', 'ring-offset-2', 'ring-blue-500');
                             this.selectedColorScheme = el.dataset.theme;
-                        });
-                    });
+                });
+            });
 
-                    document.getElementById('confirm-add-calendar').addEventListener('click', () => {
-                        const name = document.getElementById('new-calendar-name').value;
+            document.getElementById('confirm-add-calendar').addEventListener('click', () => {
+                const name = document.getElementById('new-calendar-name').value;
                         if (name && this.selectedColorScheme) {
                             this.addCalendar(name, this.selectedColorScheme);
                             this.closeModal(this.elements.addCalendarModal);
-                            document.getElementById('new-calendar-name').value = '';
-                        }
-                    });
+                    document.getElementById('new-calendar-name').value = '';
+                }
+            });
 
-                    document.getElementById('event-colors').addEventListener('click', (e) => {
-                        if (e.target.dataset.color) {
+            document.getElementById('event-colors').addEventListener('click', (e) => {
+                if (e.target.dataset.color) {
                             this.selectedEventColor = e.target.dataset.color;
-                            document.querySelectorAll('#event-colors div').forEach(div => div.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500'));
-                            e.target.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500');
-                        }
-                    });
+                    document.querySelectorAll('#event-colors div').forEach(div => div.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500'));
+                    e.target.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500');
+                }
+            });
 
-                    document.getElementById('save-event').addEventListener('click', () => {
-                        const name = document.getElementById('event-name-input').value;
-                        const linkedCalendarId = document.getElementById('link-calendar-select').value;
-                        if (name && this.selectedDateForEvent) {
-                            const eventDate = new Date(this.selectedDateForEvent);
-                            eventDate.setHours(12, 0, 0, 0);
-                            this.addEvent(this.state.activeCalendarId, eventDate, name, this.selectedEventColor, linkedCalendarId);
-                            this.closeModal(this.elements.addEventModal);
-                            document.getElementById('event-name-input').value = '';
+            document.getElementById('save-event').addEventListener('click', () => {
+                        const name = document.getElementById('event-name-input').value.trim();
+                const linkedCalendarId = document.getElementById('link-calendar-select').value;
+                        
+                        if (!name) {
+                            alert('Please enter an event name');
+                            return;
                         }
-                    });
-                    
-                    document.getElementById('schedule-add-event-btn').addEventListener('click', () => {
-                        const name = document.getElementById('schedule-event-input').value;
-                        const time = document.getElementById('schedule-event-time').value;
+                        
+                        if (!this.selectedDateForEvent) {
+                            alert('No date selected');
+                            return;
+                        }
+                        
+                        if (!this.state.activeCalendarId) {
+                            alert('Please create a calendar first');
+                            return;
+                        }
+                        
+                        const eventDate = new Date(this.selectedDateForEvent);
+                    eventDate.setHours(12, 0, 0, 0);
+                        this.addEvent(this.state.activeCalendarId, eventDate, name, this.selectedEventColor, linkedCalendarId);
+                        this.closeModal(this.elements.addEventModal);
+                    document.getElementById('event-name-input').value = '';
+            });
+            
+            document.getElementById('schedule-add-event-btn').addEventListener('click', () => {
+                        const name = document.getElementById('schedule-event-input').value.trim();
+                const time = document.getElementById('schedule-event-time').value;
                         const baseDate = new Date(this.elements.dailySchedulePanel.dataset.date);
                         
-                        if (name && time) {
-                            const [hours, minutes] = time.split(':');
-                            baseDate.setHours(parseInt(hours), parseInt(minutes));
-                            this.addEvent(this.state.activeCalendarId, baseDate, name, 'event-color-1', null);
-                            this.renderDailySchedule(new Date(this.elements.dailySchedulePanel.dataset.date));
-                            document.getElementById('schedule-event-input').value = '';
-                            document.getElementById('schedule-event-time').value = '';
+                        if (!name) {
+                            alert('Please enter an event name');
+                            return;
                         }
+                        
+                        if (!time) {
+                            alert('Please select a time');
+                            return;
+                        }
+                        
+                        if (!this.state.activeCalendarId) {
+                            alert('Please create a calendar first');
+                            return;
+                        }
+                        
+                    const [hours, minutes] = time.split(':');
+                    baseDate.setHours(parseInt(hours), parseInt(minutes));
+                        this.addEvent(this.state.activeCalendarId, baseDate, name, 'event-color-1', null);
+                        this.renderDailySchedule(new Date(this.elements.dailySchedulePanel.dataset.date));
+                    document.getElementById('schedule-event-input').value = '';
+                    document.getElementById('schedule-event-time').value = '';
                     });
                 }
             };
