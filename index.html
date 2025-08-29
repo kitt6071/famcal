@@ -2450,94 +2450,95 @@
                          });
                      }
 
-                    document.getElementById('cancel-add-calendar').addEventListener('click', () => this.closeModal(this.elements.addCalendarModal));
-                    document.getElementById('cancel-add-event').addEventListener('click', () => this.closeModal(this.elements.addEventModal));
-                    this.elements.modalBackdrop.addEventListener('click', () => {
-                        this.closeModal(this.elements.addCalendarModal);
-                        this.closeModal(this.elements.addEventModal);
-                        this.closeDailySchedule();
-                    });
-                    document.getElementById('close-schedule').addEventListener('click', () => this.closeDailySchedule());
+                     // Calendar and event modal handlers
+                     document.getElementById('cancel-add-calendar').addEventListener('click', () => this.closeModal(this.elements.addCalendarModal));
+                     document.getElementById('cancel-add-event').addEventListener('click', () => this.closeModal(this.elements.addEventModal));
+                     this.elements.modalBackdrop.addEventListener('click', () => {
+                         this.closeModal(this.elements.addCalendarModal);
+                         this.closeModal(this.elements.addEventModal);
+                         this.closeDailySchedule();
+                     });
+                     document.getElementById('close-schedule').addEventListener('click', () => this.closeDailySchedule());
 
-            document.querySelectorAll('.color-scheme-option').forEach(el => {
-                el.addEventListener('click', () => {
-                    document.querySelectorAll('.color-scheme-option div').forEach(div => div.classList.remove('ring-4', 'ring-offset-2', 'ring-blue-500'));
-                    el.querySelector('div').classList.add('ring-4', 'ring-offset-2', 'ring-blue-500');
-                            this.selectedColorScheme = el.dataset.theme;
-                });
-            });
+                     document.querySelectorAll('.color-scheme-option').forEach(el => {
+                         el.addEventListener('click', () => {
+                             document.querySelectorAll('.color-scheme-option div').forEach(div => div.classList.remove('ring-4', 'ring-offset-2', 'ring-blue-500'));
+                             el.querySelector('div').classList.add('ring-4', 'ring-offset-2', 'ring-blue-500');
+                             this.selectedColorScheme = el.dataset.theme;
+                         });
+                     });
 
-            document.getElementById('confirm-add-calendar').addEventListener('click', () => {
-                const name = document.getElementById('new-calendar-name').value;
-                        if (name && this.selectedColorScheme) {
-                            this.addCalendar(name, this.selectedColorScheme);
-                            this.closeModal(this.elements.addCalendarModal);
-                    document.getElementById('new-calendar-name').value = '';
-                }
-            });
+                     document.getElementById('confirm-add-calendar').addEventListener('click', () => {
+                         const name = document.getElementById('new-calendar-name').value;
+                         if (name && this.selectedColorScheme) {
+                             this.addCalendar(name, this.selectedColorScheme);
+                             this.closeModal(this.elements.addCalendarModal);
+                             document.getElementById('new-calendar-name').value = '';
+                         }
+                     });
 
-            document.getElementById('event-colors').addEventListener('click', (e) => {
-                if (e.target.dataset.color) {
-                            this.selectedEventColor = e.target.dataset.color;
-                    document.querySelectorAll('#event-colors div').forEach(div => div.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500'));
-                    e.target.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500');
-                }
-            });
+                     document.getElementById('event-colors').addEventListener('click', (e) => {
+                         if (e.target.dataset.color) {
+                             this.selectedEventColor = e.target.dataset.color;
+                             document.querySelectorAll('#event-colors div').forEach(div => div.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500'));
+                             e.target.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500');
+                         }
+                     });
 
-            document.getElementById('save-event').addEventListener('click', () => {
-                        const name = document.getElementById('event-name-input').value.trim();
-                const linkedCalendarId = document.getElementById('link-calendar-select').value;
-                        
-                        if (!name) {
-                            alert('Please enter an event name');
-                            return;
-                        }
-                        
-                        if (!this.selectedDateForEvent) {
-                            alert('No date selected');
-                            return;
-                        }
-                        
-                        if (!this.state.activeCalendarId) {
-                            alert('Please create a calendar first');
-                            return;
-                        }
-                        
-                        const eventDate = new Date(this.selectedDateForEvent);
-                    eventDate.setHours(12, 0, 0, 0);
-                        this.addEvent(this.state.activeCalendarId, eventDate, name, this.selectedEventColor, linkedCalendarId);
-                        this.closeModal(this.elements.addEventModal);
-                    document.getElementById('event-name-input').value = '';
-            });
-            
-            document.getElementById('schedule-add-event-btn').addEventListener('click', () => {
-                        const name = document.getElementById('schedule-event-input').value.trim();
-                const time = document.getElementById('schedule-event-time').value;
-                        const baseDate = new Date(this.elements.dailySchedulePanel.dataset.date);
-                        
-                        if (!name) {
-                            alert('Please enter an event name');
-                            return;
-                        }
-                        
-                        if (!time) {
-                            alert('Please select a time');
-                            return;
-                        }
-                        
-                        if (!this.state.activeCalendarId) {
-                            alert('Please create a calendar first');
-                            return;
-                        }
-                        
-                    const [hours, minutes] = time.split(':');
-                    baseDate.setHours(parseInt(hours), parseInt(minutes));
-                        this.addEvent(this.state.activeCalendarId, baseDate, name, 'event-color-1', null);
-                        this.renderDailySchedule(new Date(this.elements.dailySchedulePanel.dataset.date));
-                    document.getElementById('schedule-event-input').value = '';
-                    document.getElementById('schedule-event-time').value = '';
-                    });
-                }
+                     document.getElementById('save-event').addEventListener('click', () => {
+                         const name = document.getElementById('event-name-input').value.trim();
+                         const linkedCalendarId = document.getElementById('link-calendar-select').value;
+                         
+                         if (!name) {
+                             alert('Please enter an event name');
+                             return;
+                         }
+                         
+                         if (!this.selectedDateForEvent) {
+                             alert('No date selected');
+                             return;
+                         }
+                         
+                         if (!this.state.activeCalendarId) {
+                             alert('Please create a calendar first');
+                             return;
+                         }
+                         
+                         const eventDate = new Date(this.selectedDateForEvent);
+                         eventDate.setHours(12, 0, 0, 0);
+                         this.addEvent(this.state.activeCalendarId, eventDate, name, this.selectedEventColor, linkedCalendarId);
+                         this.closeModal(this.elements.addEventModal);
+                         document.getElementById('event-name-input').value = '';
+                     });
+                     
+                     document.getElementById('schedule-add-event-btn').addEventListener('click', () => {
+                         const name = document.getElementById('schedule-event-input').value.trim();
+                         const time = document.getElementById('schedule-event-time').value;
+                         const baseDate = new Date(this.elements.dailySchedulePanel.dataset.date);
+                         
+                         if (!name) {
+                             alert('Please enter an event name');
+                             return;
+                         }
+                         
+                         if (!time) {
+                             alert('Please select a time');
+                             return;
+                         }
+                         
+                         if (!this.state.activeCalendarId) {
+                             alert('Please create a calendar first');
+                             return;
+                         }
+                         
+                         const [hours, minutes] = time.split(':');
+                         baseDate.setHours(parseInt(hours), parseInt(minutes));
+                         this.addEvent(this.state.activeCalendarId, baseDate, name, 'event-color-1', null);
+                         this.renderDailySchedule(new Date(this.elements.dailySchedulePanel.dataset.date));
+                         document.getElementById('schedule-event-input').value = '';
+                         document.getElementById('schedule-event-time').value = '';
+                     });
+                 }
             };
             
             // Make app globally available for toggle callbacks
