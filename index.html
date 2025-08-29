@@ -315,14 +315,37 @@
             padding: 12px 24px;
             font-weight: 500;
             font-size: 14px;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clean-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
         }
 
         .clean-btn:hover {
             background: var(--dark-gray);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-medium);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .clean-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .clean-btn:active {
+            transform: translateY(0);
+            transition-duration: 0.1s;
         }
 
         .clean-btn.secondary {
@@ -354,6 +377,127 @@
 
         .clean-input::placeholder {
             color: var(--medium-gray);
+        }
+
+        /* Modal Glassmorphism Effects */
+        .modal-glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Enhanced Card Styles */
+        .card-elevated {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-elevated:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+
+        /* Subtle Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .slide-up {
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Better Calendar Day Hover Effects */
+        .day-cell {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .day-cell:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        /* Enhanced Input Focus States */
+        .clean-input {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .clean-input:focus {
+            outline: none;
+            border-color: var(--dusty-rose);
+            box-shadow: 0 0 0 4px rgba(232, 197, 181, 0.12);
+            transform: translateY(-1px);
+        }
+
+        /* Mobile Responsiveness Improvements */
+        @media (max-width: 768px) {
+            .card-elevated {
+                border-radius: 8px;
+                margin: 0 -0.5rem;
+            }
+            
+            .clean-btn {
+                padding: 14px 20px;
+                font-size: 15px;
+                min-height: 48px;
+            }
+            
+            .day-cell {
+                min-height: 60px;
+                font-size: 14px;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            header h1 {
+                font-size: 2rem !important;
+            }
+            
+            .chore-section-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem;
+            }
+        }
+
+        /* Enhanced Focus States for Accessibility */
+        .clean-btn:focus,
+        .day-cell:focus {
+            outline: 3px solid rgba(232, 197, 181, 0.5);
+            outline-offset: 2px;
+        }
+
+        /* Loading State Improvements */
+        .loading-shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
 
         /* Clean Color Themes */
@@ -587,7 +731,7 @@
 <body>
 
     <div id="app" class="min-h-screen p-6 relative">
-        <header class="flex items-center justify-between mb-8 bg-white rounded-lg p-6 shadow-md border border-gray-100">
+        <header class="flex items-center justify-between mb-8 card-elevated p-6 fade-in">
             <h1 class="display-font text-4xl">Calendar</h1>
             <div class="flex items-center gap-3">
                 <div id="weather-widget" class="text-right content-font">
@@ -596,11 +740,11 @@
                         <p class="text-gray-500">Loading weather...</p>
                     </div>
                 </div>
-                <button id="notification-settings-btn" class="clean-btn p-2" title="Notification Settings">
-                    <span id="notification-icon">🔕</span>
+                <button id="notification-settings-btn" class="clean-btn px-3 py-2 text-xs" title="Notification Settings">
+                    <span id="notification-icon">🔕</span> Notifications
                 </button>
-                <button id="session-btn" class="clean-btn p-2" title="Session Info">
-                    <span id="session-icon">👤</span>
+                <button id="session-btn" class="clean-btn px-3 py-2 text-xs" title="Session Info">
+                    Session
                 </button>
             </div>
         </header>
@@ -613,17 +757,20 @@
         </div>
 
         <div class="flex justify-center mb-6">
-            <div class="bg-white rounded-lg p-1 shadow-sm border">
+            <div class="card-elevated p-1 slide-up">
                 <button id="view-toggle-btn" class="px-6 py-2 rounded-md font-medium transition-all duration-300" data-view="calendar">
                     <span id="view-icon">📅</span> Calendar
                 </button>
                 <button id="voting-view-btn" class="px-6 py-2 rounded-md font-medium transition-all duration-300" data-view="voting">
                     <span id="voting-icon">🗳️</span> Voting
                 </button>
+                <button id="chores-view-btn" class="px-6 py-2 rounded-md font-medium transition-all duration-300" data-view="chores">
+                    <span id="chores-icon">🧹</span> Chores
+                </button>
             </div>
         </div>
 
-        <main id="main-content" class="p-6 mb-6">
+        <main id="main-content" class="card-elevated p-6 mb-6 slide-up">
             <div id="calendar-view">
                 <div class="flex justify-between items-center mb-6">
                     <button id="prev-month" class="clean-btn secondary p-3">
@@ -657,6 +804,49 @@
                 <div id="polls-container" class="space-y-4">
                     </div>
             </div>
+
+            <div id="chores-view" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-medium display-font">🧹 Weekly Chores</h2>
+                    <button id="add-chore-btn" class="clean-btn">
+                        <i class="fas fa-plus mr-2"></i>Add Chore
+                    </button>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="chore-section-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Unclaimed Chores -->
+                        <div class="card-elevated p-5 bg-gradient-to-br from-gray-50 to-gray-100">
+                            <h3 class="font-semibold mb-4 text-gray-700 flex items-center gap-2">
+                                <span class="text-lg">📋</span> Available Chores
+                            </h3>
+                            <div id="unclaimed-chores" class="space-y-2">
+                                <!-- Unclaimed chores will be inserted here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Claimed Chores -->
+                        <div class="card-elevated p-5 bg-gradient-to-br from-blue-50 to-blue-100">
+                            <h3 class="font-semibold mb-4 text-blue-700 flex items-center gap-2">
+                                <span class="text-lg">👤</span> Claimed Chores
+                            </h3>
+                            <div id="claimed-chores" class="space-y-2">
+                                <!-- Claimed chores will be inserted here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Completed Chores -->
+                        <div class="card-elevated p-5 bg-gradient-to-br from-green-50 to-green-100">
+                            <h3 class="font-semibold mb-4 text-green-700 flex items-center gap-2">
+                                <span class="text-lg">✅</span> Completed Chores
+                            </h3>
+                            <div id="completed-chores" class="space-y-2">
+                                <!-- Completed chores will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -681,7 +871,7 @@
 
     <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
 
-                <div id="user-setup-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
+                <div id="user-setup-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 modal-glass rounded-xl shadow-2xl p-8 z-50 hidden w-96 slide-up">
                 <h3 class="text-2xl font-medium mb-4 content-font">🔗 Join a Calendar Session</h3>
                 <p class="text-gray-600 mb-4">To sync your calendar, please enter a session code. Use the same code on all your devices.</p>
                 <input type="text" id="user-sync-code" placeholder="e.g., 'family-vacation' or 'work-team'" class="clean-input mb-4">
@@ -691,7 +881,7 @@
             </div>
 
             <!-- Session Info Modal -->
-            <div id="session-info-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
+            <div id="session-info-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 modal-glass rounded-xl shadow-2xl p-8 z-50 hidden w-96 slide-up">
                 <h3 class="text-2xl font-medium mb-4 content-font">👤 Current Session</h3>
                 
                 <div class="bg-gray-50 rounded-lg p-4 mb-6">
@@ -715,7 +905,7 @@
                 </div>
             </div>
 
-            <div id="create-poll-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
+            <div id="create-poll-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 modal-glass rounded-xl shadow-2xl p-8 z-50 hidden w-96 slide-up">
                 <h3 class="text-2xl font-medium mb-4 content-font">🗳️ Create New Poll</h3>
                 <input type="text" id="poll-title" placeholder="Poll title (e.g., Movie Night)" class="clean-input mb-4">
                 <textarea id="poll-description" placeholder="Description (optional)" class="clean-input mb-4 h-20 resize-none"></textarea>
@@ -729,6 +919,22 @@
                 <div class="flex justify-end gap-3">
                     <button id="cancel-create-poll" class="clean-btn secondary">Cancel</button>
                     <button id="confirm-create-poll" class="clean-btn">Create Poll ✨</button>
+                </div>
+            </div>
+
+            <!-- Add Chore Modal -->
+            <div id="add-chore-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 modal-glass rounded-xl shadow-2xl p-8 z-50 hidden w-96 slide-up">
+                <h3 class="text-2xl font-medium mb-4 content-font">🧹 Add New Chore</h3>
+                <input type="text" id="chore-title" placeholder="Chore name (e.g., Clean kitchen)" class="clean-input mb-4">
+                <textarea id="chore-description" placeholder="Description (optional)" class="clean-input mb-4 h-20 resize-none"></textarea>
+                <select id="chore-difficulty" class="clean-input mb-4">
+                    <option value="easy">Easy (5-15 min)</option>
+                    <option value="medium">Medium (15-30 min)</option>
+                    <option value="hard">Hard (30+ min)</option>
+                </select>
+                <div class="flex justify-end gap-3">
+                    <button id="cancel-add-chore" class="clean-btn secondary">Cancel</button>
+                    <button id="confirm-add-chore" class="clean-btn">Add Chore ✨</button>
                 </div>
             </div>
 
@@ -813,19 +1019,20 @@
         document.addEventListener('DOMContentLoaded', () => {
             const app = {
                 // --- STATE MANAGEMENT ---
-                                 state: {
-                     currentDate: new Date(),
-                     calendars: [],
-                     activeCalendarId: null,
-                     weatherData: {},
-                     visibleCalendars: new Set(), // Track which calendars are visible for overlay
-                     notificationsEnabled: false,
-                     notificationTimes: [15, 5], // Notify 15 and 5 minutes before events
-                     scheduledNotifications: new Map(), // Track scheduled notifications
-                     userKey: null,
-                     polls: [], // Store all polls/voting events
-                     currentView: 'calendar' // 'calendar' or 'voting'
-                 },
+                                                 state: {
+                    currentDate: new Date(),
+                    calendars: [],
+                    activeCalendarId: null,
+                    weatherData: {},
+                    visibleCalendars: new Set(), // Track which calendars are visible for overlay
+                    notificationsEnabled: false,
+                    notificationTimes: [15, 5], // Notify 15 and 5 minutes before events
+                    scheduledNotifications: new Map(), // Track scheduled notifications
+                    userKey: null,
+                    polls: [], // Store all polls/voting events
+                    chores: [], // Store all chores/tasks
+                    currentView: 'calendar' // 'calendar', 'voting', or 'chores'
+                },
 
                 // --- DOM ELEMENTS ---
                 elements: {},
@@ -1027,6 +1234,7 @@
                          scheduledNotifications: new Map(),
                          userKey: null,
                          polls: [],
+                         chores: [],
                          currentView: 'calendar'
                      };
                      
@@ -1701,37 +1909,175 @@
                          
                          container.appendChild(pollEl);
                      });
-                 },
+                                 },
 
-                 switchView(view) {
+                // --- CHORE MANAGEMENT ---
+                addChore(title, description, difficulty) {
+                    const newChore = {
+                        id: `chore-${Date.now()}`,
+                        title,
+                        description: description || '',
+                        difficulty,
+                        status: 'unclaimed', // 'unclaimed', 'claimed', 'completed'
+                        claimedBy: null,
+                        claimedAt: null,
+                        completedAt: null,
+                        createdAt: Date.now()
+                    };
+                    
+                    this.state.chores.push(newChore);
+                    this.renderChores();
+                    this.saveState();
+                },
+
+                claimChore(choreId) {
+                    const chore = this.state.chores.find(c => c.id === choreId);
+                    if (!chore || chore.status !== 'unclaimed') return;
+                    
+                    const userName = this.getUserKey() || 'Anonymous';
+                    chore.status = 'claimed';
+                    chore.claimedBy = userName;
+                    chore.claimedAt = Date.now();
+                    
+                    this.renderChores();
+                    this.saveState();
+                },
+
+                completeChore(choreId) {
+                    const chore = this.state.chores.find(c => c.id === choreId);
+                    if (!chore || chore.status !== 'claimed') return;
+                    
+                    chore.status = 'completed';
+                    chore.completedAt = Date.now();
+                    
+                    this.renderChores();
+                    this.saveState();
+                },
+
+                unclaimChore(choreId) {
+                    const chore = this.state.chores.find(c => c.id === choreId);
+                    if (!chore || chore.status !== 'claimed') return;
+                    
+                    chore.status = 'unclaimed';
+                    chore.claimedBy = null;
+                    chore.claimedAt = null;
+                    
+                    this.renderChores();
+                    this.saveState();
+                },
+
+                renderChores() {
+                    const unclaimedContainer = document.getElementById('unclaimed-chores');
+                    const claimedContainer = document.getElementById('claimed-chores');
+                    const completedContainer = document.getElementById('completed-chores');
+                    
+                    if (!unclaimedContainer || !claimedContainer || !completedContainer) return;
+                    
+                    // Filter chores by status
+                    const unclaimed = this.state.chores.filter(c => c.status === 'unclaimed');
+                    const claimed = this.state.chores.filter(c => c.status === 'claimed');
+                    const completed = this.state.chores.filter(c => c.status === 'completed');
+                    
+                    // Render unclaimed chores
+                    if (unclaimed.length === 0) {
+                        unclaimedContainer.innerHTML = '<p class="text-gray-500 text-sm">No chores available</p>';
+                    } else {
+                        unclaimedContainer.innerHTML = unclaimed.map(chore => `
+                            <div class="chore-item card-elevated p-4 fade-in">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-medium">${chore.title}</h4>
+                                    <span class="text-xs px-2 py-1 rounded-full ${chore.difficulty === 'easy' ? 'bg-green-100 text-green-700' : chore.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}">${chore.difficulty}</span>
+                                </div>
+                                ${chore.description ? `<p class="text-sm text-gray-600 mb-2">${chore.description}</p>` : ''}
+                                <button onclick="app.claimChore('${chore.id}')" class="clean-btn secondary text-xs w-full">
+                                    👋 Claim This
+                                </button>
+                            </div>
+                        `).join('');
+                    }
+                    
+                    // Render claimed chores
+                    if (claimed.length === 0) {
+                        claimedContainer.innerHTML = '<p class="text-gray-500 text-sm">No claimed chores</p>';
+                    } else {
+                        claimedContainer.innerHTML = claimed.map(chore => `
+                            <div class="chore-item card-elevated p-4 fade-in border-l-4 border-blue-400">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-medium">${chore.title}</h4>
+                                    <span class="text-xs px-2 py-1 rounded-full ${chore.difficulty === 'easy' ? 'bg-green-100 text-green-700' : chore.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}">${chore.difficulty}</span>
+                                </div>
+                                ${chore.description ? `<p class="text-sm text-gray-600 mb-2">${chore.description}</p>` : ''}
+                                <p class="text-xs text-blue-600 mb-2">Claimed by: ${chore.claimedBy}</p>
+                                <div class="flex gap-2">
+                                    <button onclick="app.completeChore('${chore.id}')" class="clean-btn text-xs flex-1">
+                                        ✅ Complete
+                                    </button>
+                                    <button onclick="app.unclaimChore('${chore.id}')" class="clean-btn secondary text-xs">
+                                        ↩️
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                    
+                    // Render completed chores
+                    if (completed.length === 0) {
+                        completedContainer.innerHTML = '<p class="text-gray-500 text-sm">No completed chores</p>';
+                    } else {
+                        completedContainer.innerHTML = completed.map(chore => `
+                            <div class="chore-item card-elevated p-4 fade-in border-l-4 border-green-400 opacity-75">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-medium line-through">${chore.title}</h4>
+                                    <span class="text-xs px-2 py-1 rounded-full ${chore.difficulty === 'easy' ? 'bg-green-100 text-green-700' : chore.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}">${chore.difficulty}</span>
+                                </div>
+                                ${chore.description ? `<p class="text-sm text-gray-600 mb-2 line-through">${chore.description}</p>` : ''}
+                                <p class="text-xs text-green-600">Completed by: ${chore.claimedBy}</p>
+                                <p class="text-xs text-gray-500">${new Date(chore.completedAt).toLocaleDateString()}</p>
+                            </div>
+                        `).join('');
+                    }
+                },
+
+                switchView(view) {
                      this.state.currentView = view;
                      
                      // Update view toggle buttons
                      document.getElementById('view-toggle-btn').classList.toggle('active', view === 'calendar');
                      document.getElementById('voting-view-btn').classList.toggle('active', view === 'voting');
+                     document.getElementById('chores-view-btn').classList.toggle('active', view === 'chores');
                      
                      // Show/hide views
                      document.getElementById('calendar-view').classList.toggle('hidden', view !== 'calendar');
                      document.getElementById('voting-view').classList.toggle('hidden', view !== 'voting');
+                     document.getElementById('chores-view').classList.toggle('hidden', view !== 'chores');
                      
                      // Update view icon
-                     document.getElementById('view-icon').textContent = view === 'calendar' ? '📅' : '🗳️';
+                     let icon = '📅';
+                     if (view === 'voting') icon = '🗳️';
+                     if (view === 'chores') icon = '🧹';
+                     document.getElementById('view-icon').textContent = icon;
                      
                      if (view === 'voting') {
                          this.renderPolls();
+                     } else if (view === 'chores') {
+                         this.renderChores();
                      } else {
                          this.renderCalendar();
                      }
                  },
 
-                 openCreatePollModal() {
-                     this.openModal(document.getElementById('create-poll-modal'));
-                     // Set default date to tomorrow
-                     const tomorrow = new Date();
-                     tomorrow.setDate(tomorrow.getDate() + 1);
-                     tomorrow.setHours(18, 0, 0, 0);
-                     document.getElementById('poll-date').value = tomorrow.toISOString().slice(0, 16);
-                 },
+                                 openCreatePollModal() {
+                    this.openModal(document.getElementById('create-poll-modal'));
+                    // Set default date to tomorrow
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    tomorrow.setHours(18, 0, 0, 0);
+                    document.getElementById('poll-date').value = tomorrow.toISOString().slice(0, 16);
+                },
+
+                openAddChoreModal() {
+                    this.openModal(document.getElementById('add-chore-modal'));
+                },
 
                  // --- CALENDAR VISIBILITY CONTROLS ---
                  toggleCalendarVisibility(calendarId) {
@@ -1952,9 +2298,13 @@
                      // View toggle
                      document.getElementById('view-toggle-btn').addEventListener('click', () => this.switchView('calendar'));
                      document.getElementById('voting-view-btn').addEventListener('click', () => this.switchView('voting'));
+                     document.getElementById('chores-view-btn').addEventListener('click', () => this.switchView('chores'));
                      
                      // Create poll button
                      document.getElementById('create-poll-btn').addEventListener('click', () => this.openCreatePollModal());
+                     
+                     // Create chore button
+                     document.getElementById('add-chore-btn').addEventListener('click', () => this.openAddChoreModal());
                      
                      // Poll modal handlers
                      document.getElementById('cancel-create-poll').addEventListener('click', () => this.closeModal(document.getElementById('create-poll-modal')));
@@ -1973,9 +2323,26 @@
                              document.getElementById('poll-description').value = '';
                              document.getElementById('poll-is-event').checked = false;
                          }
+                                          });
+                     
+                     // Chore modal handlers
+                     document.getElementById('cancel-add-chore').addEventListener('click', () => this.closeModal(document.getElementById('add-chore-modal')));
+                     document.getElementById('confirm-add-chore').addEventListener('click', () => {
+                         const title = document.getElementById('chore-title').value.trim();
+                         const description = document.getElementById('chore-description').value.trim();
+                         const difficulty = document.getElementById('chore-difficulty').value;
+                         
+                         if (title) {
+                             this.addChore(title, description, difficulty);
+                             this.closeModal(document.getElementById('add-chore-modal'));
+                             // Clear form
+                             document.getElementById('chore-title').value = '';
+                             document.getElementById('chore-description').value = '';
+                             document.getElementById('chore-difficulty').value = 'easy';
+                         }
                      });
                      
-                                           // Notification settings
+                                          // Notification settings
                       const notificationBtn = document.getElementById('notification-settings-btn');
                       if (notificationBtn) {
                           notificationBtn.addEventListener('click', () => {
