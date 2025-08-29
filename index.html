@@ -599,6 +599,9 @@
                 <button id="notification-settings-btn" class="clean-btn p-2" title="Notification Settings">
                     <span id="notification-icon">🔕</span>
                 </button>
+                <button id="session-btn" class="clean-btn p-2" title="Session Info">
+                    <span id="session-icon">👤</span>
+                </button>
             </div>
         </header>
 
@@ -684,6 +687,31 @@
                 <input type="text" id="user-sync-code" placeholder="e.g., 'family-vacation' or 'work-team'" class="clean-input mb-4">
                 <div class="flex justify-end gap-3">
                     <button id="setup-sync" class="clean-btn">Join Session 🔄</button>
+                </div>
+            </div>
+
+            <!-- Session Info Modal -->
+            <div id="session-info-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
+                <h3 class="text-2xl font-medium mb-4 content-font">👤 Current Session</h3>
+                
+                <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                    <div class="mb-2">
+                        <span class="font-medium">Session Code:</span>
+                        <span class="ml-2 text-blue-600 font-mono" id="current-session-display">Loading...</span>
+                    </div>
+                    <div class="text-sm text-gray-600">
+                        This code syncs your calendars across all devices
+                    </div>
+                </div>
+
+                <div class="space-y-3 mb-6">
+                    <button id="switch-session-btn" class="clean-btn w-full">
+                        🔄 Switch to Different Session
+                    </button>
+                </div>
+
+                <div class="flex justify-end">
+                    <button id="close-session-modal" class="clean-btn secondary">Close</button>
                 </div>
             </div>
 
@@ -802,7 +830,7 @@
                 // --- DOM ELEMENTS ---
                 elements: {},
 
-                // --- CONSTANTS & CONFIG ---
+                // --- CONSTANTS & CONFIG -- -
                 config: {
                     WEATHER_API_KEY: '973209301a5a4be53a5337c204db93c2',
                     // IMPORTANT: REPLACE WITH YOUR FIREBASE PROJECT URL
@@ -955,15 +983,57 @@
                     return this.state.userKey || localStorage.getItem('calendarUserKey');
                 },
                 
-                setUserKey(userKey) {
-                    localStorage.setItem('calendarUserKey', userKey);
-                    this.state.userKey = userKey;
-                    
-                    this.loadState().then(() => {
-                        this.renderTabs();
-                        this.renderCalendar();
-                    });
-                },
+                                 setUserKey(userKey) {
+                     localStorage.setItem('calendarUserKey', userKey);
+                     this.state.userKey = userKey;
+                     
+                     this.loadState().then(() => {
+                         this.renderTabs();
+                         this.renderCalendar();
+                     });
+                 },
+
+                 openSessionInfoModal() {
+                     const modal = document.getElementById('session-info-modal');
+                     const sessionDisplay = document.getElementById('current-session-display');
+                     
+                     if (sessionDisplay) {
+                         const userKey = this.getUserKey();
+                         if (userKey) {
+                             // Show just the session code without technical prefixes
+                             sessionDisplay.textContent = userKey;
+                         } else {
+                             sessionDisplay.textContent = 'No session active';
+                         }
+                     }
+                     
+                     this.openModal(modal);
+                 },
+
+                 switchToNewSession() {
+                     // Clear current session data
+                     localStorage.removeItem('calendarAppState');
+                     localStorage.removeItem('calendarUserKey');
+                     
+                     // Reset state
+                     this.state = {
+                         currentDate: new Date(),
+                         calendars: [],
+                         activeCalendarId: null,
+                         weatherData: {},
+                         visibleCalendars: new Set(),
+                         notificationsEnabled: false,
+                         notificationTimes: [15, 5],
+                         scheduledNotifications: new Map(),
+                         userKey: null,
+                         polls: [],
+                         currentView: 'calendar'
+                     };
+                     
+                     // Close current modal and show setup
+                     this.closeModal(document.getElementById('session-info-modal'));
+                     this.showUserSetupModal();
+                 },
 
                 // --- WEATHER API ---
                 async getWeatherData(lat, lon, cityName) {
@@ -1905,21 +1975,45 @@
                          }
                      });
                      
-                     // Notification settings
-                     const notificationBtn = document.getElementById('notification-settings-btn');
-                     if (notificationBtn) {
-                         notificationBtn.addEventListener('click', () => {
-                             if (this.state.notificationsEnabled) {
-                                 this.state.notificationsEnabled = false;
-                                 this.state.scheduledNotifications.forEach(timeoutId => clearTimeout(timeoutId));
-                                 this.state.scheduledNotifications.clear();
-                                 this.updateNotificationIcon();
-                                 this.saveState();
-                             } else {
-                                 this.showNotificationModal();
-                             }
-                         });
-                     }
+                                           // Notification settings
+                      const notificationBtn = document.getElementById('notification-settings-btn');
+                      if (notificationBtn) {
+                          notificationBtn.addEventListener('click', () => {
+                              if (this.state.notificationsEnabled) {
+                                  this.state.notificationsEnabled = false;
+                                  this.state.scheduledNotifications.forEach(timeoutId => clearTimeout(timeoutId));
+                                  this.state.scheduledNotifications.clear();
+                                  this.updateNotificationIcon();
+                                  this.saveState();
+                              } else {
+                                  this.showNotificationModal();
+                              }
+                          });
+                      }
+
+                      // Session button
+                      const sessionBtn = document.getElementById('session-btn');
+                      if (sessionBtn) {
+                          sessionBtn.addEventListener('click', () => {
+                              this.openSessionInfoModal();
+                          });
+                      }
+
+                      // Session info modal handlers
+                      const switchSessionBtn = document.getElementById('switch-session-btn');
+                      const closeSessionModal = document.getElementById('close-session-modal');
+
+                      if (switchSessionBtn) {
+                          switchSessionBtn.addEventListener('click', () => {
+                              this.switchToNewSession();
+                          });
+                      }
+
+                      if (closeSessionModal) {
+                          closeSessionModal.addEventListener('click', () => {
+                              this.closeModal(document.getElementById('session-info-modal'));
+                          });
+                      }
 
                      // User setup modal handlers
                      const setupSyncBtn = document.getElementById('setup-sync');
