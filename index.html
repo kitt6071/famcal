@@ -884,8 +884,8 @@
     <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
 
                 <div id="user-setup-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 modal-glass rounded-xl shadow-2xl p-8 z-50 hidden w-96 slide-up">
-                <h3 class="text-2xl font-medium mb-4 content-font">🔗 Join a Calendar Session</h3>
-                <p class="text-gray-600 mb-4">To sync your calendar, please enter a session code. Use the same code on all your devices.</p>
+                <h3 class="text-2xl font-medium mb-4 content-font">🔗 Join Different Session</h3>
+                <p class="text-gray-600 mb-4">Enter a session code to join a different calendar group. Leave blank to return to the default session.</p>
                 <input type="text" id="user-sync-code" placeholder="e.g., 'family-vacation' or 'work-team'" class="clean-input mb-4">
                 <div class="flex justify-end gap-3">
                     <button id="setup-sync" class="clean-btn">Join Session 🔄</button>
@@ -908,7 +908,7 @@
 
                 <div class="space-y-3 mb-6">
                     <button id="switch-session-btn" class="clean-btn w-full">
-                        🔄 Switch to Different Session
+                        🔄 Join Different Session
                     </button>
             </div>
 
@@ -1032,7 +1032,7 @@
     </div>
 
     <script>
-        // Cache busting - Updated error fixes - v2.1
+        // Cache busting - Default session auto-join - v2.2
         document.addEventListener('DOMContentLoaded', () => {
             const app = {
             // --- STATE MANAGEMENT ---
@@ -1213,7 +1213,18 @@
                 },
                 
                 getUserKey() {
-                    return this.state.userKey || localStorage.getItem('calendarUserKey');
+                    // Check for existing user key
+                    let userKey = this.state.userKey || localStorage.getItem('calendarUserKey');
+                    
+                    // If no user key exists, automatically assign default session
+                    if (!userKey) {
+                        userKey = 'famcal-default-session';
+                        localStorage.setItem('calendarUserKey', userKey);
+                        this.state.userKey = userKey;
+                        console.log('🎯 Automatically joined default session:', userKey);
+                    }
+                    
+                    return userKey;
                 },
                 
                                  setUserKey(userKey) {
@@ -1233,8 +1244,15 @@
                      if (sessionDisplay) {
                          const userKey = this.getUserKey();
                          if (userKey) {
-                             // Show just the session code without technical prefixes
-                             sessionDisplay.textContent = userKey;
+                             if (userKey === 'famcal-default-session') {
+                                 sessionDisplay.textContent = 'Default Session';
+                                 sessionDisplay.className = 'ml-2 text-blue-600 font-mono bg-blue-50 px-2 py-1 rounded';
+                             } else {
+                                 // Show just the session code without technical prefixes
+                                 const displayKey = userKey.replace('user_', '');
+                                 sessionDisplay.textContent = displayKey;
+                                 sessionDisplay.className = 'ml-2 text-green-600 font-mono bg-green-50 px-2 py-1 rounded';
+                             }
                          } else {
                              sessionDisplay.textContent = 'No session active';
                          }
@@ -2356,25 +2374,22 @@
                     this.addEventListeners();
                     this.switchView('calendar');
                     
-                    const userKey = this.getUserKey();
+                    // Auto-assign default session and load state
+                    const userKey = this.getUserKey(); // This will auto-assign if needed
                     
-                    if (!userKey) {
-                        this.showUserSetupModal();
-                    } else {
-                        await this.loadState();
-                        
-                        const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
-                        if (activeCalendar) {
-                            this.applyFullPageTheme(this.config.colorSchemes[activeCalendar.theme]);
-                        }
-                        
-                        this.getLocationAndFetchWeather();
-                        this.renderTabs();
-                        this.renderCalendar();
-                        
-                        if (this.state.notificationsEnabled) {
-                            this.scheduleAllNotifications();
-                        }
+                    await this.loadState();
+                    
+                    const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
+                    if (activeCalendar) {
+                        this.applyFullPageTheme(this.config.colorSchemes[activeCalendar.theme]);
+                    }
+                    
+                    this.getLocationAndFetchWeather();
+                    this.renderTabs();
+                    this.renderCalendar();
+                    
+                    if (this.state.notificationsEnabled) {
+                        this.scheduleAllNotifications();
                     }
                      
                      // Auto-sync from cloud every 2 minutes
@@ -2486,14 +2501,19 @@
                      if (setupSyncBtn) {
                          setupSyncBtn.addEventListener('click', () => {
                              const syncCode = userSyncCodeInput.value.trim();
+                             let userKey;
+                             
                              if (syncCode) {
-                                 const userKey = 'user_' + syncCode.toLowerCase().replace(/[^a-z0-9]/g, '');
-                                 this.setUserKey(userKey);
-                                 this.closeModal(document.getElementById('user-setup-modal'));
-                                 
-                                 // After setting the key, initialize the main app view
-                                 this.init(); 
+                                 userKey = 'user_' + syncCode.toLowerCase().replace(/[^a-z0-9]/g, '');
+                             } else {
+                                 userKey = 'famcal-default-session'; // Return to default session if empty
                              }
+                             
+                             this.setUserKey(userKey);
+                             this.closeModal(document.getElementById('user-setup-modal'));
+                             
+                             // After setting the key, initialize the main app view
+                             this.init(); 
                          });
                      }
 
