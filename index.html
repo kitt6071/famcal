@@ -1007,7 +1007,11 @@
 
     <div id="add-event-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-xl p-8 z-50 hidden w-96 border">
         <h3 class="text-2xl font-medium mb-6 content-font">Add Event for <span id="event-modal-date" class="font-normal text-gray-600"></span></h3>
-        <input type="text" id="event-name-input" placeholder="Event Name" class="clean-input mb-6">
+        <input type="text" id="event-name-input" placeholder="Event Name" class="clean-input mb-4">
+        <div class="mb-6">
+            <label class="block text-sm font-medium mb-2 content-font">Time:</label>
+            <input type="time" id="event-time-input" class="clean-input" value="12:00">
+        </div>
         <p class="font-medium mb-4 content-font">Event Color:</p>
         <div id="event-colors" class="flex gap-2 mb-6">
             <div class="w-8 h-8 rounded cursor-pointer transition-all duration-200 hover:scale-110 event-color-1" data-color="event-color-1"></div>
@@ -1028,6 +1032,7 @@
     </div>
 
     <script>
+        // Cache busting - Updated error fixes - v2.1
         document.addEventListener('DOMContentLoaded', () => {
             const app = {
             // --- STATE MANAGEMENT ---
@@ -1194,15 +1199,15 @@
                             this.state.calendars.forEach(calendar => {
                                 if (!calendar.events) {
                                     calendar.events = {};
-                                }
-                            });
-                        }
+                            }
+                        });
+                    }
                         
                         if(this.state.calendars && this.state.calendars.length > 0 && !this.state.activeCalendarId) {
                             this.state.activeCalendarId = this.state.calendars[0].id;
                         }
                         console.log('✅ State loaded from cloud.');
-                    } else {
+                } else {
                         console.log('🆕 No cloud data found for this session, starting fresh.');
                     }
                 },
@@ -1635,23 +1640,35 @@
                  },
 
                                 renderDailySchedule(date) {
-                    const year = date.getFullYear();
-                    const month = date.getMonth();
-                    const day = date.getDate();
-                    const dateKey = `${year}-${month}-${day}`;
+                    // Ensure elements exist
+                    if (!this.elements.scheduleDateHeader || !this.elements.scheduleContent) {
+                        console.error('Daily schedule elements not found');
+                        return;
+                    }
                     
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const day = date.getDate();
+                const dateKey = `${year}-${month}-${day}`;
+                
                     this.elements.scheduleDateHeader.textContent = `📅 ${date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}`;
                     this.elements.scheduleContent.innerHTML = '';
 
                     const activeCalendar = this.state.calendars.find(c => c.id === this.state.activeCalendarId);
-                    if (!activeCalendar) return;
+                    if (!activeCalendar) {
+                        console.log('No active calendar found. Please create a calendar first.');
+                        alert('Please create a calendar first before viewing the daily schedule.');
+                        return;
+                    }
                     
                     // Ensure events object exists
                     if (!activeCalendar.events) {
                         activeCalendar.events = {};
+                        console.log('Initialized events object for calendar:', activeCalendar.name);
                     }
                     
                     const events = activeCalendar.events[dateKey] ? [...activeCalendar.events[dateKey]] : [];
+                    console.log('Found events for', dateKey, ':', events.length);
                 events.sort((a,b) => new Date(a.date) - new Date(b.date));
 
                 for (let hour = 0; hour < 24; hour++) {
@@ -1676,11 +1693,33 @@
                     } else {
                         eventsThisHour.forEach(event => {
                             const eventDiv = document.createElement('div');
-                            eventDiv.innerHTML = `<strong>${new Date(event.date).getMinutes().toString().padStart(2, '0')}:</strong> ${event.name}`;
-                            eventDiv.className = `text-sm p-3 rounded-2xl text-white font-semibold mb-2 last:mb-0 shadow-md`;
-                            eventDiv.style.background = event.color || 'linear-gradient(135deg, #60a5fa, #3b82f6)';
+                            eventDiv.className = `text-sm p-3 rounded-2xl text-white font-semibold mb-2 last:mb-0 shadow-md flex items-center justify-between`;
+                            
+                            const eventContent = document.createElement('div');
+                            eventContent.innerHTML = `<strong>${new Date(event.date).getMinutes().toString().padStart(2, '0')}:</strong> ${event.name}`;
                             if (event.completed) {
-                                eventDiv.style.textDecoration = 'line-through';
+                                eventContent.style.textDecoration = 'line-through';
+                                eventContent.style.opacity = '0.7';
+                            }
+                            
+                            const checkbox = document.createElement('input');
+                            checkbox.type = 'checkbox';
+                            checkbox.checked = event.completed;
+                            checkbox.className = 'ml-2 w-4 h-4 rounded';
+                            checkbox.onchange = (e) => {
+                                e.stopPropagation();
+                                this.toggleEventCompletion(event.id);
+                                // Re-render the daily schedule to update the display
+                                this.renderDailySchedule(new Date(this.elements.dailySchedulePanel.dataset.date));
+                            };
+                            
+                            eventDiv.appendChild(eventContent);
+                            eventDiv.appendChild(checkbox);
+                            
+                            // Apply event color class
+                            eventDiv.classList.add(event.color || 'event-color-1');
+                            
+                            if (event.completed) {
                                 eventDiv.style.opacity = '0.7';
                             }
                             slotEl.appendChild(eventDiv);
@@ -2145,21 +2184,21 @@
 
                                                  addEvent(calendarId, date, name, color, linkedCalendarId) {
                     const calendar = this.state.calendars.find(c => c.id === calendarId);
-                    if (!calendar) return;
+                if (!calendar) return;
 
                     // Ensure events object exists
                     if (!calendar.events) {
                         calendar.events = {};
                     }
 
-                    const year = date.getFullYear();
-                    const month = date.getMonth();
-                    const day = date.getDate();
-                    const dateKey = `${year}-${month}-${day}`;
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const day = date.getDate();
+                const dateKey = `${year}-${month}-${day}`;
 
-                    if (!calendar.events[dateKey]) {
-                        calendar.events[dateKey] = [];
-                    }
+                if (!calendar.events[dateKey]) {
+                    calendar.events[dateKey] = [];
+                }
 
                 const newEvent = {
                     id: `evt-${Date.now()}`,
@@ -2170,7 +2209,7 @@
                 };
                 calendar.events[dateKey].push(newEvent);
                 
-                                if (linkedCalendarId) {
+                if (linkedCalendarId) {
                     const linkedCalendar = this.state.calendars.find(c => c.id === linkedCalendarId);
                     if (linkedCalendar) {
                         // Ensure events object exists
@@ -2250,8 +2289,9 @@
                     this.selectedDateForEvent = date;
                 document.getElementById('event-modal-date').textContent = date.toLocaleDateString();
                     
-                    // Clear the event name input
+                    // Clear the event name and time inputs
                     document.getElementById('event-name-input').value = '';
+                    document.getElementById('event-time-input').value = '12:00';
                     
                     // Reset event color selection
                     this.selectedEventColor = 'event-color-1';
@@ -2275,10 +2315,20 @@
                 },
 
                 openDailySchedule(date) {
-                    this.renderDailySchedule(date);
-                    this.elements.dailySchedulePanel.classList.add('open');
-                    this.elements.modalBackdrop.classList.remove('hidden');
-                    this.elements.dailySchedulePanel.dataset.date = date.toISOString();
+                    try {
+                        // Ensure required elements exist
+                        if (!this.elements.dailySchedulePanel || !this.elements.modalBackdrop) {
+                            console.error('Daily schedule panel elements not found');
+                            return;
+                        }
+                        
+                        this.renderDailySchedule(date);
+                        this.elements.dailySchedulePanel.classList.add('open');
+                        this.elements.modalBackdrop.classList.remove('hidden');
+                        this.elements.dailySchedulePanel.dataset.date = date.toISOString();
+                    } catch (error) {
+                        console.error('Error opening daily schedule:', error);
+                    }
                 },
 
                 closeDailySchedule() {
@@ -2485,37 +2535,43 @@
                      });
                      document.getElementById('close-schedule').addEventListener('click', () => this.closeDailySchedule());
 
-                     document.querySelectorAll('.color-scheme-option').forEach(el => {
-                         el.addEventListener('click', () => {
-                             document.querySelectorAll('.color-scheme-option div').forEach(div => div.classList.remove('ring-4', 'ring-offset-2', 'ring-blue-500'));
-                             el.querySelector('div').classList.add('ring-4', 'ring-offset-2', 'ring-blue-500');
+            document.querySelectorAll('.color-scheme-option').forEach(el => {
+                el.addEventListener('click', () => {
+                    document.querySelectorAll('.color-scheme-option div').forEach(div => div.classList.remove('ring-4', 'ring-offset-2', 'ring-blue-500'));
+                    el.querySelector('div').classList.add('ring-4', 'ring-offset-2', 'ring-blue-500');
                              this.selectedColorScheme = el.dataset.theme;
-                         });
-                     });
+                });
+            });
 
-                     document.getElementById('confirm-add-calendar').addEventListener('click', () => {
-                         const name = document.getElementById('new-calendar-name').value;
+            document.getElementById('confirm-add-calendar').addEventListener('click', () => {
+                const name = document.getElementById('new-calendar-name').value;
                          if (name && this.selectedColorScheme) {
                              this.addCalendar(name, this.selectedColorScheme);
                              this.closeModal(this.elements.addCalendarModal);
-                             document.getElementById('new-calendar-name').value = '';
-                         }
-                     });
+                    document.getElementById('new-calendar-name').value = '';
+                }
+            });
 
-                     document.getElementById('event-colors').addEventListener('click', (e) => {
-                         if (e.target.dataset.color) {
+            document.getElementById('event-colors').addEventListener('click', (e) => {
+                if (e.target.dataset.color) {
                              this.selectedEventColor = e.target.dataset.color;
-                             document.querySelectorAll('#event-colors div').forEach(div => div.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500'));
-                             e.target.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500');
-                         }
-                     });
+                    document.querySelectorAll('#event-colors div').forEach(div => div.classList.remove('ring-2', 'ring-offset-2', 'ring-blue-500'));
+                    e.target.classList.add('ring-2', 'ring-offset-2', 'ring-blue-500');
+                }
+            });
 
-                     document.getElementById('save-event').addEventListener('click', () => {
+                                 document.getElementById('save-event').addEventListener('click', () => {
                          const name = document.getElementById('event-name-input').value.trim();
+                         const time = document.getElementById('event-time-input').value;
                          const linkedCalendarId = document.getElementById('link-calendar-select').value;
                          
                          if (!name) {
                              alert('Please enter an event name');
+                             return;
+                         }
+                         
+                         if (!time) {
+                             alert('Please select a time');
                              return;
                          }
                          
@@ -2530,15 +2586,19 @@
                          }
                          
                          const eventDate = new Date(this.selectedDateForEvent);
-                         eventDate.setHours(12, 0, 0, 0);
+                         const [hours, minutes] = time.split(':');
+                         eventDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+                         
                          this.addEvent(this.state.activeCalendarId, eventDate, name, this.selectedEventColor, linkedCalendarId);
                          this.closeModal(this.elements.addEventModal);
+                         this.renderCalendar(); // Update the main calendar view
                          document.getElementById('event-name-input').value = '';
+                         document.getElementById('event-time-input').value = '12:00';
                      });
-                     
-                     document.getElementById('schedule-add-event-btn').addEventListener('click', () => {
+            
+            document.getElementById('schedule-add-event-btn').addEventListener('click', () => {
                          const name = document.getElementById('schedule-event-input').value.trim();
-                         const time = document.getElementById('schedule-event-time').value;
+                const time = document.getElementById('schedule-event-time').value;
                          const baseDate = new Date(this.elements.dailySchedulePanel.dataset.date);
                          
                          if (!name) {
@@ -2556,10 +2616,11 @@
                              return;
                          }
                          
-                         const [hours, minutes] = time.split(':');
-                         baseDate.setHours(parseInt(hours), parseInt(minutes));
-                         this.addEvent(this.state.activeCalendarId, baseDate, name, 'event-color-1', null);
+                    const [hours, minutes] = time.split(':');
+                    baseDate.setHours(parseInt(hours), parseInt(minutes));
+                                                  this.addEvent(this.state.activeCalendarId, baseDate, name, 'event-color-1', null);
                          this.renderDailySchedule(new Date(this.elements.dailySchedulePanel.dataset.date));
+                         this.renderCalendar(); // Update the main calendar view too
                          document.getElementById('schedule-event-input').value = '';
                          document.getElementById('schedule-event-time').value = '';
                      });
